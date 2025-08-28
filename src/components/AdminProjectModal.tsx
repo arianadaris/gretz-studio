@@ -37,7 +37,8 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
     image: '',
     tags: [],
     featured: false,
-    year: new Date().getFullYear().toString()
+    year: new Date().getFullYear().toString(),
+    viewUrl: ''
   });
   const [customTagInput, setCustomTagInput] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -64,7 +65,8 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
         image: project.image,
         tags: [...project.tags],
         featured: project.featured,
-        year: project.year
+        year: project.year,
+        viewUrl: project.viewUrl || ''
       });
     } else {
       setFormData({
@@ -74,7 +76,8 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
         image: '',
         tags: [],
         featured: false,
-        year: new Date().getFullYear().toString()
+        year: new Date().getFullYear().toString(),
+        viewUrl: ''
       });
     }
     setErrors({});
@@ -293,6 +296,16 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
             onChange={(e) => handleInputChange('image', e.target.value)}
             error={!!errors.image}
             helperText={errors.image || 'Enter the path to the project image (e.g., /logos/PrimaryLogo.svg)'}
+            sx={{ mb: 3 }}
+          />
+
+          <TextField
+            fullWidth
+            label="View URL (optional)"
+            value={formData.viewUrl}
+            onChange={(e) => handleInputChange('viewUrl', e.target.value)}
+            helperText="URL for the 'View' button (e.g., https://example.com)"
+            placeholder="https://example.com"
             sx={{ mb: 3 }}
           />
 

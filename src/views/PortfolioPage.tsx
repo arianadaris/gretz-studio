@@ -283,12 +283,14 @@ const PortfolioPage: React.FC = () => {
                       transform: 'translateY(-8px)',
                       boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
                       background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)',
-                      '& .project-overlay': {
-                        opacity: 1
-                      },
-                      '& .project-image': {
-                        transform: 'scale(0.9)',
-                      }
+                      ...(project.viewUrl && {
+                        '& .project-overlay': {
+                          opacity: 1
+                        },
+                        '& .project-image': {
+                          transform: 'scale(0.9)',
+                        }
+                      })
                     }
                   }}
                 >
@@ -361,10 +363,14 @@ const PortfolioPage: React.FC = () => {
                         color: 'white'
                       }}
                     >
-                      <Stack direction="row" spacing={2}>
+                      {project.viewUrl && (
                         <Button
                           variant="contained"
                           startIcon={<Visibility />}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(project.viewUrl, '_blank');
+                          }}
                           sx={{
                             bgcolor: 'white',
                             color: 'primary.main',
@@ -373,21 +379,7 @@ const PortfolioPage: React.FC = () => {
                         >
                           View
                         </Button>
-                        <Button
-                          variant="outlined"
-                          startIcon={<Launch />}
-                          sx={{
-                            borderColor: 'white',
-                            color: 'white',
-                            '&:hover': { 
-                              borderColor: 'white', 
-                              bgcolor: 'rgba(255,255,255,0.1)' 
-                            }
-                          }}
-                        >
-                          Details
-                        </Button>
-                      </Stack>
+                      )}
                     </Box>
                   </Box>
                   <CardContent sx={{ p: 3 }}>

@@ -7,6 +7,7 @@ export interface Project {
   tags: string[];
   featured: boolean;
   year: string;
+  viewUrl?: string;
 }
 
 class PortfolioService {
@@ -85,7 +86,19 @@ class PortfolioService {
   initializeDefaultProjects(): void {
     const projects = this.getProjects();
     if (projects.length === 0) {
-      const defaultProjects: Project[] = [];
+      const defaultProjects: Project[] = [
+        {
+          id: Date.now(),
+          title: 'Sample Project',
+          category: 'web-design',
+          description: 'This is a sample project to demonstrate the new URL functionality. You can add a View URL to make the button functional.',
+          image: '/logos/PrimaryLogo.svg',
+          tags: ['React', 'TypeScript', 'Material-UI'],
+          featured: true,
+          year: '2024',
+          viewUrl: 'https://example.com'
+        }
+      ];
       this.saveProjects(defaultProjects);
     }
   }

@@ -16,6 +16,7 @@ import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
 import Visibility from '@mui/icons-material/Visibility';
 import Settings from '@mui/icons-material/Settings';
+import Launch from '@mui/icons-material/Launch';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import AdminProjectModal from '../../components/AdminProjectModal';
@@ -277,6 +278,25 @@ const AdminDashboard: React.FC = () => {
                             </Box>
                           </Box>
                           <Box sx={{ display: 'flex', gap: 1 }}>
+                            {project.viewUrl && (
+                              <Box 
+                                sx={{ 
+                                  px: 1, 
+                                  py: 0.5, 
+                                  borderRadius: 1, 
+                                  bgcolor: 'success.main',
+                                  color: 'white',
+                                  fontSize: '0.75rem',
+                                  fontWeight: 600,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 0.5
+                                }}
+                              >
+                                <Launch sx={{ fontSize: 16 }} />
+                                Link
+                              </Box>
+                            )}
                             <IconButton 
                               size="small" 
                               onClick={(e) => {
@@ -308,6 +328,13 @@ const AdminDashboard: React.FC = () => {
                         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
                           {project.description}
                         </Typography>
+                        {project.viewUrl && (
+                          <Box sx={{ mb: 2 }}>
+                            <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary' }}>
+                              View URL: {project.viewUrl}
+                            </Typography>
+                          </Box>
+                        )}
                                                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                            {project.tags.map((tag, index) => (
                              <Box 

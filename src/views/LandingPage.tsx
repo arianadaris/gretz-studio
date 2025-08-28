@@ -285,7 +285,7 @@ const LandingPage: React.FC = () => {
                  </Stack>
                </Slide>
              </Grid>
-             <Grid item xs={12} md={6}>
+             <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
                 <Zoom in={isVisible} timeout={1600}>
                   <Box 
                     sx={{ 
