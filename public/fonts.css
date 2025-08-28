@@ -1,0 +1,12 @@
+/* Custom Font Declarations */
+
+/* Primary Font - Milyuna */
+@font-face {
+  font-family: 'Milyuna';
+  src: url('./fonts/Milyuna-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Montserrat Font is now loaded via Google Fonts link in index.html */ 
