@@ -14,19 +14,24 @@ import Slide from '@mui/material/Slide';
 import Zoom from '@mui/material/Zoom';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
 import Visibility from '@mui/icons-material/Visibility';
 import Launch from '@mui/icons-material/Launch';
 import Star from '@mui/icons-material/Star';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
+
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import ContactCTA from '../components/ContactCTA';
+import { portfolioService, Project } from '../services/portfolioService';
 
 const PortfolioPage: React.FC = () => {
   const theme = useTheme();
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [expandedDescriptions, setExpandedDescriptions] = useState<{ [key: string]: boolean }>({});
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
@@ -40,104 +45,20 @@ const PortfolioPage: React.FC = () => {
 
   const categories = [
     { value: 'all', label: 'All Projects' },
-    { value: 'branding', label: 'Branding' },
-    { value: 'digital', label: 'Digital' },
-    { value: 'print', label: 'Print' },
-    { value: 'ui-ux', label: 'UI/UX' }
+    ...portfolioService.getCategoriesWithInfo().map(cat => ({
+      value: cat.name,
+      label: cat.label
+    }))
   ];
 
-  const projects = [
-    {
-      id: 1,
-      title: 'TechCorp Brand Identity',
-      category: 'branding',
-      description: 'Complete brand identity redesign for a technology startup, including logo, color palette, and brand guidelines.',
-      image: '/logos/PrimaryLogo.svg',
-      tags: ['Logo Design', 'Brand Guidelines', 'Color Palette'],
-      featured: true,
-      year: '2024'
-    },
-    {
-      id: 2,
-      title: 'E-commerce Website Design',
-      category: 'digital',
-      description: 'Modern e-commerce website with intuitive user experience and mobile-first design approach.',
-      image: '/logos/SecondaryLogo.svg',
-      tags: ['Web Design', 'E-commerce', 'Responsive'],
-      featured: true,
-      year: '2024'
-    },
-    {
-      id: 3,
-      title: 'Marketing Campaign Materials',
-      category: 'print',
-      description: 'Comprehensive marketing campaign including brochures, business cards, and promotional materials.',
-      image: '/logos/Submark.svg',
-      tags: ['Print Design', 'Marketing', 'Brochures'],
-      featured: false,
-      year: '2023'
-    },
-    {
-      id: 4,
-      title: 'Mobile App Interface',
-      category: 'ui-ux',
-      description: 'User interface design for a mobile application focusing on accessibility and user experience.',
-      image: '/logos/PrimaryLogo.svg',
-      tags: ['Mobile Design', 'UI/UX', 'Prototyping'],
-      featured: true,
-      year: '2023'
-    },
-    {
-      id: 5,
-      title: 'Restaurant Branding',
-      category: 'branding',
-      description: 'Complete branding package for a local restaurant including logo, menu design, and signage.',
-      image: '/logos/SecondaryLogo.svg',
-      tags: ['Logo Design', 'Menu Design', 'Signage'],
-      featured: false,
-      year: '2023'
-    },
-    {
-      id: 6,
-      title: 'Social Media Graphics',
-      category: 'digital',
-      description: 'Engaging social media content and graphics for various platforms and campaigns.',
-      image: '/logos/Submark.svg',
-      tags: ['Social Media', 'Graphics', 'Content'],
-      featured: false,
-      year: '2023'
-    },
-    {
-      id: 7,
-      title: 'Corporate Presentation',
-      category: 'print',
-      description: 'Professional presentation design and corporate materials for client meetings.',
-      image: '/logos/PrimaryLogo.svg',
-      tags: ['Presentations', 'Corporate', 'Print'],
-      featured: false,
-      year: '2022'
-    },
-    {
-      id: 8,
-      title: 'Dashboard Interface',
-      category: 'ui-ux',
-      description: 'Analytics dashboard design with focus on data visualization and user experience.',
-      image: '/logos/SecondaryLogo.svg',
-      tags: ['Dashboard', 'Analytics', 'Data Viz'],
-      featured: true,
-      year: '2022'
-    },
-    {
-      id: 9,
-      title: 'Event Branding',
-      category: 'branding',
-      description: 'Complete event branding including invitations, signage, and promotional materials.',
-      image: '/logos/Submark.svg',
-      tags: ['Event Design', 'Invitations', 'Signage'],
-      featured: false,
-      year: '2022'
-    }
-  ];
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    // Initialize default projects if none exist
+    portfolioService.initializeDefaultProjects();
+    // Load projects from service
+    setProjects(portfolioService.getProjects());
+  }, []);
 
   const filteredProjects = selectedCategory === 'all' 
     ? projects 
@@ -145,6 +66,18 @@ const PortfolioPage: React.FC = () => {
 
   const handleCategoryChange = (event: React.SyntheticEvent, newValue: string) => {
     setSelectedCategory(newValue);
+  };
+
+  const handleDescriptionToggle = (projectId: number) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [projectId.toString()]: !prev[projectId.toString()]
+    }));
+  };
+
+  const truncateDescription = (description: string, maxLength: number = 120) => {
+    if (description.length <= maxLength) return description;
+    return description.substring(0, maxLength) + '...';
   };
 
   return (
@@ -336,7 +269,7 @@ const PortfolioPage: React.FC = () => {
         <Grid container spacing={4}>
           {filteredProjects.map((project, index) => (
             <Grid item xs={12} sm={6} md={4} key={project.id}>
-              <Grow in={isVisible} timeout={2000 + (index * 1000)}>
+              <Grow in={isVisible} timeout={2000 + (index * 500)}>
                 <Card 
                   sx={{ 
                     height: '100%',
@@ -354,7 +287,7 @@ const PortfolioPage: React.FC = () => {
                         opacity: 1
                       },
                       '& .project-image': {
-                        transform: 'scale(1.1)'
+                        transform: 'scale(0.9)',
                       }
                     }
                   }}
@@ -365,23 +298,36 @@ const PortfolioPage: React.FC = () => {
                       sx={{
                         width: '100%',
                         height: '100%',
-                        background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'transform 0.3s ease'
+                        background: `url('/logos/Mockup.svg') no-repeat center center`,
+                        backgroundSize: 'contain',
+                        transition: 'transform 0.3s ease',
+                        overflow: 'hidden',
+                        position: 'relative'
                       }}
                     >
-                      <img 
-                        src={project.image} 
-                        alt={project.title}
-                        style={{
-                          width: '60%',
-                          height: '60%',
-                          objectFit: 'contain',
-                          filter: 'drop-shadow(0 5px 15px rgba(50, 60, 85, 0.1))'
+                      {/* Project image positioned within the black screen area */}
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: '2.25%', // Position within the black screen area
+                          left: '14%', // Position within the black screen area
+                          width: '72.5%', // Width of the black screen area
+                          height: '59%', // Height of the black screen area
+                          overflow: 'hidden',
+                          borderRadius: '2px'
                         }}
-                      />
+                      >
+                        <img 
+                          src={project.image} 
+                          alt={project.title}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3))'
+                          }}
+                        />
+                      </Box>
                     </Box>
                     {project.featured && (
                       <Chip 
@@ -445,18 +391,19 @@ const PortfolioPage: React.FC = () => {
                     </Box>
                   </Box>
                   <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                      <Typography 
-                        variant="h6" 
-                        component="h3" 
-                        sx={{ 
-                          fontWeight: 600, 
-                          color: 'text.primary',
-                          lineHeight: 1.3
-                        }}
-                      >
-                        {project.title}
-                      </Typography>
+                    <Typography 
+                      variant="h6" 
+                      component="h3" 
+                      sx={{ 
+                        fontWeight: 600, 
+                        color: 'text.primary',
+                        lineHeight: 1.3,
+                        mb: 2
+                      }}
+                    >
+                      {project.title}
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                       <Chip 
                         label={project.year} 
                         size="small" 
@@ -466,31 +413,58 @@ const PortfolioPage: React.FC = () => {
                           fontWeight: 500
                         }} 
                       />
+                      <Chip 
+                        label={portfolioService.getCategoryLabel(project.category)} 
+                        size="small" 
+                        sx={{ 
+                          bgcolor: portfolioService.getCategoryColor(project.category), 
+                          color: 'white',
+                          fontWeight: 500,
+                          fontSize: '0.7rem'
+                        }} 
+                      />
                     </Box>
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        color: 'text.secondary', 
-                        mb: 2,
-                        lineHeight: 1.5
-                      }}
-                    >
-                      {project.description}
-                    </Typography>
-                    <Stack direction="row" spacing={1} flexWrap="wrap">
-                      {project.tags.map((tag, tagIndex) => (
-                        <Chip 
-                          key={tagIndex}
-                          label={tag} 
-                          size="small" 
-                          sx={{ 
-                            bgcolor: 'background.paper', 
-                            color: 'text.secondary',
-                            fontSize: '0.75rem'
-                          }} 
-                        />
+                    <Box sx={{ mb: 2 }}>
+                      <Typography 
+                        variant="body2" 
+                        onClick={(e) => {
+                          if (project.description.length > 120) {
+                            e.stopPropagation();
+                            handleDescriptionToggle(project.id);
+                          }
+                        }}
+                        sx={{ 
+                          color: 'text.secondary', 
+                          lineHeight: 1.5,
+                          cursor: project.description.length > 120 ? 'pointer' : 'default',
+                          '&:hover': project.description.length > 120 ? {
+                            color: 'secondary.main',
+                            textDecoration: 'underline'
+                          } : {}
+                        }}
+                      >
+                        {expandedDescriptions[project.id.toString()] 
+                          ? project.description 
+                          : truncateDescription(project.description)
+                        }
+                      </Typography>
+                    </Box>
+                    <Grid container spacing={1} sx={{ mb: 2 }}>
+                      {project.tags.map((tag: string, tagIndex: number) => (
+                        <Grid item key={tagIndex}>
+                          <Chip 
+                            label={tag} 
+                            size="small" 
+                            sx={{ 
+                              bgcolor: portfolioService.getTagColor(tag), 
+                              color: 'white',
+                              fontSize: '0.75rem',
+                              fontWeight: 500
+                            }} 
+                          />
+                        </Grid>
                       ))}
-                    </Stack>
+                    </Grid>
                   </CardContent>
                 </Card>
               </Grow>

@@ -20,6 +20,7 @@ import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
+import { aboutService } from '../services/aboutService';
 
 const AboutPage: React.FC = () => {
   const theme = useTheme();
@@ -37,13 +38,11 @@ const AboutPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const personalInfo = {
-    name: 'Ariana Daris',
-    role: 'Creative Director & Founder',
-    bio: 'I am passionate about creating meaningful brand experiences that connect with audiences and drive results. With a fresh perspective and dedication to excellence, I bring creativity and vision to every project.',
-    avatar: '/logos/Headshot.jpg',
-    skills: ['Brand Strategy', 'Creative Direction', 'Visual Design', 'Brand Identity', 'Digital Design', 'Creative Strategy']
-  };
+  const [personalInfo, setPersonalInfo] = useState(aboutService.getPersonalInfo());
+
+  useEffect(() => {
+    setPersonalInfo(aboutService.getPersonalInfo());
+  }, []);
 
   const values = [
     {

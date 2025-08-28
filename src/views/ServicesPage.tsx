@@ -54,89 +54,52 @@ const ServicesPage: React.FC = () => {
 
   const services = [
     {
-      icon: <Brush sx={{ fontSize: 50, color: theme.palette.secondary.main }} />,
-      title: 'Brand Identity Design',
-      description: 'Complete brand identity development including logo design, color palettes, typography, and brand guidelines.',
-      features: [
-        'Logo design and variations',
-        'Color palette development',
-        'Typography selection',
-        'Brand guidelines document',
-        'Business card design',
-        'Letterhead and stationery'
-      ],
-      price: 'Starting at $2,500'
-    },
-    {
       icon: <Web sx={{ fontSize: 50, color: theme.palette.secondary.main }} />,
-      title: 'Website Design',
-      description: 'Modern, responsive website design that engages visitors and drives conversions.',
-      features: [
-        'Custom website design',
-        'Mobile-responsive layout',
-        'User experience optimization',
-        'Content management system',
-        'SEO optimization',
-        'Performance optimization'
+      title: 'Starter Site',
+      subtitle: 'Polished 1–3 page brochure site',
+      description: 'Perfect for small businesses and startups looking for a professional online presence.',
+      scope: [
+        'Strategy mini',
+        'Design',
+        'Build',
+        'Basic CMS',
+        'Forms',
+        'Analytics'
       ],
-      price: 'Starting at $3,500'
-    },
-    {
-      icon: <Smartphone sx={{ fontSize: 50, color: theme.palette.secondary.main }} />,
-      title: 'UI/UX Design',
-      description: 'User-centered design solutions for web and mobile applications.',
-      features: [
-        'User research and analysis',
-        'Wireframing and prototyping',
-        'User interface design',
-        'User experience optimization',
-        'Interactive prototypes',
-        'Usability testing'
-      ],
-      price: 'Starting at $4,000'
-    },
-    {
-      icon: <Print sx={{ fontSize: 50, color: theme.palette.secondary.main }} />,
-      title: 'Print Design',
-      description: 'Professional print materials that make a lasting impression.',
-      features: [
-        'Brochures and catalogs',
-        'Business cards and stationery',
-        'Posters and banners',
-        'Packaging design',
-        'Marketing materials',
-        'Print-ready files'
-      ],
-      price: 'Starting at $1,500'
-    },
-    {
-      icon: <Business sx={{ fontSize: 50, color: theme.palette.secondary.main }} />,
-      title: 'Marketing Design',
-      description: 'Strategic marketing materials that help you reach and engage your target audience.',
-      features: [
-        'Social media graphics',
-        'Email marketing templates',
-        'Digital advertisements',
-        'Presentation design',
-        'Infographics',
-        'Campaign materials'
-      ],
-      price: 'Starting at $1,200'
+      timeline: '~2–3 weeks',
+      investment: '$1.2k–$2.5k',
+      standardPrice: '(std $3k–$6k)'
     },
     {
       icon: <DesignServices sx={{ fontSize: 50, color: theme.palette.secondary.main }} />,
-      title: 'Consultation & Strategy',
-      description: 'Strategic guidance to help you make informed design decisions.',
-      features: [
-        'Brand strategy consultation',
-        'Design audit and analysis',
-        'Competitive research',
-        'Design system development',
-        'Project planning',
-        'Ongoing support'
+      title: 'Brand Website',
+      subtitle: 'Custom site for a boutique brand (5–8 pages)',
+      description: 'Comprehensive website solution for established brands looking to elevate their digital presence.',
+      scope: [
+        'Full discovery',
+        'Design system',
+        'CMS',
+        'Tasteful animations'
       ],
-      price: 'Starting at $150/hour'
-    }
+      timeline: '~4–8 weeks',
+      investment: '$3k–$6k',
+      standardPrice: '(std $6k–$12k)'
+    },
+    {
+      icon: <Business sx={{ fontSize: 50, color: theme.palette.secondary.main }} />,
+      title: 'E‑commerce Lite',
+      subtitle: 'Services or small catalog with checkout',
+      description: 'Complete e-commerce solution for businesses ready to sell online.',
+      scope: [
+        '5–10 products/services',
+        'Payments',
+        'Tax/shipping config'
+      ],
+      timeline: '~5–8 weeks',
+      investment: '$4k–$8k',
+      standardPrice: '(std $8k–$16k)'
+    },
+    
   ];
 
   const processSteps = [
@@ -323,7 +286,7 @@ const ServicesPage: React.FC = () => {
         <Grid container spacing={4}>
           {services.map((service, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <Grow in={isVisible} timeout={2000 + (index * 500)}>
+              <Grow in={isVisible} timeout={2000 + (index * 250)}>
                 <Card 
                   sx={{ 
                     height: '100%',
@@ -348,7 +311,7 @@ const ServicesPage: React.FC = () => {
                       variant="h6" 
                       component="h3" 
                       sx={{ 
-                        mb: 2, 
+                        mb: 1, 
                         fontWeight: 600, 
                         color: 'text.primary', 
                         textAlign: 'center',
@@ -356,6 +319,18 @@ const ServicesPage: React.FC = () => {
                       }}
                     >
                       {service.title}
+                    </Typography>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        mb: 2, 
+                        color: theme.palette.secondary.main, 
+                        fontWeight: 500, 
+                        textAlign: 'center',
+                        fontSize: '0.9rem'
+                      }}
+                    >
+                      {service.subtitle}
                     </Typography>
                     <Typography 
                       variant="body2" 
@@ -369,14 +344,25 @@ const ServicesPage: React.FC = () => {
                       {service.description}
                     </Typography>
                     <Box sx={{ mb: 3 }}>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          mb: 2, 
+                          fontWeight: 600, 
+                          color: 'text.primary',
+                          fontSize: '0.9rem'
+                        }}
+                      >
+                        Scope:
+                      </Typography>
                       <List dense>
-                        {service.features.map((feature, featureIndex) => (
-                          <ListItem key={featureIndex} sx={{ px: 0 }}>
+                        {service.scope.map((item, itemIndex) => (
+                          <ListItem key={itemIndex} sx={{ px: 0 }}>
                             <ListItemIcon sx={{ minWidth: 30 }}>
                               <Check sx={{ color: theme.palette.secondary.main, fontSize: 20 }} />
                             </ListItemIcon>
                             <ListItemText 
-                              primary={feature} 
+                              primary={item} 
                               sx={{ 
                                 '& .MuiTypography-root': { 
                                   fontSize: '0.9rem',
@@ -388,6 +374,19 @@ const ServicesPage: React.FC = () => {
                         ))}
                       </List>
                     </Box>
+                    <Box sx={{ mb: 2 }}>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          mb: 1, 
+                          fontWeight: 600, 
+                          color: 'text.primary',
+                          fontSize: '0.9rem'
+                        }}
+                      >
+                        Timeline: {service.timeline}
+                      </Typography>
+                    </Box>
                     <Box sx={{ mt: 'auto' }}>
                       <Typography 
                         variant="h6" 
@@ -395,10 +394,21 @@ const ServicesPage: React.FC = () => {
                           color: theme.palette.secondary.main, 
                           fontWeight: 600, 
                           textAlign: 'center',
-                          mb: 2
+                          mb: 1
                         }}
                       >
-                        {service.price}
+                        {service.investment}
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          color: 'text.secondary', 
+                          textAlign: 'center',
+                          mb: 2,
+                          fontSize: '0.8rem'
+                        }}
+                      >
+                        {service.standardPrice}
                       </Typography>
                       <Button 
                         variant="outlined" 

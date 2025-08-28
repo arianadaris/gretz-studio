@@ -39,15 +39,17 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
 
   const handlePrimaryClick = () => {
     navigate(primaryButtonPath);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   const handleSecondaryClick = () => {
     navigate(secondaryButtonPath);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   const renderContent = () => (
     <>
-      <Fade in={scrollY > 600} timeout={800}>
+      <Fade in={scrollY > 200} timeout={800}>
         <Typography 
           variant="h3" 
           component="h2" 
@@ -61,7 +63,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
           {title}
         </Typography>
       </Fade>
-      <Fade in={scrollY > 650} timeout={1000}>
+      <Fade in={scrollY > 250} timeout={1000}>
         <Typography 
           variant="body1" 
           sx={{ 
@@ -75,7 +77,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
           {description}
         </Typography>
       </Fade>
-      <Fade in={scrollY > 700} timeout={1200}>
+      <Fade in={scrollY > 300} timeout={1200}>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ justifyContent: 'center' }}>
           <Button 
             variant="contained" 
