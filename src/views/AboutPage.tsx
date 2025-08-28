@@ -16,15 +16,17 @@ import StarIcon from '@mui/icons-material/Star';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
-import ArrowForward from '@mui/icons-material/ArrowForward';
 import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import ContactCTA from '../components/ContactCTA';
 
 const AboutPage: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -100,69 +102,77 @@ const AboutPage: React.FC = () => {
          />
          
          {/* Decorative Elements */}
-         <Box
-           sx={{
-             position: 'absolute',
-             top: '10%',
-             right: '10%',
-             opacity: 0.6,
-             animation: 'sparkle 3s ease-in-out infinite',
-             '@keyframes sparkle': {
-               '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
-               '50%': { opacity: 1, transform: 'scale(1.1)' }
-             }
-           }}
-         >
-           <AutoAwesome sx={{ fontSize: 40, color: theme.palette.secondary.main }} />
-         </Box>
+         {!isMobile && (
+           <Box
+             sx={{
+               position: 'absolute',
+               top: '10%',
+               right: '10%',
+               opacity: 0.6,
+               animation: 'sparkle 3s ease-in-out infinite',
+               '@keyframes sparkle': {
+                 '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
+                 '50%': { opacity: 1, transform: 'scale(1.1)' }
+               }
+             }}
+           >
+             <AutoAwesome sx={{ fontSize: 40, color: theme.palette.secondary.main }} />
+           </Box>
+         )}
          
-                 <Box
-          sx={{
-            position: 'absolute',
-            bottom: '20%',
-            left: '5%',
-            opacity: 0.4,
-            animation: 'float 4s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-10px)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 30, color: theme.palette.secondary.light }} />
-        </Box>
+                 {!isMobile && (
+                   <Box
+                     sx={{
+                       position: 'absolute',
+                       bottom: '20%',
+                       left: '5%',
+                       opacity: 0.4,
+                       animation: 'float 4s ease-in-out infinite',
+                       '@keyframes float': {
+                         '0%, 100%': { transform: 'translateY(0px)' },
+                         '50%': { transform: 'translateY(-10px)' }
+                       }
+                     }}
+                   >
+                     <AutoAwesome sx={{ fontSize: 30, color: theme.palette.secondary.light }} />
+                   </Box>
+                 )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '30%',
-            left: '15%',
-            opacity: 0.3,
-            animation: 'sparkle 4.5s ease-in-out infinite',
-            '@keyframes sparkle': {
-              '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-              '50%': { opacity: 0.8, transform: 'scale(1.2)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 25, color: theme.palette.secondary.main }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '30%',
+              left: '15%',
+              opacity: 0.3,
+              animation: 'sparkle 4.5s ease-in-out infinite',
+              '@keyframes sparkle': {
+                '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
+                '50%': { opacity: 0.8, transform: 'scale(1.2)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 25, color: theme.palette.secondary.main }} />
+          </Box>
+        )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '40%',
-            right: '20%',
-            opacity: 0.5,
-            animation: 'float 6s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-15px)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 20, color: theme.palette.secondary.light }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '40%',
+              right: '20%',
+              opacity: 0.5,
+              animation: 'float 6s ease-in-out infinite',
+              '@keyframes float': {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-15px)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 20, color: theme.palette.secondary.light }} />
+          </Box>
+        )}
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
             <Typography 
@@ -377,110 +387,13 @@ const AboutPage: React.FC = () => {
              </Container>
 
        {/* Get in Touch CTA Section */}
-       <Box sx={{ 
-         py: 14, 
-         background: 'linear-gradient(135deg, #FFF8F8 0%, #F8F9FF 100%)',
-         position: 'relative'
-       }}>
-         {/* Subtle pattern overlay */}
-         <Box
-           sx={{
-             position: 'absolute',
-             top: 0,
-             left: 0,
-             right: 0,
-             bottom: 0,
-             opacity: 0.3,
-             background: `
-               radial-gradient(circle at 25% 25%, ${theme.palette.secondary.main}1A 0%, transparent 50%),
-               radial-gradient(circle at 75% 75%, ${theme.palette.secondary.light}1A 0%, transparent 50%)
-             `
-           }}
-         />
-         <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-           <Fade in={scrollY > 900} timeout={800}>
-             <Box sx={{ 
-               p: 6, 
-               borderRadius: '25px',
-               background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)',
-               border: `2px solid ${theme.palette.secondary.main}1A`,
-               boxShadow: `0 20px 40px ${theme.palette.secondary.main}1A`
-             }}>
-               <Typography 
-                 variant="h3" 
-                 component="h2" 
-                 sx={{ 
-                   mb: 4, 
-                   fontWeight: 600, 
-                   color: '#2D3748',
-                   fontFamily: '"Georgia", serif'
-                 }}
-               >
-                 Ready to Start Your Project?
-               </Typography>
-               <Typography 
-                 variant="body1" 
-                 sx={{ 
-                   mb: 6, 
-                   fontSize: '1.3rem', 
-                   color: '#4A5568',
-                   lineHeight: 1.6,
-                   fontFamily: '"Georgia", serif'
-                 }}
-               >
-                 Let's collaborate to bring your creative vision to life. 
-                 I'm excited to hear about your project and discuss how we can work together.
-               </Typography>
-               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ justifyContent: 'center' }}>
-                 <Button 
-                   variant="contained" 
-                   size="large"
-                   endIcon={<ArrowForward />}
-                   onClick={() => navigate('/contact')}
-                   sx={{ 
-                     bgcolor: theme.palette.secondary.main, 
-                     color: theme.palette.secondary.contrastText,
-                     px: 5,
-                     py: 1.5,
-                     borderRadius: '25px',
-                     boxShadow: `0 10px 25px ${theme.palette.secondary.main}4D`,
-                     '&:hover': { 
-                       bgcolor: theme.palette.secondary.dark,
-                       transform: 'translateY(-3px)',
-                       boxShadow: `0 15px 35px ${theme.palette.secondary.main}66`
-                     },
-                     transition: 'all 0.3s ease'
-                   }}
-                 >
-                   Get in Touch
-                 </Button>
-                 <Button 
-                   variant="outlined" 
-                   size="large"
-                   onClick={() => navigate('/portfolio')}
-                   sx={{ 
-                     borderColor: theme.palette.secondary.main, 
-                     color: theme.palette.secondary.main,
-                     px: 5,
-                     py: 1.5,
-                     borderRadius: '25px',
-                     borderWidth: '2px',
-                     '&:hover': { 
-                       borderColor: theme.palette.secondary.dark, 
-                       bgcolor: `${theme.palette.secondary.main}0D`,
-                       transform: 'translateY(-3px)',
-                       boxShadow: `0 10px 25px ${theme.palette.secondary.main}33`
-                     },
-                     transition: 'all 0.3s ease'
-                   }}
-                 >
-                   View Portfolio
-                 </Button>
-               </Stack>
-             </Box>
-           </Fade>
-         </Container>
-       </Box>
+       <ContactCTA 
+         title="Ready to Start Your Project?"
+         description="Let's collaborate to bring your creative vision to life. I'm excited to hear about your project and discuss how we can work together."
+         primaryButtonText="Get in Touch"
+         secondaryButtonText="View Portfolio"
+         scrollY={scrollY}
+       />
      </Box>
    );
  };

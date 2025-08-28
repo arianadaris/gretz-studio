@@ -34,11 +34,14 @@ import {
   AutoAwesome
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
+import ContactCTA from '../components/ContactCTA';
 
 const ServicesPage: React.FC = () => {
   const theme = useTheme();
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -203,69 +206,77 @@ const ServicesPage: React.FC = () => {
         />
         
         {/* Decorative Elements */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '10%',
-            right: '10%',
-            opacity: 0.6,
-            animation: 'sparkle 3s ease-in-out infinite',
-            '@keyframes sparkle': {
-              '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
-              '50%': { opacity: 1, transform: 'scale(1.1)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 40, color: theme.palette.secondary.main }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '10%',
+              right: '10%',
+              opacity: 0.6,
+              animation: 'sparkle 3s ease-in-out infinite',
+              '@keyframes sparkle': {
+                '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
+                '50%': { opacity: 1, transform: 'scale(1.1)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 40, color: theme.palette.secondary.main }} />
+          </Box>
+        )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '20%',
-            left: '5%',
-            opacity: 0.4,
-            animation: 'float 4s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-10px)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 30, color: theme.palette.secondary.light }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '20%',
+              left: '5%',
+              opacity: 0.4,
+              animation: 'float 4s ease-in-out infinite',
+              '@keyframes float': {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-10px)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 30, color: theme.palette.secondary.light }} />
+          </Box>
+        )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '30%',
-            left: '15%',
-            opacity: 0.3,
-            animation: 'sparkle 4.5s ease-in-out infinite',
-            '@keyframes sparkle': {
-              '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-              '50%': { opacity: 0.8, transform: 'scale(1.2)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 25, color: theme.palette.secondary.main }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '30%',
+              left: '15%',
+              opacity: 0.3,
+              animation: 'sparkle 4.5s ease-in-out infinite',
+              '@keyframes sparkle': {
+                '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
+                '50%': { opacity: 0.8, transform: 'scale(1.2)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 25, color: theme.palette.secondary.main }} />
+          </Box>
+        )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '40%',
-            right: '20%',
-            opacity: 0.5,
-            animation: 'float 6s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-15px)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 20, color: theme.palette.secondary.light }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '40%',
+              right: '20%',
+              opacity: 0.5,
+              animation: 'float 6s ease-in-out infinite',
+              '@keyframes float': {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-15px)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 20, color: theme.palette.secondary.light }} />
+          </Box>
+        )}
         
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
@@ -538,71 +549,13 @@ const ServicesPage: React.FC = () => {
       </Container>
 
       {/* CTA Section */}
-      <Box sx={{ bgcolor: 'background.paper', py: 12 }}>
-        <Container maxWidth="md" sx={{ textAlign: 'center' }}>
-          <Fade in={scrollY > 800} timeout={800}>
-            <Typography 
-              variant="h3" 
-              component="h2" 
-              sx={{ mb: 4, fontWeight: 600, color: 'text.primary' }}
-            >
-              Ready to Get Started?
-            </Typography>
-          </Fade>
-          <Fade in={scrollY > 850} timeout={1000}>
-            <Typography 
-              variant="body1" 
-              sx={{ mb: 6, fontSize: '1.1rem', color: 'text.secondary', lineHeight: 1.6 }}
-            >
-              Let's discuss your project and see how we can help bring your vision to life. 
-              Schedule a free consultation to get started.
-            </Typography>
-          </Fade>
-          <Fade in={scrollY > 900} timeout={1200}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ justifyContent: 'center' }}>
-              <Button 
-                variant="contained" 
-                size="large"
-                endIcon={<ArrowForward />}
-                sx={{ 
-                  bgcolor: theme.palette.secondary.main, 
-                  color: 'white',
-                  px: 4,
-                  py: 1.5,
-                  fontWeight: 600,
-                  '&:hover': { 
-                    bgcolor: theme.palette.secondary.dark,
-                    transform: 'translateY(-2px)',
-                    boxShadow: `0 8px 25px ${theme.palette.secondary.main}30`
-                  },
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                Schedule Consultation
-              </Button>
-              <Button 
-                variant="outlined" 
-                size="large"
-                sx={{ 
-                  borderColor: 'primary.main', 
-                  color: 'primary.main',
-                  px: 4,
-                  py: 1.5,
-                  fontWeight: 600,
-                  '&:hover': { 
-                    borderColor: 'primary.main', 
-                    bgcolor: 'rgba(45, 55, 72, 0.05)',
-                    transform: 'translateY(-2px)'
-                  },
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                View Portfolio
-              </Button>
-            </Stack>
-          </Fade>
-        </Container>
-      </Box>
+      <ContactCTA 
+        title="Ready to Get Started?"
+        description="Let's discuss your project and see how we can help bring your vision to life. Schedule a free consultation to get started."
+        primaryButtonText="Schedule Consultation"
+        secondaryButtonText="View Portfolio"
+        scrollY={scrollY}
+      />
     </Box>
   );
 };

@@ -38,6 +38,18 @@ const Navigation: React.FC = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    scrollToTop();
+  };
+
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
@@ -73,7 +85,7 @@ const Navigation: React.FC = () => {
           <ListItem 
             key={item.label} 
             button 
-            onClick={() => navigate(item.path)}
+            onClick={() => handleNavigation(item.path)}
             sx={{
               backgroundColor: isActive(item.path) ? 'rgba(255, 179, 133, 0.1)' : 'transparent',
               '&:hover': {
@@ -122,7 +134,7 @@ const Navigation: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center'
                 }}
-                onClick={() => navigate('/')}
+                onClick={() => handleNavigation('/')}
               >
                 <img 
                   src="/logos/PrimaryLogo.svg" 
@@ -163,7 +175,7 @@ const Navigation: React.FC = () => {
                 {navItems.map((item) => (
                   <Button
                     key={item.label}
-                    onClick={() => navigate(item.path)}
+                    onClick={() => handleNavigation(item.path)}
                     sx={{
                       color: isOnLandingPage 
                         ? (scrolled ? '#323C55' : '#777')

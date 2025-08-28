@@ -28,11 +28,13 @@ import {
   AutoAwesome
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 const ContactPage: React.FC = () => {
   const theme = useTheme();
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -159,69 +161,77 @@ const ContactPage: React.FC = () => {
         />
         
         {/* Decorative Elements */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '10%',
-            right: '10%',
-            opacity: 0.6,
-            animation: 'sparkle 3s ease-in-out infinite',
-            '@keyframes sparkle': {
-              '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
-              '50%': { opacity: 1, transform: 'scale(1.1)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 40, color: theme.palette.secondary.main }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '10%',
+              right: '10%',
+              opacity: 0.6,
+              animation: 'sparkle 3s ease-in-out infinite',
+              '@keyframes sparkle': {
+                '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
+                '50%': { opacity: 1, transform: 'scale(1.1)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 40, color: theme.palette.secondary.main }} />
+          </Box>
+        )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '20%',
-            left: '5%',
-            opacity: 0.4,
-            animation: 'float 4s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-10px)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 30, color: theme.palette.secondary.light }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '20%',
+              left: '5%',
+              opacity: 0.4,
+              animation: 'float 4s ease-in-out infinite',
+              '@keyframes float': {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-10px)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 30, color: theme.palette.secondary.light }} />
+          </Box>
+        )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '30%',
-            left: '15%',
-            opacity: 0.3,
-            animation: 'sparkle 4.5s ease-in-out infinite',
-            '@keyframes sparkle': {
-              '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-              '50%': { opacity: 0.8, transform: 'scale(1.2)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 25, color: theme.palette.secondary.main }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '30%',
+              left: '15%',
+              opacity: 0.3,
+              animation: 'sparkle 4.5s ease-in-out infinite',
+              '@keyframes sparkle': {
+                '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
+                '50%': { opacity: 0.8, transform: 'scale(1.2)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 25, color: theme.palette.secondary.main }} />
+          </Box>
+        )}
         
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '40%',
-            right: '20%',
-            opacity: 0.5,
-            animation: 'float 6s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-15px)' }
-            }
-          }}
-        >
-          <AutoAwesome sx={{ fontSize: 20, color: theme.palette.secondary.light }} />
-        </Box>
+        {!isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '40%',
+              right: '20%',
+              opacity: 0.5,
+              animation: 'float 6s ease-in-out infinite',
+              '@keyframes float': {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-15px)' }
+              }
+            }}
+          >
+            <AutoAwesome sx={{ fontSize: 20, color: theme.palette.secondary.light }} />
+          </Box>
+        )}
         
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
@@ -266,7 +276,6 @@ const ContactPage: React.FC = () => {
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': { 
-                  transform: 'translateY(-4px)',
                   boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
                   background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)'
                 }
