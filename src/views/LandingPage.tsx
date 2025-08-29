@@ -27,6 +27,7 @@ import Celebration from '@mui/icons-material/Celebration';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
+import { aboutService } from '@/services/aboutService';
 
 const LandingPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -35,6 +36,11 @@ const LandingPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [personalInfo, setPersonalInfo] = useState(aboutService.getPersonalInfo());
+
+  useEffect(() => {
+    setPersonalInfo(aboutService.getPersonalInfo());
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -315,7 +321,7 @@ const LandingPage: React.FC = () => {
                     >
                       <Box
                         component="img"
-                        src="/logos/headshot.jpg"
+                        src={personalInfo.avatar}
                         alt="Professional headshot"
                         sx={{
                           width: '90%',
