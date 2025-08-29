@@ -311,17 +311,21 @@ const LandingPage: React.FC = () => {
                         justifyContent: 'center',
                         position: 'relative',
                         animation: 'float 6s ease-in-out infinite',
-                        '@keyframes float': {
-                          '0%, 100%': { transform: 'translateY(0px)' },
-                          '50%': { transform: 'translateY(-10px)' }
-                        }
                       }}
                     >
-                      <AutoAwesome sx={{ 
-                        fontSize: isMobile ? 60 : 80, 
-                        color: theme.palette.secondary.main,
-                        opacity: 0.7
-                      }} />
+                      <Box
+                        component="img"
+                        src="/logos/headshot.jpg"
+                        alt="Professional headshot"
+                        sx={{
+                          width: '90%',
+                          height: '90%',
+                          objectFit: 'cover',
+                          borderRadius: '50%',
+                          border: `3px solid ${theme.palette.secondary.main}30`,
+                          boxShadow: `0 8px 32px ${theme.palette.secondary.main}20`,
+                        }}
+                      />
                     </Box>
                   </Box>
                 </Zoom>
