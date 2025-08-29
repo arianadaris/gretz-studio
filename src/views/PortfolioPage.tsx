@@ -33,6 +33,7 @@ const PortfolioPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedDescriptions, setExpandedDescriptions] = useState<{ [key: string]: boolean }>({});
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -81,16 +82,16 @@ const PortfolioPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: 8 }}>
+    <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
       {/* Hero Section */}
       <Box 
         sx={{ 
           background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
           color: '#2D3748',
-          py: 12,
+          py: isMobile ? 6 : 12,
           position: 'relative',
           overflow: 'hidden',
-          minHeight: '40vh',
+          minHeight: isMobile ? '30vh' : '40vh',
           display: 'flex',
           alignItems: 'center'
         }}
@@ -194,41 +195,53 @@ const PortfolioPage: React.FC = () => {
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
             <Typography 
-              variant="h2" 
+              variant={isMobile ? "h3" : "h2"}
               component="h1" 
               align="center" 
-              sx={{ mb: 4, fontWeight: 700, color: '#2D3748' }}
+              sx={{ 
+                mb: isMobile ? 2 : 4,  
+                mt: isMobile ? 4 : 0,
+                fontWeight: 700, 
+                color: '#2D3748',
+                fontSize: isSmallMobile ? '1.8rem' : undefined
+              }}
             >
               Our Portfolio
             </Typography>
           </Fade>
           <Fade in={isVisible} timeout={1200}>
             <Typography 
-              variant="h6" 
+              variant={isMobile ? "body2" : "h6"}
               align="center" 
               sx={{ 
                 maxWidth: 800, 
                 mx: 'auto', 
                 opacity: 0.9,
                 lineHeight: 1.6,
-                color: '#2D3748'
+                color: '#2D3748',
+                px: isMobile ? 2 : 0,
+                fontSize: isSmallMobile ? '0.9rem' : undefined
               }}
             >
-              Explore our collection of creative projects that showcase our passion for design 
-              and commitment to delivering exceptional results.
+              Explore our creative journey through carefully crafted projects that showcase our passion for design and innovation.
             </Typography>
           </Fade>
         </Container>
       </Box>
 
       {/* Filter Section */}
-      <Container maxWidth="lg" sx={{ py: 12 }}>
+      <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
         <Fade in={isVisible} timeout={1500}>
-          <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Box sx={{ textAlign: 'center', mb: isMobile ? 4 : 8 }}>
             <Typography 
-              variant="h3" 
+              variant={isMobile ? "h4" : "h3"}
               component="h2" 
-              sx={{ mb: 4, fontWeight: 600, color: 'text.primary' }}
+              sx={{ 
+                mb: isMobile ? 2 : 4, 
+                fontWeight: 600, 
+                color: 'text.primary',
+                fontSize: isSmallMobile ? '1.5rem' : undefined
+              }}
             >
               Browse by Category
             </Typography>
@@ -242,8 +255,8 @@ const PortfolioPage: React.FC = () => {
                   color: 'text.secondary',
                   fontWeight: 500,
                   textTransform: 'none',
-                  fontSize: '1rem',
-                  minWidth: 120,
+                  fontSize: isMobile ? '0.9rem' : '1rem',
+                  minWidth: isMobile ? 100 : 120,
                   '&.Mui-selected': {
                     color: 'secondary.main',
                     fontWeight: 600
@@ -266,7 +279,7 @@ const PortfolioPage: React.FC = () => {
         </Fade>
 
         {/* Projects Grid */}
-        <Grid container spacing={4}>
+        <Grid container spacing={isMobile ? 2 : 4}>
           {filteredProjects.map((project, index) => (
             <Grid item xs={12} sm={6} md={4} key={project.id}>
               <Grow in={isVisible} timeout={2000 + (index * 500)}>
@@ -311,10 +324,10 @@ const PortfolioPage: React.FC = () => {
                       <Box
                         sx={{
                           position: 'absolute',
-                          top: '2.25%', // Position within the black screen area
-                          left: '14%', // Position within the black screen area
-                          width: '72.5%', // Width of the black screen area
-                          height: '59%', // Height of the black screen area
+                          top: '2.25%',
+                          left: '13%',
+                          width: '74%',
+                          height: '60%',
                           overflow: 'hidden',
                           borderRadius: '2px'
                         }}
@@ -366,6 +379,7 @@ const PortfolioPage: React.FC = () => {
                       {project.viewUrl && (
                         <Button
                           variant="contained"
+                          size={isMobile ? "small" : "medium"}
                           startIcon={<Visibility />}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -374,6 +388,7 @@ const PortfolioPage: React.FC = () => {
                           sx={{
                             bgcolor: 'white',
                             color: 'primary.main',
+                            fontSize: isMobile ? '0.8rem' : undefined,
                             '&:hover': { bgcolor: '#f5f5f5' }
                           }}
                         >
@@ -382,27 +397,29 @@ const PortfolioPage: React.FC = () => {
                       )}
                     </Box>
                   </Box>
-                  <CardContent sx={{ p: 3 }}>
+                  <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                     <Typography 
-                      variant="h6" 
+                      variant={isMobile ? "body1" : "h6"}
                       component="h3" 
                       sx={{ 
                         fontWeight: 600, 
                         color: 'text.primary',
                         lineHeight: 1.3,
-                        mb: 2
+                        mb: isMobile ? 1.5 : 2,
+                        fontSize: isSmallMobile ? '1rem' : undefined
                       }}
                     >
                       {project.title}
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 1, mb: isMobile ? 1.5 : 2 }}>
                       <Chip 
                         label={project.year} 
                         size="small" 
                         sx={{ 
                           bgcolor: `${theme.palette.secondary.main}1A`, 
                           color: 'secondary.main',
-                          fontWeight: 500
+                          fontWeight: 500,
+                          fontSize: isMobile ? '0.7rem' : undefined
                         }} 
                       />
                       <Chip 
@@ -412,11 +429,11 @@ const PortfolioPage: React.FC = () => {
                           bgcolor: portfolioService.getCategoryColor(project.category), 
                           color: 'white',
                           fontWeight: 500,
-                          fontSize: '0.7rem'
+                          fontSize: isMobile ? '0.65rem' : '0.7rem'
                         }} 
                       />
                     </Box>
-                    <Box sx={{ mb: 2 }}>
+                    <Box sx={{ mb: isMobile ? 1.5 : 2 }}>
                       <Typography 
                         variant="body2" 
                         onClick={(e) => {
@@ -428,14 +445,14 @@ const PortfolioPage: React.FC = () => {
                         sx={{ 
                           color: 'text.secondary', 
                           lineHeight: 1.5,
+                          fontSize: isMobile ? '0.8rem' : undefined,
                           cursor: project.description.length > 120 ? 'pointer' : 'default',
                           '&:hover': project.description.length > 120 ? {
-                            color: 'secondary.main',
                             textDecoration: 'underline'
                           } : {}
                         }}
                       >
-                        {expandedDescriptions[project.id.toString()] 
+                        {expandedDescriptions[project.id.toString()]
                           ? project.description 
                           : truncateDescription(project.description)
                         }

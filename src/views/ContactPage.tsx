@@ -35,6 +35,7 @@ const ContactPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -94,19 +95,19 @@ const ContactPage: React.FC = () => {
 
   const contactInfo = [
     {
-      icon: <Email sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
+      icon: <Email sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Email',
       details: 'hello@arianadarisstudio.com',
       description: 'Send us an email anytime'
     },
     {
-      icon: <Phone sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
+      icon: <Phone sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Phone',
       details: '+1 (555) 123-4567',
       description: 'Mon-Fri from 9am to 6pm'
     },
     {
-      icon: <Schedule sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
+      icon: <Schedule sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Business Hours',
       details: 'Monday - Friday',
       description: '9:00 AM - 6:00 PM EST'
@@ -123,16 +124,16 @@ const ContactPage: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pt: 8 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
       {/* Hero Section */}
       <Box 
         sx={{ 
           background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
           color: '#2D3748',
-          py: 12,
+          py: isMobile ? 6 : 12,
           position: 'relative',
           overflow: 'hidden',
-          minHeight: '20vh',
+          minHeight: isMobile ? '15vh' : '20vh',
           display: 'flex',
           alignItems: 'center'
         }}
@@ -236,24 +237,32 @@ const ContactPage: React.FC = () => {
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
             <Typography 
-              variant="h2" 
+              variant={isMobile ? "h3" : "h2"}
               component="h1" 
               align="center" 
-              sx={{ mb: 4, fontWeight: 700, color: '#2D3748' }}
+              sx={{ 
+                mb: isMobile ? 2 : 4,  
+                mt: isMobile ? 4 : 0,
+                fontWeight: 700, 
+                color: '#2D3748',
+                fontSize: isSmallMobile ? '1.8rem' : undefined
+              }}
             >
               Get in Touch
             </Typography>
           </Fade>
           <Fade in={isVisible} timeout={1200}>
             <Typography 
-              variant="h6" 
+              variant={isMobile ? "body2" : "h6"}
               align="center" 
               sx={{ 
                 maxWidth: 800, 
                 mx: 'auto', 
                 opacity: 0.9,
                 lineHeight: 1.6,
-                color: '#2D3748'
+                color: '#2D3748',
+                px: isMobile ? 2 : 0,
+                fontSize: isSmallMobile ? '0.9rem' : undefined
               }}
             >
               Ready to start your project? Let's discuss how we can help bring your 
@@ -264,13 +273,13 @@ const ContactPage: React.FC = () => {
       </Box>
 
       {/* Contact Information */}
-      <Container maxWidth="lg" sx={{ py: 12 }}>
-        <Grid container spacing={6}>
+      <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
+        <Grid container spacing={isMobile ? 3 : 6}>
           {/* Contact Form */}
           <Grid item xs={12} lg={8}>
             <Fade in={isVisible} timeout={1500}>
               <Card sx={{ 
-                p: 4, 
+                p: isMobile ? 2.5 : 4, 
                 height: 'fit-content',
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,248,248,0.8) 100%)',
                 backdropFilter: 'blur(10px)',
@@ -281,9 +290,14 @@ const ContactPage: React.FC = () => {
                 }
               }}>
                 <Typography 
-                  variant="h4" 
+                  variant={isMobile ? "h5" : "h4"}
                   component="h2" 
-                  sx={{ mb: 4, fontWeight: 600, color: '#323C55' }}
+                  sx={{ 
+                    mb: isMobile ? 2 : 4, 
+                    fontWeight: 600, 
+                    color: '#323C55',
+                    fontSize: isSmallMobile ? '1.3rem' : undefined
+                  }}
                 >
                   Send us a Message
                 </Typography>
@@ -375,7 +389,7 @@ const ContactPage: React.FC = () => {
                           }
                         }}
                       >
-                        <option value="">Select a service</option>
+                        <option value=""></option>
                         {services.map((service) => (
                           <option key={service} value={service}>
                             {service}

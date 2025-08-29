@@ -34,6 +34,7 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -47,17 +48,17 @@ const LandingPage: React.FC = () => {
 
   const services = [
     {
-      icon: <Brush sx={{ fontSize: 40, color: theme.palette.secondary.main }} />,
+      icon: <Brush sx={{ fontSize: isMobile ? 32 : 40, color: theme.palette.secondary.main }} />,
       title: 'Brand Identity Design',
       description: 'Create memorable brand identities that resonate with your audience and stand out in the market.'
     },
     {
-      icon: <Palette sx={{ fontSize: 40, color: theme.palette.secondary.main }} />,
+      icon: <Palette sx={{ fontSize: isMobile ? 32 : 40, color: theme.palette.secondary.main }} />,
       title: 'Visual Design',
       description: 'Stunning visual designs that capture attention and communicate your message effectively.'
     },
     {
-      icon: <DesignServices sx={{ fontSize: 40, color: theme.palette.secondary.main }} />,
+      icon: <DesignServices sx={{ fontSize: isMobile ? 32 : 40, color: theme.palette.secondary.main }} />,
       title: 'Creative Strategy',
       description: 'Strategic creative solutions that align with your business goals and drive results.'
     }
@@ -67,22 +68,22 @@ const LandingPage: React.FC = () => {
 
   const processSteps = [
     {
-      icon: <Assignment sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
+      icon: <Assignment sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Discovery',
       description: 'We start by understanding your vision, goals, and target audience to create a solid foundation.'
     },
     {
-      icon: <Brush sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
+      icon: <Brush sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Design',
       description: 'Our creative team develops concepts and designs that align with your brand and objectives.'
     },
     {
-      icon: <CheckCircle sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
+      icon: <CheckCircle sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Refinement',
       description: 'We collaborate with you to refine and perfect every detail until it meets your vision.'
     },
     {
-      icon: <Celebration sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
+      icon: <Celebration sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Delivery',
       description: 'Final delivery with all assets and guidelines to ensure successful implementation.'
     }
@@ -97,10 +98,10 @@ const LandingPage: React.FC = () => {
         sx={{ 
           background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
           color: '#2D3748',
-          py: 12,
+          py: isMobile ? 6 : 12,
           position: 'relative',
           overflow: 'hidden',
-          minHeight: '100vh',
+          minHeight: isMobile ? '80vh' : '100vh',
           display: 'flex',
           alignItems: 'center'
         }}
@@ -202,16 +203,16 @@ const LandingPage: React.FC = () => {
         )}
 
          <Container maxWidth="lg">
-           <Grid container spacing={6} alignItems="center">
+           <Grid container spacing={isMobile ? 3 : 6} alignItems="center">
              <Grid item xs={12} md={6}>
                <Fade in={isVisible} timeout={1000}>
-                 <Box sx={{ mb: 4 }}>
+                 <Box sx={{ mb: isMobile ? 2 : 4, display: 'flex', justifyContent: 'center' }}>
                    <img 
                      src="/logos/PrimaryLogo.svg" 
                      alt="Ariana Daris Studio" 
                      style={{
                        width: '100%',
-                       maxWidth: '400px',
+                       maxWidth: isMobile ? '300px' : '400px',
                        height: 'auto',
                        filter: 'brightness(0) saturate(100%) invert(18%) sepia(8%) saturate(1234%) hue-rotate(202deg) brightness(95%) contrast(86%)',
                        transform: `translateY(${scrollY * 0.1}px)`,
@@ -222,10 +223,10 @@ const LandingPage: React.FC = () => {
                </Fade>
                <Slide direction="up" in={isVisible} timeout={1200}>
                  <Typography 
-                   variant="body1" 
+                   variant={isMobile ? "body2" : "body1"}
                    sx={{ 
-                     mb: 6, 
-                     fontSize: '1.3rem',
+                     mb: isMobile ? 3 : 6, 
+                     fontSize: isMobile ? '1rem' : '1.3rem',
                      opacity: 0.85,
                      maxWidth: 500,
                      color: '#4A5568',
@@ -237,19 +238,20 @@ const LandingPage: React.FC = () => {
                  </Typography>
                </Slide>
                <Slide direction="up" in={isVisible} timeout={1400}>
-                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
+                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={isMobile ? 2 : 3}>
                    <Button 
                      variant="contained" 
-                     size="large"
+                     size={isMobile ? "medium" : "large"}
                      endIcon={<ArrowForward />}
                      onClick={() => navigate('/portfolio')}
                      sx={{ 
                        bgcolor: theme.palette.secondary.main, 
                        color: theme.palette.secondary.contrastText,
-                       px: 4,
-                       py: 1.5,
+                       px: isMobile ? 3 : 4,
+                       py: isMobile ? 1 : 1.5,
                        borderRadius: '25px',
                        boxShadow: `0 8px 25px ${theme.palette.secondary.main}4D`,
+                       fontSize: isMobile ? '0.9rem' : undefined,
                        '&:hover': { 
                          bgcolor: theme.palette.secondary.dark,
                          transform: 'translateY(-3px)',
@@ -262,15 +264,16 @@ const LandingPage: React.FC = () => {
                    </Button>
                    <Button 
                      variant="outlined" 
-                     size="large"
+                     size={isMobile ? "medium" : "large"}
                      onClick={() => navigate('/contact')}
                      sx={{ 
                        borderColor: theme.palette.secondary.main, 
                        color: theme.palette.secondary.main,
-                       px: 4,
-                       py: 1.5,
+                       px: isMobile ? 3 : 4,
+                       py: isMobile ? 1 : 1.5,
                        borderRadius: '25px',
                        borderWidth: '2px',
+                       fontSize: isMobile ? '0.9rem' : undefined,
                        '&:hover': { 
                          borderColor: theme.palette.secondary.dark, 
                          bgcolor: `${theme.palette.secondary.main}0D`,
@@ -292,93 +295,37 @@ const LandingPage: React.FC = () => {
                       display: 'flex', 
                       justifyContent: 'center',
                       alignItems: 'center',
-                      height: 400,
+                      height: isMobile ? 300 : 400,
                       position: 'relative'
                     }}
                   >
                     <Box 
                       sx={{ 
-                        width: 320, 
-                        height: 320, 
+                        width: isMobile ? 250 : 350,
+                        height: isMobile ? 250 : 350,
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,248,248,0.8) 100%)',
+                        background: `linear-gradient(135deg, ${theme.palette.secondary.main}15 0%, ${theme.palette.secondary.light}15 100%)`,
+                        border: `2px solid ${theme.palette.secondary.main}30`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backdropFilter: 'blur(15px)',
-                        border: `3px solid ${theme.palette.secondary.main}33`,
                         position: 'relative',
-                        cursor: 'pointer',
-                        overflow: 'hidden',
-                        boxShadow: `0 25px 50px ${theme.palette.secondary.main}26`,
-                        '&:hover': {
-                          transform: 'scale(1.05)',
-                          boxShadow: `0 35px 70px ${theme.palette.secondary.main}40`,
-                          borderColor: `${theme.palette.secondary.main}66`
-                        },
-                        transition: 'all 0.4s ease',
-                        animation: 'gentle-pulse 4s ease-in-out infinite',
-                        '@keyframes gentle-pulse': {
-                          '0%, 100%': { transform: 'scale(1)' },
-                          '50%': { transform: 'scale(1.02)' }
+                        animation: 'float 6s ease-in-out infinite',
+                        '@keyframes float': {
+                          '0%, 100%': { transform: 'translateY(0px)' },
+                          '50%': { transform: 'translateY(-10px)' }
                         }
                       }}
                     >
-                      <img 
-                        src="/logos/Headshot.jpg" 
-                        alt="Ariana Daris Headshot" 
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          borderRadius: '50%'
-                        }}
-                      />
-                    </Box>
-                    {/* Floating decorative elements */}
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        animation: 'rotate 30s linear infinite',
-                        '@keyframes rotate': {
-                          '0%': { transform: 'rotate(0deg)' },
-                          '100%': { transform: 'rotate(360deg)' }
-                        }
-                      }}
-                    >
-                      {[...Array(8)].map((_, i) => (
-                        <Box
-                          key={i}
-                          sx={{
-                            position: 'absolute',
-                            width: 12,
-                            height: 12,
-                            borderRadius: '50%',
-                            background: i % 2 === 0 ? theme.palette.secondary.main : theme.palette.secondary.light,
-                            top: '50%',
-                            left: '50%',
-                            transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-200px)`,
-                            opacity: 0.7,
-                            animation: `float-${i} 4s ease-in-out infinite`,
-                            [`@keyframes float-${i}`]: {
-                              '0%, 100%': { 
-                                opacity: 0.7, 
-                                transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-200px)` 
-                              },
-                              '50%': { 
-                                opacity: 1, 
-                                transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-220px)` 
-                              }
-                            }
-                          }}
-                        />
-                      ))}
+                      <AutoAwesome sx={{ 
+                        fontSize: isMobile ? 60 : 80, 
+                        color: theme.palette.secondary.main,
+                        opacity: 0.7
+                      }} />
                     </Box>
                   </Box>
                 </Zoom>
-              </Grid>
+             </Grid>
            </Grid>
          </Container>
          
@@ -415,19 +362,20 @@ const LandingPage: React.FC = () => {
 
 
       {/* Services Section */}
-      <Box sx={{ py: 14, bgcolor: '#FEFCF8' }}>
+      <Box sx={{ py: isMobile ? 6 : 14, bgcolor: '#FEFCF8' }}>
         <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 10 }}>
-            <Typography variant="h2" sx={{ 
+          <Box sx={{ textAlign: 'center', mb: isMobile ? 4 : 10 }}>
+            <Typography variant={isMobile ? "h3" : "h2"} sx={{ 
               fontWeight: 600, 
               color: '#2D3748', 
-              mb: 3,
-              fontFamily: '"Georgia", serif'
+              mb: isMobile ? 2 : 3,
+              fontFamily: '"Georgia", serif',
+              fontSize: isSmallMobile ? '1.8rem' : undefined
             }}>
               Our Services
             </Typography>
-            <Typography variant="body1" sx={{ 
-              fontSize: '1.3rem', 
+            <Typography variant={isMobile ? "body2" : "body1"} sx={{ 
+              fontSize: isMobile ? '1rem' : '1.3rem', 
               color: '#4A5568', 
               maxWidth: 600, 
               mx: 'auto',
@@ -438,21 +386,21 @@ const LandingPage: React.FC = () => {
             </Typography>
           </Box>
           
-          <Grid container spacing={5}>
+          <Grid container spacing={isMobile ? 3 : 5}>
             {services.map((service, index) => (
               <Grid item xs={12} md={4} key={index}>
                 <Grow in={isVisible} timeout={600 + index * 200}>
                   <Card 
                     sx={{ 
                       height: '100%',
-                      p: 5,
+                      p: isMobile ? 3 : 5,
                       textAlign: 'center',
                       border: '2px solid #F7FAFC',
                       borderRadius: '20px',
                       background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)',
                       boxShadow: `0 10px 30px ${theme.palette.secondary.main}1A`,
                       '&:hover': {
-                        transform: 'translateY(-10px)',
+                        transform: isMobile ? 'none' : 'translateY(-10px)',
                         boxShadow: `0 25px 50px ${theme.palette.secondary.main}33`,
                         borderColor: theme.palette.secondary.main,
                         background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%)',
@@ -461,8 +409,8 @@ const LandingPage: React.FC = () => {
                     }}
                   >
                     <Box sx={{ 
-                      mb: 4,
-                      p: 3,
+                      mb: isMobile ? 2 : 4,
+                      p: isMobile ? 2 : 3,
                       borderRadius: '50%',
                       background: `${theme.palette.secondary.main}1A`,
                       display: 'inline-flex',
@@ -471,18 +419,20 @@ const LandingPage: React.FC = () => {
                     }}>
                       {service.icon}
                     </Box>
-                    <Typography variant="h5" sx={{ 
+                    <Typography variant={isMobile ? "h6" : "h5"} sx={{ 
                       fontWeight: 600, 
                       color: '#2D3748', 
-                      mb: 3,
-                      fontFamily: '"Georgia", serif'
+                      mb: isMobile ? 2 : 3,
+                      fontFamily: '"Georgia", serif',
+                      fontSize: isSmallMobile ? '1.1rem' : undefined
                     }}>
                       {service.title}
                     </Typography>
-                    <Typography variant="body1" sx={{ 
+                    <Typography variant={isMobile ? "body2" : "body1"} sx={{ 
                       color: '#4A5568',
                       lineHeight: 1.6,
-                      fontFamily: '"Montserrat", serif'
+                      fontFamily: '"Montserrat", serif',
+                      fontSize: isSmallMobile ? '0.85rem' : undefined
                     }}>
                       {service.description}
                     </Typography>
@@ -496,7 +446,7 @@ const LandingPage: React.FC = () => {
 
       {/* Process Section */}
       <Box sx={{ 
-        py: 14, 
+        py: isMobile ? 6 : 14, 
         background: 'linear-gradient(135deg, #F8F9FF 0%, #FFF8F8 100%)',
         position: 'relative'
       }}>
@@ -516,17 +466,18 @@ const LandingPage: React.FC = () => {
           }}
         />
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-          <Box sx={{ textAlign: 'center', mb: 10 }}>
-            <Typography variant="h2" sx={{ 
+          <Box sx={{ textAlign: 'center', mb: isMobile ? 4 : 10 }}>
+            <Typography variant={isMobile ? "h3" : "h2"} sx={{ 
               fontWeight: 600, 
               color: '#2D3748', 
-              mb: 3,
-              fontFamily: '"Georgia", serif'
+              mb: isMobile ? 2 : 3,
+              fontFamily: '"Georgia", serif',
+              fontSize: isSmallMobile ? '1.8rem' : undefined
             }}>
               Our Process
             </Typography>
-            <Typography variant="body1" sx={{ 
-              fontSize: '1.3rem', 
+            <Typography variant={isMobile ? "body2" : "body1"} sx={{ 
+              fontSize: isMobile ? '1rem' : '1.3rem', 
               color: '#4A5568', 
               maxWidth: 600, 
               mx: 'auto',
@@ -537,26 +488,26 @@ const LandingPage: React.FC = () => {
             </Typography>
           </Box>
           
-          <Grid container spacing={5}>
+          <Grid container spacing={isMobile ? 3 : 5}>
             {processSteps.map((step, index) => (
               <Grid item xs={12} sm={6} md={3} key={index}>
                 <Grow in={isVisible} timeout={800 + index * 200}>
                   <Box sx={{ textAlign: 'center', position: 'relative' }}>
                     <Box 
                       sx={{ 
-                        width: 90, 
-                        height: 90, 
+                        width: isMobile ? 70 : 90, 
+                        height: isMobile ? 70 : 90, 
                         borderRadius: '50%',
                         background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         mx: 'auto',
-                        mb: 4,
+                        mb: isMobile ? 2 : 4,
                         boxShadow: `0 15px 35px ${theme.palette.secondary.main}26`,
                         border: `3px solid ${theme.palette.secondary.main}`,
                         '&:hover': {
-                          transform: 'scale(1.05)',
+                          transform: isMobile ? 'none' : 'scale(1.05)',
                           boxShadow: `0 20px 45px ${theme.palette.secondary.main}40`
                         },
                         transition: 'all 0.3s ease'
@@ -564,18 +515,20 @@ const LandingPage: React.FC = () => {
                     >
                       {step.icon}
                     </Box>
-                    <Typography variant="h6" sx={{ 
+                    <Typography variant={isMobile ? "body1" : "h6"} sx={{ 
                       fontWeight: 600, 
                       color: '#2D3748', 
-                      mb: 3,
-                      fontFamily: '"Georgia", serif'
+                      mb: isMobile ? 2 : 3,
+                      fontFamily: '"Georgia", serif',
+                      fontSize: isSmallMobile ? '1rem' : undefined
                     }}>
                       {step.title}
                     </Typography>
                     <Typography variant="body2" sx={{ 
                       color: '#4A5568',
                       lineHeight: 1.6,
-                      fontFamily: '"Montserrat", serif'
+                      fontFamily: '"Montserrat", serif',
+                      fontSize: isSmallMobile ? '0.8rem' : undefined
                     }}>
                       {step.description}
                     </Typography>
@@ -585,7 +538,7 @@ const LandingPage: React.FC = () => {
                       <Box
                         sx={{
                           position: 'absolute',
-                          top: 45,
+                          top: isMobile ? 35 : 45,
                           right: -25,
                           width: 50,
                           height: 3,

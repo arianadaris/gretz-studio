@@ -159,7 +159,7 @@ const Navigation: React.FC = () => {
                 onClick={handleDrawerToggle}
                 sx={{ 
                   color: isOnLandingPage 
-                    ? (scrolled ? '#323C55' : 'white')
+                    ? (scrolled ? '#323C55' : '#323C5590')
                     : '#323C55',
                   '&:hover': {
                     backgroundColor: isOnLandingPage 
@@ -211,6 +211,7 @@ const Navigation: React.FC = () => {
 
       <Drawer
         variant="temporary"
+        anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{

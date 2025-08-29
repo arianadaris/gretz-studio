@@ -28,6 +28,7 @@ const AboutPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -46,33 +47,33 @@ const AboutPage: React.FC = () => {
 
   const values = [
     {
-      icon: <LightbulbIcon sx={{ fontSize: 40, color: theme.palette.secondary.main }} />,
+      icon: <LightbulbIcon sx={{ fontSize: isMobile ? 32 : 40, color: theme.palette.secondary.main }} />,
       title: 'Innovation',
       description: 'We constantly push creative boundaries to deliver cutting-edge solutions.'
     },
     {
-      icon: <PsychologyIcon sx={{ fontSize: 40, color: theme.palette.secondary.main }} />,
+      icon: <PsychologyIcon sx={{ fontSize: isMobile ? 32 : 40, color: theme.palette.secondary.main }} />,
       title: 'Empathy',
       description: 'We understand our clients\' needs and create solutions that truly resonate.'
     },
     {
-      icon: <StarIcon sx={{ fontSize: 40, color: theme.palette.secondary.main }} />,
+      icon: <StarIcon sx={{ fontSize: isMobile ? 32 : 40, color: theme.palette.secondary.main }} />,
       title: 'Excellence',
       description: 'Every project receives our full attention to detail and commitment to quality.'
     }
   ];
 
   return (
-    <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: 8 }}>
+    <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
                     {/* Hero Section */}
        <Box 
          sx={{ 
            background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
            color: '#2D3748',
-           py: 12,
+           py: isMobile ? 6 : 12,
            position: 'relative',
            overflow: 'hidden',
-           minHeight: '40vh',
+           minHeight: isMobile ? '30vh' : '40vh',
            display: 'flex',
            alignItems: 'center'
          }}
@@ -175,24 +176,32 @@ const AboutPage: React.FC = () => {
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
             <Typography 
-               variant="h2" 
+               variant={isMobile ? "h3" : "h2"}
                component="h1" 
                align="center" 
-               sx={{ mb: 4, fontWeight: 700, color: '#2D3748' }}
+               sx={{ 
+                 mb: isMobile ? 2 : 4, 
+                 mt: isMobile ? 4 : 0,
+                 fontWeight: 700, 
+                 color: '#2D3748',
+                 fontSize: isSmallMobile ? '1.8rem' : undefined
+               }}
              >
                About Our Studio
              </Typography>
           </Fade>
           <Fade in={isVisible} timeout={1200}>
             <Typography 
-               variant="h6" 
+               variant={isMobile ? "body2" : "h6"}
                align="center" 
                sx={{ 
                  maxWidth: 800, 
                  mx: 'auto', 
                  opacity: 0.9,
                  lineHeight: 1.6,
-                 color: '#2D3748'
+                 color: '#2D3748',
+                 px: isMobile ? 2 : 0,
+                 fontSize: isSmallMobile ? '0.9rem' : undefined
                }}
              >
                I am a passionate creative professional dedicated to transforming ideas into 
@@ -203,22 +212,32 @@ const AboutPage: React.FC = () => {
       </Box>
 
       {/* Mission Section */}
-      <Container maxWidth="lg" sx={{ py: 12 }}>
-        <Grid container spacing={8} alignItems="center">
+      <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
+        <Grid container spacing={isMobile ? 4 : 8} alignItems="center">
           <Grid item xs={12} md={6}>
             <Fade in={isVisible} timeout={2000}>
               <Typography 
-                variant="h3" 
+                variant={isMobile ? "h4" : "h3"}
                 component="h2" 
-                sx={{ mb: 4, fontWeight: 600, color: 'text.primary' }}
+                sx={{ 
+                  mb: isMobile ? 2 : 4, 
+                  fontWeight: 600, 
+                  color: 'text.primary',
+                  fontSize: isSmallMobile ? '1.5rem' : undefined
+                }}
               >
                 Our Mission
               </Typography>
             </Fade>
             <Fade in={isVisible} timeout={3000}>
               <Typography 
-                variant="body1" 
-                sx={{ mb: 4, fontSize: '1.1rem', color: 'text.secondary', lineHeight: 1.8 }}
+                variant={isMobile ? "body2" : "body1"}
+                sx={{ 
+                  mb: isMobile ? 2 : 4, 
+                  fontSize: isMobile ? '1rem' : '1.1rem', 
+                  color: 'text.secondary', 
+                  lineHeight: 1.8 
+                }}
               >
                 At Ariana Daris Studio, I believe that great design has the power to transform 
                 businesses and inspire people. My mission is to create meaningful, beautiful, 
@@ -227,8 +246,12 @@ const AboutPage: React.FC = () => {
             </Fade>
             <Fade in={isVisible} timeout={3500}>
               <Typography 
-                variant="body1" 
-                sx={{ fontSize: '1.1rem', color: 'text.secondary', lineHeight: 1.8 }}
+                variant={isMobile ? "body2" : "body1"}
+                sx={{ 
+                  fontSize: isMobile ? '1rem' : '1.1rem', 
+                  color: 'text.secondary', 
+                  lineHeight: 1.8 
+                }}
               >
                 I combine strategic thinking with creative excellence to deliver designs that 
                 not only look stunning but also drive results. Every project is an opportunity 
@@ -243,7 +266,7 @@ const AboutPage: React.FC = () => {
                     display: 'flex', 
                     justifyContent: 'center',
                     alignItems: 'center',
-                    height: 400,
+                    height: isMobile ? 300 : 400,
                     '@keyframes logoPulse': {
                       '0%, 100%': { 
                         transform: 'scale(1)',
@@ -261,7 +284,7 @@ const AboutPage: React.FC = () => {
                    alt="Studio Mission" 
                                        style={{
                       width: '100%',
-                      maxWidth: '400px',
+                      maxWidth: isMobile ? '300px' : '400px',
                       height: 'auto',
                       animation: 'logoPulse 4s ease-in-out infinite'
                     }}
@@ -273,19 +296,24 @@ const AboutPage: React.FC = () => {
       </Container>
 
              {/* Values Section */}
-       <Box sx={{ bgcolor: 'background.paper', py: 12 }}>
+       <Box sx={{ bgcolor: 'background.paper', py: isMobile ? 6 : 12 }}>
          <Container maxWidth="lg">
           <Fade in={scrollY > 400} timeout={800}>
             <Typography 
-              variant="h3" 
+              variant={isMobile ? "h4" : "h3"}
               component="h2" 
               align="center" 
-              sx={{ mb: 8, fontWeight: 600, color: 'text.primary' }}
+              sx={{ 
+                mb: isMobile ? 4 : 8, 
+                fontWeight: 600, 
+                color: 'text.primary',
+                fontSize: isSmallMobile ? '1.5rem' : undefined
+              }}
             >
               Our Values
             </Typography>
           </Fade>
-          <Grid container spacing={4}>
+          <Grid container spacing={isMobile ? 2 : 4}>
             {values.map((value, index) => (
               <Grid item xs={12} md={4} key={index}>
                 <Grow in={scrollY > 500} timeout={1000 + (index * 200)}>

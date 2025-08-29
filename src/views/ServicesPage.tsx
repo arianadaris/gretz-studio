@@ -55,7 +55,7 @@ const ServicesPage: React.FC = () => {
 
   const services = [
     {
-      icon: <Web sx={{ fontSize: isMobile ? 40 : 50, color: theme.palette.secondary.main }} />,
+      icon: <Web sx={{ fontSize: isMobile ? 32 : 50, color: theme.palette.secondary.main }} />,
       title: 'Starter Site',
       subtitle: 'Polished 1–3 page brochure site',
       description: 'Perfect for small businesses and startups looking for a professional online presence.',
@@ -71,7 +71,7 @@ const ServicesPage: React.FC = () => {
       investment: '$1.2k–$2.5k',
     },
     {
-      icon: <DesignServices sx={{ fontSize: isMobile ? 40 : 50, color: theme.palette.secondary.main }} />,
+      icon: <DesignServices sx={{ fontSize: isMobile ? 32 : 50, color: theme.palette.secondary.main }} />,
       title: 'Brand Website',
       subtitle: 'Custom site for a boutique brand (5–8 pages)',
       description: 'Comprehensive website solution for established brands looking to elevate their digital presence.',
@@ -85,7 +85,7 @@ const ServicesPage: React.FC = () => {
       investment: '$3k–$6k',
     },
     {
-      icon: <Business sx={{ fontSize: isMobile ? 40 : 50, color: theme.palette.secondary.main }} />,
+      icon: <Business sx={{ fontSize: isMobile ? 32 : 50, color: theme.palette.secondary.main }} />,
       title: 'E‑commerce Lite',
       subtitle: 'Services or small catalog with checkout',
       description: 'Complete e-commerce solution for businesses ready to sell online.',
@@ -129,16 +129,16 @@ const ServicesPage: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: isMobile ? 4 : 8 }}>
+    <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
       {/* Hero Section */}
       <Box 
         sx={{ 
           background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
           color: '#2D3748',
-          py: isMobile ? 6 : 12,
+          py: isMobile ? 3 : 12,
           position: 'relative',
           overflow: 'hidden',
-          minHeight: isMobile ? '30vh' : '40vh',
+          minHeight: isMobile ? '25vh' : '40vh',
           display: 'flex',
           alignItems: 'center'
         }}
@@ -242,14 +242,15 @@ const ServicesPage: React.FC = () => {
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
             <Typography 
-              variant={isMobile ? "h3" : "h2"}
+              variant={isMobile ? "h4" : "h2"}
               component="h1" 
               align="center" 
               sx={{ 
-                mb: isMobile ? 2 : 4, 
+                mb: isMobile ? 1 : 4,  
+                mt: isMobile ? 4 : 0,
                 fontWeight: 700, 
                 color: '#2D3748',
-                fontSize: isSmallMobile ? '2rem' : undefined
+                fontSize: isSmallMobile ? '1.5rem' : undefined
               }}
             >
               Our Services
@@ -257,7 +258,7 @@ const ServicesPage: React.FC = () => {
           </Fade>
           <Fade in={isVisible} timeout={1200}>
             <Typography 
-              variant={isMobile ? "body1" : "h6"}
+              variant={isMobile ? "body2" : "h6"}
               align="center" 
               sx={{ 
                 maxWidth: 800, 
@@ -265,7 +266,8 @@ const ServicesPage: React.FC = () => {
                 opacity: 0.9,
                 lineHeight: 1.6,
                 color: '#2D3748',
-                px: isMobile ? 2 : 0
+                px: isMobile ? 2 : 0,
+                fontSize: isSmallMobile ? '0.9rem' : undefined
               }}
             >
               Comprehensive design solutions tailored to your unique needs. 
@@ -276,23 +278,23 @@ const ServicesPage: React.FC = () => {
       </Box>
 
       {/* Services Grid */}
-      <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
+      <Container maxWidth="lg" sx={{ py: isMobile ? 3 : 12 }}>
         <Fade in={isVisible} timeout={1500}>
           <Typography 
-            variant={isMobile ? "h4" : "h3"}
+            variant={isMobile ? "h5" : "h3"}
             component="h2" 
             align="center" 
             sx={{ 
-              mb: isMobile ? 4 : 8, 
+              mb: isMobile ? 2 : 8, 
               fontWeight: 600, 
               color: 'text.primary',
-              fontSize: isSmallMobile ? '1.75rem' : undefined
+              fontSize: isSmallMobile ? '1.4rem' : undefined
             }}
           >
             What We Offer
           </Typography>
         </Fade>
-        <Grid container spacing={isMobile ? 2 : 4}>
+        <Grid container spacing={isMobile ? 1.5 : 4}>
           {services.map((service, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Grow in={isVisible} timeout={2000 + (index * 250)}>
@@ -313,7 +315,7 @@ const ServicesPage: React.FC = () => {
                   }}
                 >
                   <CardContent sx={{ 
-                    p: isMobile ? 2.5 : 4, 
+                    p: isMobile ? 1.5 : 4, 
                     height: '100%', 
                     display: 'flex', 
                     flexDirection: 'column' 
@@ -321,8 +323,8 @@ const ServicesPage: React.FC = () => {
                     {/* Fixed height header section */}
                     <Box sx={{ 
                       textAlign: 'center', 
-                      mb: isMobile ? 2 : 3, 
-                      minHeight: isMobile ? 60 : 80 
+                      mb: isMobile ? 1 : 3, 
+                      minHeight: isMobile ? 40 : 80 
                     }}>
                       {service.icon}
                     </Box>
@@ -330,12 +332,12 @@ const ServicesPage: React.FC = () => {
                       variant={isMobile ? "h6" : "h6"}
                       component="h3" 
                       sx={{ 
-                        mb: 1, 
+                        mb: 0.5, 
                         fontWeight: 600, 
                         color: 'text.primary', 
                         textAlign: 'center',
                         lineHeight: 1.3,
-                        fontSize: isSmallMobile ? '1.1rem' : undefined
+                        fontSize: isSmallMobile ? '1rem' : undefined
                       }}
                     >
                       {service.title}
@@ -343,11 +345,11 @@ const ServicesPage: React.FC = () => {
                     <Typography 
                       variant="body2" 
                       sx={{ 
-                        mb: isMobile ? 1.5 : 2, 
+                        mb: isMobile ? 1 : 2, 
                         color: theme.palette.secondary.main, 
                         fontWeight: 500, 
                         textAlign: 'center',
-                        fontSize: isMobile ? '0.85rem' : '0.9rem'
+                        fontSize: isMobile ? '0.75rem' : '0.9rem'
                       }}
                     >
                       {service.subtitle}
@@ -355,8 +357,8 @@ const ServicesPage: React.FC = () => {
                     
                     {/* Fixed height description section */}
                     <Box sx={{ 
-                      mb: isMobile ? 2 : 3, 
-                      minHeight: isMobile ? 50 : 60, 
+                      mb: isMobile ? 1.5 : 3, 
+                      minHeight: isMobile ? 40 : 60, 
                       display: 'flex', 
                       alignItems: 'center' 
                     }}>
@@ -365,7 +367,7 @@ const ServicesPage: React.FC = () => {
                         sx={{ 
                           color: 'text.secondary', 
                           lineHeight: 1.5,
-                          fontSize: isMobile ? '0.85rem' : undefined
+                          fontSize: isMobile ? '0.75rem' : undefined
                         }}
                       >
                         {service.description}
@@ -374,34 +376,37 @@ const ServicesPage: React.FC = () => {
                     
                     {/* Fixed height scope section */}
                     <Box sx={{ 
-                      mb: isMobile ? 2 : 3, 
-                      minHeight: isMobile ? 160 : 200 
+                      mb: isMobile ? 1.5 : 3, 
+                      minHeight: isMobile ? 120 : 200,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: isMobile ? 'center' : 'flex-start'
                     }}>
                       <Typography 
                         variant="body2" 
                         sx={{ 
-                          mb: isMobile ? 1.5 : 2, 
+                          mb: isMobile ? 1 : 2, 
                           fontWeight: 600, 
                           color: 'text.primary',
-                          fontSize: isMobile ? '0.85rem' : '0.9rem'
+                          fontSize: isMobile ? '0.75rem' : '0.9rem'
                         }}
                       >
                         Scope:
                       </Typography>
                       <List dense sx={{ py: 0 }}>
                         {service.scope.map((item, itemIndex) => (
-                          <ListItem key={itemIndex} sx={{ px: 0, py: isMobile ? 0.5 : 1 }}>
-                            <ListItemIcon sx={{ minWidth: isMobile ? 25 : 30 }}>
+                          <ListItem key={itemIndex} sx={{ px: 0, py: isMobile ? 0.25 : 1 }}>
+                            <ListItemIcon sx={{ minWidth: isMobile ? 20 : 30 }}>
                               <Check sx={{ 
                                 color: theme.palette.secondary.main, 
-                                fontSize: isMobile ? 16 : 20 
+                                fontSize: isMobile ? 14 : 20 
                               }} />
                             </ListItemIcon>
                             <ListItemText 
                               primary={item} 
                               sx={{ 
                                 '& .MuiTypography-root': { 
-                                  fontSize: isMobile ? '0.8rem' : '0.9rem',
+                                  fontSize: isMobile ? '0.7rem' : '0.9rem',
                                   color: 'text.secondary'
                                 } 
                               }}
@@ -419,8 +424,8 @@ const ServicesPage: React.FC = () => {
                           color: theme.palette.secondary.main, 
                           fontWeight: 600, 
                           textAlign: 'center',
-                          mb: 1,
-                          fontSize: isMobile ? '1.1rem' : undefined
+                          mb: 0.5,
+                          fontSize: isMobile ? '1rem' : undefined
                         }}
                       >
                         {service.investment}
@@ -428,10 +433,10 @@ const ServicesPage: React.FC = () => {
                       <Typography 
                         variant="body2" 
                         sx={{ 
-                          mb: isMobile ? 1.5 : 2, 
+                          mb: isMobile ? 1 : 2, 
                           fontWeight: 600, 
                           color: 'text.primary',
-                          fontSize: isMobile ? '0.8rem' : '0.9rem',
+                          fontSize: isMobile ? '0.7rem' : '0.9rem',
                           textAlign: 'center'
                         }}
                       >
@@ -445,8 +450,8 @@ const ServicesPage: React.FC = () => {
                         sx={{ 
                           borderColor: theme.palette.secondary.main, 
                           color: theme.palette.secondary.main,
-                          fontSize: isMobile ? '0.85rem' : undefined,
-                          py: isMobile ? 1 : undefined,
+                          fontSize: isMobile ? '0.75rem' : undefined,
+                          py: isMobile ? 0.5 : undefined,
                           '&:hover': { 
                             borderColor: theme.palette.secondary.dark, 
                             bgcolor: `${theme.palette.secondary.main}0A`
@@ -465,42 +470,42 @@ const ServicesPage: React.FC = () => {
       </Container>
 
       {/* Process Section */}
-      <Box sx={{ bgcolor: 'background.paper', py: isMobile ? 6 : 12 }}>
+      <Box sx={{ bgcolor: 'background.paper', py: isMobile ? 3 : 12 }}>
         <Container maxWidth="lg">
           <Fade in={scrollY > 400} timeout={800}>
             <Typography 
-              variant={isMobile ? "h4" : "h3"}
+              variant={isMobile ? "h5" : "h3"}
               component="h2" 
               align="center" 
               sx={{ 
-                mb: isMobile ? 4 : 8, 
+                mb: isMobile ? 2 : 8, 
                 fontWeight: 600, 
                 color: 'text.primary',
-                fontSize: isSmallMobile ? '1.75rem' : undefined
+                fontSize: isSmallMobile ? '1.4rem' : undefined
               }}
             >
               Our Process
             </Typography>
           </Fade>
-          <Grid container spacing={isMobile ? 3 : 4}>
+          <Grid container spacing={isMobile ? 2 : 4}>
             {processSteps.map((step, index) => (
               <Grid item xs={12} md={6} lg={2.4} key={index}>
                 <Fade in={scrollY > 1200 + (index * 10)} timeout={1000 + (index * 100)}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Box 
                       sx={{ 
-                        width: isMobile ? 60 : 80, 
-                        height: isMobile ? 60 : 80, 
+                        width: isMobile ? 45 : 80, 
+                        height: isMobile ? 45 : 80, 
                         borderRadius: '50%',
                         bgcolor: theme.palette.secondary.main,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         mx: 'auto',
-                        mb: isMobile ? 2 : 3,
+                        mb: isMobile ? 1 : 3,
                         color: 'white',
                         fontWeight: 700,
-                        fontSize: isMobile ? '1.2rem' : '1.5rem'
+                        fontSize: isMobile ? '0.9rem' : '1.5rem'
                       }}
                     >
                       {step.number}
@@ -509,10 +514,10 @@ const ServicesPage: React.FC = () => {
                       variant={isMobile ? "h6" : "h6"}
                       component="h3" 
                       sx={{ 
-                        mb: isMobile ? 1 : 2, 
+                        mb: isMobile ? 0.5 : 2, 
                         fontWeight: 600, 
                         color: 'text.primary',
-                        fontSize: isSmallMobile ? '1.1rem' : undefined
+                        fontSize: isSmallMobile ? '1rem' : undefined
                       }}
                     >
                       {step.title}
@@ -522,7 +527,7 @@ const ServicesPage: React.FC = () => {
                       sx={{ 
                         color: 'text.secondary', 
                         lineHeight: 1.6,
-                        fontSize: isMobile ? '0.85rem' : undefined
+                        fontSize: isMobile ? '0.75rem' : undefined
                       }}
                     >
                       {step.description}
@@ -536,17 +541,17 @@ const ServicesPage: React.FC = () => {
       </Box>
 
       {/* FAQ Section */}
-      <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
+      <Container maxWidth="lg" sx={{ py: isMobile ? 3 : 12 }}>
         <Fade in={scrollY > 600} timeout={800}>
           <Typography 
-            variant={isMobile ? "h4" : "h3"}
+            variant={isMobile ? "h5" : "h3"}
             component="h2" 
             align="center" 
             sx={{ 
-              mb: isMobile ? 4 : 8, 
+              mb: isMobile ? 2 : 8, 
               fontWeight: 600, 
               color: 'text.primary',
-              fontSize: isSmallMobile ? '1.75rem' : undefined
+              fontSize: isSmallMobile ? '1.4rem' : undefined
             }}
           >
             Frequently Asked Questions
@@ -578,7 +583,7 @@ const ServicesPage: React.FC = () => {
             <Fade in={scrollY > 700 + (index * 50)} timeout={1000 + (index * 100)} key={index}>
               <Accordion 
                 sx={{ 
-                  mb: isMobile ? 1 : 2,
+                  mb: isMobile ? 0.5 : 2,
                   '&:before': { display: 'none' },
                   boxShadow: `0 2px 8px ${theme.palette.primary.main}1A`,
                   borderRadius: 2
@@ -588,16 +593,16 @@ const ServicesPage: React.FC = () => {
                   expandIcon={<ExpandMore />}
                   sx={{ 
                     '& .MuiAccordionSummary-content': { 
-                      my: isMobile ? 1 : 2 
+                      my: isMobile ? 0.5 : 2 
                     }
                   }}
                 >
                   <Typography 
-                    variant={isMobile ? "body1" : "h6"} 
+                    variant={isMobile ? "body2" : "h6"} 
                     sx={{ 
                       fontWeight: 600, 
                       color: 'text.primary',
-                      fontSize: isSmallMobile ? '1rem' : undefined
+                      fontSize: isSmallMobile ? '0.9rem' : undefined
                     }}
                   >
                     {faq.question}
@@ -609,7 +614,7 @@ const ServicesPage: React.FC = () => {
                     sx={{ 
                       color: 'text.secondary', 
                       lineHeight: 1.6,
-                      fontSize: isMobile ? '0.9rem' : undefined
+                      fontSize: isMobile ? '0.8rem' : undefined
                     }}
                   >
                     {faq.answer}
