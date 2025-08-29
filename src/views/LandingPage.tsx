@@ -27,7 +27,7 @@ import Celebration from '@mui/icons-material/Celebration';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
-import { aboutService } from '@/services/aboutService';
+import { aboutService } from '../services/aboutService';
 
 const LandingPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
