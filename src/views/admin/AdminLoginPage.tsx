@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import Lock from '@mui/icons-material/Lock';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import GradientBackground, { getGradient } from '../../components/GradientBackground';
 
 const AdminLoginPage: React.FC = () => {
   const [credentials, setCredentials] = useState({
@@ -47,10 +48,10 @@ const AdminLoginPage: React.FC = () => {
   };
 
   return (
-    <Box 
+    <GradientBackground 
+      type="hero"
       sx={{ 
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -73,7 +74,7 @@ const AdminLoginPage: React.FC = () => {
             <Box sx={{ mb: 3 }}>
               <img 
                 src="/logos/PrimaryLogo.svg" 
-                alt="Ariana Daris Studio" 
+                alt="Gretz Tech" 
                 style={{ 
                   height: '60px', 
                   width: 'auto',
@@ -96,7 +97,7 @@ const AdminLoginPage: React.FC = () => {
             >
               <Lock sx={{ fontSize: 30, color: 'white' }} />
             </Box>
-            <Typography variant="h4" component="h1" sx={{ fontWeight: 600, mb: 1, fontFamily: 'Milyuna, Georgia, serif' }}>
+            <Typography variant="h4" component="h1" sx={{ fontWeight: 600, mb: 1, fontFamily: 'BearNose, Georgia, serif' }}>
               Admin Access
             </Typography>
             <Typography variant="body1" sx={{ color: 'text.secondary' }}>
@@ -171,7 +172,7 @@ const AdminLoginPage: React.FC = () => {
           </Box>
         </Paper>
       </Container>
-    </Box>
+    </GradientBackground>
   );
 };
 

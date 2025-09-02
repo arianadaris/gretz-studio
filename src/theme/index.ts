@@ -2,68 +2,78 @@ import { createTheme } from '@mui/material/styles';
 
 // Brand fonts based on style guide
 const customFonts = {
-  milyuna: '"Milyuna", "Georgia", "Times", "Times New Roman", serif', // For H1, headlines, titles, quotes
-  montserrat: '"Montserrat", "Roboto", "Helvetica", "Arial", sans-serif', // For H2, H3, sub-headlines, body text
+  bearNose: '"BearNose", "Georgia", "Times", "Times New Roman", serif', // For H1, headlines, titles, quotes
+  figtree: '"Figtree", "Roboto", "Helvetica", "Arial", sans-serif', // For H2, H3, sub-headlines, body text
 };
 
 // Brand colors from style guide
 const brandColors = {
   darkBlueGrey: '#323C55',
-  lightPeach: '#FFB385',
+  lightGreen: '#7FB069', // Replaced lightPeach with lightGreen
   darkGrey: '#545454',
   veryLightBlueGrey: '#F0F4F8',
   mediumBlueGrey: '#526680',
-  // New blue accent colors
+  // Blue accent colors
   primaryBlue: '#4A90E2',
   lightBlue: '#7BB3F0',
   softBlue: '#E3F2FD',
   warmBlue: '#5B9BD5',
   accentBlue: '#64B5F6',
+  // New green accent colors
+  primaryGreen: '#4CAF50',
+  mediumGreen: '#81C784',
+  softGreen: '#E8F5E8',
+  warmGreen: '#66BB6A',
+  accentGreen: '#66BB6A',
+  // Additional blue-green colors
+  teal: '#26A69A',
+  lightTeal: '#4DB6AC',
+  softTeal: '#E0F2F1',
 };
 
 export const theme = createTheme({
   typography: {
-    fontFamily: customFonts.montserrat, // Default body font
+    fontFamily: customFonts.figtree, // Default body font
     h1: {
-      fontFamily: customFonts.milyuna,
+      fontFamily: customFonts.bearNose,
       fontWeight: 400,
       color: brandColors.darkBlueGrey,
     },
     h2: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       fontWeight: 600,
       color: brandColors.darkBlueGrey,
     },
     h3: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       fontWeight: 600,
       color: brandColors.darkBlueGrey,
     },
     h4: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       fontWeight: 500,
       color: brandColors.darkBlueGrey,
     },
     h5: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       fontWeight: 500,
       color: brandColors.darkBlueGrey,
     },
     h6: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       fontWeight: 500,
       color: brandColors.darkBlueGrey,
     },
     body1: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       color: brandColors.darkGrey,
     },
     body2: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       color: brandColors.darkGrey,
     },
     button: {
-      fontFamily: customFonts.montserrat,
+      fontFamily: customFonts.figtree,
       fontWeight: 600,
     },
   },

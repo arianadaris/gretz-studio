@@ -53,8 +53,8 @@ const AdminSettings: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
-  const [newCategory, setNewCategory] = useState({ name: '', label: '', color: '#FF6B6B' });
-  const [newTag, setNewTag] = useState({ name: '', color: '#FF6B6B' });
+      const [newCategory, setNewCategory] = useState({ name: '', label: '', color: '#4A90E2' });
+    const [newTag, setNewTag] = useState({ name: '', color: '#4A90E2' });
   const [isAdding, setIsAdding] = useState(false);
   const [isAddingTag, setIsAddingTag] = useState(false);
   const [categoriesExpanded, setCategoriesExpanded] = useState(false);
@@ -73,8 +73,8 @@ const AdminSettings: React.FC = () => {
 
   // Pre-set tag colors based on theme
   const tagColors = [
-    { value: '#FF6B6B', label: 'Coral Red', color: '#FF6B6B' },
-    { value: '#FFA726', label: 'Orange', color: '#FFA726' },
+            { value: '#4A90E2', label: 'Blue', color: '#4A90E2' },
+        { value: '#4CAF50', label: 'Green', color: '#4CAF50' },
     { value: '#4ECDC4', label: 'Teal', color: '#4ECDC4' },
     { value: '#45B7D1', label: 'Sky Blue', color: '#45B7D1' },
     { value: '#C8A2C8', label: 'Lilac', color: '#C8A2C8' }
@@ -125,7 +125,7 @@ const AdminSettings: React.FC = () => {
       
       const updatedCategories = [...categories, category];
       saveCategories(updatedCategories);
-      setNewCategory({ name: '', label: '', color: '#FF6B6B' });
+      setNewCategory({ name: '', label: '', color: '#4A90E2' });
       setIsAdding(false);
     }
   };
@@ -155,7 +155,7 @@ const AdminSettings: React.FC = () => {
       );
       saveCategories(updatedCategories);
       setEditingCategory(null);
-      setNewCategory({ name: '', label: '', color: '#FF6B6B' });
+      setNewCategory({ name: '', label: '', color: '#4A90E2' });
       setIsAdding(false);
     }
   };
@@ -169,7 +169,7 @@ const AdminSettings: React.FC = () => {
 
   const handleCancel = () => {
     setEditingCategory(null);
-    setNewCategory({ name: '', label: '', color: '#FF6B6B' });
+    setNewCategory({ name: '', label: '', color: '#4A90E2' });
     setIsAdding(false);
   };
 
@@ -184,7 +184,7 @@ const AdminSettings: React.FC = () => {
       
       const updatedTags = [...tags, tag];
       saveTags(updatedTags);
-      setNewTag({ name: '', color: '#95A5A6' });
+      setNewTag({ name: '', color: '#4A90E2' });
       setIsAddingTag(false);
     }
   };
@@ -211,7 +211,7 @@ const AdminSettings: React.FC = () => {
       );
       saveTags(updatedTags);
       setEditingTag(null);
-      setNewTag({ name: '', color: '#95A5A6' });
+      setNewTag({ name: '', color: '#4A90E2' });
       setIsAddingTag(false);
     }
   };
@@ -225,7 +225,7 @@ const AdminSettings: React.FC = () => {
 
   const handleCancelTag = () => {
     setEditingTag(null);
-    setNewTag({ name: '', color: '#FF6B6B' });
+    setNewTag({ name: '', color: '#4A90E2' });
     setIsAddingTag(false);
   };
 
@@ -316,7 +316,7 @@ const AdminSettings: React.FC = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+          <Box sx={{ minHeight: '100vh', bgcolor: '#F0F8FF' }}>
       {/* Admin App Bar */}
       <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
         <Toolbar>
@@ -324,7 +324,7 @@ const AdminSettings: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
             <img 
               src="/logos/PrimaryLogo.svg" 
-              alt="Ariana Daris Studio" 
+              alt="Gretz Tech" 
               style={{ 
                 height: '40px', 
                 width: 'auto',
@@ -332,7 +332,7 @@ const AdminSettings: React.FC = () => {
               }} 
             />
           </Box>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'Milyuna, Georgia, serif' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
             Settings
           </Typography>
           <IconButton onClick={() => navigate('/admin/dashboard')} color="inherit">
@@ -366,7 +366,7 @@ const AdminSettings: React.FC = () => {
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Person sx={{ color: 'secondary.main' }} />
-                  <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'Milyuna, Georgia, serif' }}>
+                  <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
                     About Page Settings
                   </Typography>
                 </Box>
@@ -393,7 +393,7 @@ const AdminSettings: React.FC = () => {
                       label="Avatar Image URL"
                       value={personalInfo.avatar}
                       onChange={(e) => handlePersonalInfoUpdate('avatar', e.target.value)}
-                      placeholder="/logos/Headshot.jpg"
+                      placeholder="/photos/Headshot.jpg"
                       sx={{ mb: 2 }}
                     />
                   </Grid>
@@ -483,7 +483,7 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               >
-                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'Milyuna, Georgia, serif' }}>
+                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
                   Portfolio Categories
                 </Typography>
                 {!isAdding && (
@@ -648,7 +648,7 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               >
-                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'Milyuna, Georgia, serif' }}>
+                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
                   Portfolio Tags
                 </Typography>
                 {!isAddingTag && (

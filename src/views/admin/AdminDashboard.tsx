@@ -94,7 +94,7 @@ const AdminDashboard: React.FC = () => {
   console.log(projects);
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+          <Box sx={{ minHeight: '100vh', bgcolor: '#F0F8FF' }}>
       {/* Admin App Bar */}
       <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
         <Toolbar>
@@ -102,7 +102,7 @@ const AdminDashboard: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
             <img 
               src="/logos/PrimaryLogo.svg" 
-              alt="Ariana Daris Studio" 
+              alt="Gretz Tech" 
               style={{ 
                 height: '40px', 
                 width: 'auto',
@@ -110,7 +110,7 @@ const AdminDashboard: React.FC = () => {
               }} 
             />
           </Box>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'Milyuna, Georgia, serif' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
             Portfolio CMS
           </Typography>
           <Button 
@@ -190,7 +190,7 @@ const AdminDashboard: React.FC = () => {
         {/* Projects List */}
         <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
           <CardContent>
-            <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 600, fontFamily: 'Milyuna, Georgia, serif' }}>
+            <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
               Portfolio Projects
             </Typography>
             
@@ -225,7 +225,7 @@ const AdminDashboard: React.FC = () => {
                             sx={{ 
                               width: 60, 
                               height: 60, 
-                              bgcolor: '#f5f5f5',
+                              bgcolor: '#E3F2FD',
                               borderRadius: 1,
                               display: 'flex',
                               alignItems: 'center',

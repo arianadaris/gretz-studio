@@ -10,6 +10,7 @@ import {
 import { ArrowForward } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { getGradient } from './GradientBackground';
 
 interface ContactCTAProps {
   title?: string;
@@ -57,7 +58,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
             mb: { xs: 2, sm: 3, md: 4 }, 
             fontWeight: 600, 
             color: variant === 'card' ? '#2D3748' : 'text.primary',
-            fontFamily: variant === 'card' ? '"Georgia", serif' : 'inherit',
+            fontFamily: variant === 'card' ? '"BearNose", serif' : 'BearNose',
             fontSize: { xs: '1.3rem', sm: '1.8rem', md: '2.5rem', lg: '3rem' },
             lineHeight: { xs: 1.3, sm: 1.4, md: 1.2 }
           }}
@@ -77,7 +78,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
             }, 
             color: variant === 'card' ? '#4A5568' : 'text.secondary',
             lineHeight: 1.6,
-            fontFamily: variant === 'card' ? '"Georgia", serif' : 'inherit',
+            fontFamily: variant === 'card' ? '"BearNose", serif' : 'inherit',
             px: { xs: 1, sm: 0 }
           }}
         >
@@ -149,7 +150,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
         <Box sx={{ 
           p: { xs: 3, sm: 4, md: 6 }, 
           borderRadius: { xs: '15px', sm: '20px', md: '25px' },
-          background: 'linear-gradient(135deg, #FFF8F8 0%, #F8F9FF 100%)',
+          background: getGradient('sectionAlt'),
           border: `2px solid ${theme.palette.secondary.main}1A`,
           boxShadow: `0 20px 40px ${theme.palette.secondary.main}1A`
         }}>

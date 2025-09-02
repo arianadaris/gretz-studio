@@ -72,7 +72,7 @@ const Navigation: React.FC = () => {
       <Box sx={{ p: 3, borderBottom: '1px solid #E2E8F0' }}>
         <img 
           src="/logos/PrimaryLogo.svg" 
-          alt="Ariana Daris Studio" 
+          alt="Gretz Tech" 
           style={{
             width: '100%',
             maxWidth: '200px',
@@ -87,9 +87,9 @@ const Navigation: React.FC = () => {
             button 
             onClick={() => handleNavigation(item.path)}
             sx={{
-              backgroundColor: isActive(item.path) ? 'rgba(255, 179, 133, 0.1)' : 'transparent',
+              backgroundColor: isActive(item.path) ? 'rgba(74, 144, 226, 0.1)' : 'transparent',
               '&:hover': {
-                backgroundColor: 'rgba(255, 179, 133, 0.05)'
+                backgroundColor: 'rgba(74, 144, 226, 0.05)'
               }
             }}
           >
@@ -97,7 +97,7 @@ const Navigation: React.FC = () => {
               primary={item.label} 
               sx={{
                 '& .MuiTypography-root': {
-                  color: isActive(item.path) ? '#FFB385' : '#323C55',
+                  color: isActive(item.path) ? theme.palette.secondary.main : '#323C55',
                   fontWeight: isActive(item.path) ? 600 : 400
                 }
               }}
@@ -138,9 +138,9 @@ const Navigation: React.FC = () => {
               >
                 <img 
                   src="/logos/PrimaryLogo.svg" 
-                  alt="Ariana Daris Studio" 
+                  alt="Gretz Tech" 
                   style={{
-                    height: '40px',
+                    height: '60px',
                     width: 'auto',
                     padding: '8px 0',
                     filter: isOnLandingPage 
@@ -186,15 +186,15 @@ const Navigation: React.FC = () => {
                       px: 2,
                       py: 1,
                       borderRadius: 2,
-                      backgroundColor: isActive(item.path) 
-                        ? isOnLandingPage
-                          ? (scrolled ? 'rgba(255, 179, 133, 0.2)' : 'rgba(255, 255, 255, 0.2)')
-                          : 'rgba(255, 179, 133, 0.2)'
-                        : 'transparent',
+                                              backgroundColor: isActive(item.path) 
+                          ? isOnLandingPage
+                            ? (scrolled ? 'rgba(74, 144, 226, 0.2)' : 'rgba(255, 255, 255, 0.2)')
+                            : 'rgba(74, 144, 226, 0.2)'
+                          : 'transparent',
                       '&:hover': {
                         backgroundColor: isOnLandingPage
-                          ? (scrolled ? 'rgba(255, 179, 133, 0.1)' : 'rgba(255, 255, 255, 0.1)')
-                          : 'rgba(255, 179, 133, 0.1)',
+                          ? (scrolled ? 'rgba(74, 144, 226, 0.1)' : 'rgba(255, 255, 255, 0.1)')
+                          : 'rgba(74, 144, 226, 0.1)',
                         transform: 'translateY(-1px)'
                       },
                       transition: 'all 0.3s ease'

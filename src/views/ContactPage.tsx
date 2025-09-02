@@ -29,6 +29,7 @@ import {
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
+import GradientBackground, { getGradient } from '../components/GradientBackground';
 
 const ContactPage: React.FC = () => {
   const theme = useTheme();
@@ -126,16 +127,12 @@ const ContactPage: React.FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
       {/* Hero Section */}
-      <Box 
+      <GradientBackground 
+        type="hero"
         sx={{ 
-          background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
           color: '#2D3748',
           py: isMobile ? 6 : 12,
-          position: 'relative',
-          overflow: 'hidden',
-          minHeight: isMobile ? '15vh' : '20vh',
-          display: 'flex',
-          alignItems: 'center'
+          minHeight: isMobile ? '15vh' : '20vh'
         }}
       >
         {/* Cozy Background Pattern */}
@@ -236,20 +233,21 @@ const ContactPage: React.FC = () => {
         
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
-            <Typography 
-              variant={isMobile ? "h3" : "h2"}
-              component="h1" 
-              align="center" 
-              sx={{ 
-                mb: isMobile ? 2 : 4,  
-                mt: isMobile ? 4 : 0,
-                fontWeight: 700, 
-                color: '#2D3748',
-                fontSize: isSmallMobile ? '1.8rem' : undefined
-              }}
-            >
-              Get in Touch
-            </Typography>
+                         <Typography 
+               variant={isMobile ? "h3" : "h2"}
+               component="h1" 
+               align="center" 
+               sx={{ 
+                 mb: isMobile ? 2 : 4,  
+                 mt: isMobile ? 4 : 0,
+                 fontWeight: 700, 
+                 color: '#2D3748',
+                 fontSize: isSmallMobile ? '1.8rem' : undefined,
+                 fontFamily: '"BearNose", serif'
+               }}
+             >
+               Get in Touch
+             </Typography>
           </Fade>
           <Fade in={isVisible} timeout={1200}>
             <Typography 
@@ -270,7 +268,7 @@ const ContactPage: React.FC = () => {
             </Typography>
           </Fade>
         </Container>
-      </Box>
+      </GradientBackground>
 
       {/* Contact Information */}
       <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
@@ -281,12 +279,12 @@ const ContactPage: React.FC = () => {
               <Card sx={{ 
                 p: isMobile ? 2.5 : 4, 
                 height: 'fit-content',
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,248,248,0.8) 100%)',
+                background: getGradient('card'),
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': { 
                   boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)'
+                  background: getGradient('cardHover')
                 }
               }}>
                 <Typography 
@@ -296,7 +294,8 @@ const ContactPage: React.FC = () => {
                     mb: isMobile ? 2 : 4, 
                     fontWeight: 600, 
                     color: '#323C55',
-                    fontSize: isSmallMobile ? '1.3rem' : undefined
+                    fontSize: isSmallMobile ? '1.3rem' : undefined,
+                    fontFamily: '"BearNose", serif'
                   }}
                 >
                   Send us a Message
@@ -453,7 +452,7 @@ const ContactPage: React.FC = () => {
                 <Typography 
                   variant="h4" 
                   component="h2" 
-                  sx={{ mb: 4, fontWeight: 600, color: '#323C55' }}
+                  sx={{ mb: 4, fontWeight: 600, color: '#323C55', fontFamily: '"BearNose", serif' }}
                 >
                   Contact Information
                 </Typography>
@@ -462,13 +461,13 @@ const ContactPage: React.FC = () => {
                     <Grow in={isVisible} timeout={1200 + (index * 100)} key={index}>
                       <Card sx={{ 
                         p: 3,
-                        background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,248,248,0.8) 100%)',
+                        background: getGradient('card'),
                         backdropFilter: 'blur(10px)',
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': { 
                           transform: 'translateY(-4px)',
                           boxShadow: `0 12px 24px ${theme.palette.primary.main}26`,
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)'
+                          background: getGradient('cardHover')
                         }
                       }}>
                         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>

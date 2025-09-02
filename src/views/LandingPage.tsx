@@ -27,6 +27,7 @@ import Celebration from '@mui/icons-material/Celebration';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
+import GradientBackground from '../components/GradientBackground';
 import { aboutService } from '../services/aboutService';
 
 const LandingPage: React.FC = () => {
@@ -98,18 +99,14 @@ const LandingPage: React.FC = () => {
 
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#FEFCF8' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#F8FBFF' }}>
       {/* Hero Section */}
-      <Box 
+      <GradientBackground 
+        type="hero"
         sx={{ 
-          background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
           color: '#2D3748',
           py: isMobile ? 6 : 12,
-          position: 'relative',
-          overflow: 'hidden',
-          minHeight: isMobile ? '80vh' : '100vh',
-          display: 'flex',
-          alignItems: 'center'
+          minHeight: isMobile ? '80vh' : '100vh'
         }}
       >
         {/* Cozy Background Pattern */}
@@ -209,13 +206,13 @@ const LandingPage: React.FC = () => {
         )}
 
          <Container maxWidth="lg">
-           <Grid container spacing={isMobile ? 3 : 6} alignItems="center">
-             <Grid item xs={12} md={6}>
+           <Grid container spacing={isMobile ? 3 : 6} alignItems="center" justifyContent="center">
+             <Grid item xs={12} md={8} lg={6}>
                <Fade in={isVisible} timeout={1000}>
                  <Box sx={{ mb: isMobile ? 2 : 4, display: 'flex', justifyContent: 'center' }}>
                    <img 
                      src="/logos/PrimaryLogo.svg" 
-                     alt="Ariana Daris Studio" 
+                     alt="Gretz Tech" 
                      style={{
                        width: '100%',
                        maxWidth: isMobile ? '300px' : '400px',
@@ -237,14 +234,16 @@ const LandingPage: React.FC = () => {
                      maxWidth: 500,
                      color: '#4A5568',
                      lineHeight: 1.6,
-                     fontFamily: '"Georgia", serif'
+                     fontFamily: '"Figtree", serif',
+                     textAlign: 'center',
+                     mx: 'auto'
                    }}
                  >
                    Where creativity meets excellence. We bring your creative dreams to life with passion and precision, crafting designs that feel like home.
                  </Typography>
                </Slide>
                <Slide direction="up" in={isVisible} timeout={1400}>
-                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={isMobile ? 2 : 3}>
+                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={isMobile ? 2 : 3} sx={{ justifyContent: 'center' }}>
                    <Button 
                      variant="contained" 
                      size={isMobile ? "medium" : "large"}
@@ -294,48 +293,6 @@ const LandingPage: React.FC = () => {
                  </Stack>
                </Slide>
              </Grid>
-             <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
-                <Zoom in={isVisible} timeout={1600}>
-                  <Box 
-                    sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: isMobile ? 300 : 400,
-                      position: 'relative'
-                    }}
-                  >
-                    <Box 
-                      sx={{ 
-                        width: isMobile ? 250 : 350,
-                        height: isMobile ? 250 : 350,
-                        borderRadius: '50%',
-                        background: `linear-gradient(135deg, ${theme.palette.secondary.main}15 0%, ${theme.palette.secondary.light}15 100%)`,
-                        border: `2px solid ${theme.palette.secondary.main}30`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'relative',
-                        animation: 'float 6s ease-in-out infinite',
-                      }}
-                    >
-                      <Box
-                        component="img"
-                        src={personalInfo.avatar}
-                        alt="Professional headshot"
-                        sx={{
-                          width: '90%',
-                          height: '90%',
-                          objectFit: 'cover',
-                          borderRadius: '50%',
-                          border: `3px solid ${theme.palette.secondary.main}30`,
-                          boxShadow: `0 8px 32px ${theme.palette.secondary.main}20`,
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                </Zoom>
-             </Grid>
            </Grid>
          </Container>
          
@@ -361,25 +318,25 @@ const LandingPage: React.FC = () => {
              }}
            >
              <Mouse sx={{ fontSize: 24, mb: 1 }} />
-             <Typography variant="caption" sx={{ fontSize: '0.8rem', fontFamily: '"Montserrat", serif' }}>
+                             <Typography variant="caption" sx={{ fontSize: '0.8rem', fontFamily: '"Figtree", serif' }}>
                Scroll to explore
              </Typography>
              <KeyboardArrowDown sx={{ fontSize: 20, mt: 0.5 }} />
            </Box>
          )}
-       </Box>
+       </GradientBackground>
 
 
 
       {/* Services Section */}
-      <Box sx={{ py: isMobile ? 6 : 14, bgcolor: '#FEFCF8' }}>
+      <Box sx={{ py: isMobile ? 6 : 14, bgcolor: '#F8FBFF' }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', mb: isMobile ? 4 : 10 }}>
             <Typography variant={isMobile ? "h3" : "h2"} sx={{ 
               fontWeight: 600, 
               color: '#2D3748', 
               mb: isMobile ? 2 : 3,
-              fontFamily: '"Georgia", serif',
+              fontFamily: '"BearNose", serif',
               fontSize: isSmallMobile ? '1.8rem' : undefined
             }}>
               Our Services
@@ -390,7 +347,7 @@ const LandingPage: React.FC = () => {
               maxWidth: 600, 
               mx: 'auto',
               lineHeight: 1.6,
-              fontFamily: '"Georgia", serif'
+              fontFamily: '"Figtree", serif'
             }}>
               We offer comprehensive creative services to help your brand stand out and achieve its goals with warmth and authenticity.
             </Typography>
@@ -405,9 +362,9 @@ const LandingPage: React.FC = () => {
                       height: '100%',
                       p: isMobile ? 3 : 5,
                       textAlign: 'center',
-                      border: '2px solid #F7FAFC',
+                      border: '2px solid #E3F2FD',
                       borderRadius: '20px',
-                      background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)',
+                      background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%)',
                       boxShadow: `0 10px 30px ${theme.palette.secondary.main}1A`,
                       '&:hover': {
                         transform: isMobile ? 'none' : 'translateY(-10px)',
@@ -433,7 +390,7 @@ const LandingPage: React.FC = () => {
                       fontWeight: 600, 
                       color: '#2D3748', 
                       mb: isMobile ? 2 : 3,
-                      fontFamily: '"Georgia", serif',
+                      fontFamily: '"BearNose", serif',
                       fontSize: isSmallMobile ? '1.1rem' : undefined
                     }}>
                       {service.title}
@@ -441,7 +398,7 @@ const LandingPage: React.FC = () => {
                     <Typography variant={isMobile ? "body2" : "body1"} sx={{ 
                       color: '#4A5568',
                       lineHeight: 1.6,
-                      fontFamily: '"Montserrat", serif',
+                      fontFamily: '"Figtree", serif',
                       fontSize: isSmallMobile ? '0.85rem' : undefined
                     }}>
                       {service.description}
@@ -457,7 +414,7 @@ const LandingPage: React.FC = () => {
       {/* Process Section */}
       <Box sx={{ 
         py: isMobile ? 6 : 14, 
-        background: 'linear-gradient(135deg, #F8F9FF 0%, #FFF8F8 100%)',
+        background: 'linear-gradient(135deg, #F0F8FF 0%, #E6F3FF 20%)',
         position: 'relative'
       }}>
         {/* Decorative pattern */}
@@ -470,8 +427,8 @@ const LandingPage: React.FC = () => {
             bottom: 0,
             opacity: 0.2,
             background: `
-              radial-gradient(circle at 20% 80%, ${theme.palette.secondary.main}1A 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, ${theme.palette.secondary.light}1A 0%, transparent 50%)
+              radial-gradient(circle at 20% 80%, ${theme.palette.primary.main}1A 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, ${theme.palette.primary.light}1A 0%, transparent 50%)
             `
           }}
         />
@@ -481,7 +438,7 @@ const LandingPage: React.FC = () => {
               fontWeight: 600, 
               color: '#2D3748', 
               mb: isMobile ? 2 : 3,
-              fontFamily: '"Georgia", serif',
+              fontFamily: '"BearNose", serif',
               fontSize: isSmallMobile ? '1.8rem' : undefined
             }}>
               Our Process
@@ -492,7 +449,7 @@ const LandingPage: React.FC = () => {
               maxWidth: 600, 
               mx: 'auto',
               lineHeight: 1.6,
-              fontFamily: '"Georgia", serif'
+              fontFamily: '"Figtree", serif'
             }}>
               We follow a proven methodology to ensure every project is delivered on time and exceeds expectations with care and attention.
             </Typography>
@@ -508,7 +465,7 @@ const LandingPage: React.FC = () => {
                         width: isMobile ? 70 : 90, 
                         height: isMobile ? 70 : 90, 
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)',
+                        background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -529,7 +486,7 @@ const LandingPage: React.FC = () => {
                       fontWeight: 600, 
                       color: '#2D3748', 
                       mb: isMobile ? 2 : 3,
-                      fontFamily: '"Georgia", serif',
+                      fontFamily: '"BearNose", serif',
                       fontSize: isSmallMobile ? '1rem' : undefined
                     }}>
                       {step.title}
@@ -537,7 +494,7 @@ const LandingPage: React.FC = () => {
                     <Typography variant="body2" sx={{ 
                       color: '#4A5568',
                       lineHeight: 1.6,
-                      fontFamily: '"Montserrat", serif',
+                      fontFamily: '"Figtree", serif',
                       fontSize: isSmallMobile ? '0.8rem' : undefined
                     }}>
                       {step.description}

@@ -1,12 +1,12 @@
 /* Custom Font Declarations */
 
-/* Primary Font - Milyuna */
+/* Primary Font - BearNose */
 @font-face {
-  font-family: 'Milyuna';
-  src: url('./fonts/Milyuna-Regular.ttf') format('truetype');
+  font-family: 'BearNose';
+  src: url('./fonts/BearNose.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
-/* Montserrat Font is now loaded via Google Fonts link in index.html */ 
+/* Figtree Font is now loaded via Google Fonts link in index.html */ 

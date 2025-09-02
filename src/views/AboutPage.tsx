@@ -20,8 +20,8 @@ import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
+import GradientBackground, { getGradient } from '../components/GradientBackground';
 import { aboutService } from '../services/aboutService';
-
 const AboutPage: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -40,9 +40,11 @@ const AboutPage: React.FC = () => {
   }, []);
 
   const [personalInfo, setPersonalInfo] = useState(aboutService.getPersonalInfo());
+  const [husbandInfo, setHusbandInfo] = useState(aboutService.getHusbandInfo());
 
   useEffect(() => {
     setPersonalInfo(aboutService.getPersonalInfo());
+    setHusbandInfo(aboutService.getHusbandInfo());
   }, []);
 
   const values = [
@@ -66,16 +68,11 @@ const AboutPage: React.FC = () => {
   return (
     <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
                     {/* Hero Section */}
-       <Box 
+       <GradientBackground 
+         type="hero"
          sx={{ 
-           background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
-           color: '#2D3748',
            py: isMobile ? 6 : 12,
-           position: 'relative',
-           overflow: 'hidden',
-           minHeight: isMobile ? '30vh' : '40vh',
-           display: 'flex',
-           alignItems: 'center'
+           minHeight: isMobile ? '30vh' : '40vh'
          }}
        >
          {/* Cozy Background Pattern */}
@@ -175,7 +172,7 @@ const AboutPage: React.FC = () => {
         )}
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
-            <Typography 
+                         <Typography 
                variant={isMobile ? "h3" : "h2"}
                component="h1" 
                align="center" 
@@ -183,8 +180,9 @@ const AboutPage: React.FC = () => {
                  mb: isMobile ? 2 : 4, 
                  mt: isMobile ? 4 : 0,
                  fontWeight: 700, 
-                 color: '#2D3748',
-                 fontSize: isSmallMobile ? '1.8rem' : undefined
+                 color: '#07004D',
+                 fontSize: isSmallMobile ? '1.8rem' : undefined,
+                 fontFamily: '"BearNose", serif'
                }}
              >
                About Our Studio
@@ -199,7 +197,7 @@ const AboutPage: React.FC = () => {
                  mx: 'auto', 
                  opacity: 0.9,
                  lineHeight: 1.6,
-                 color: '#2D3748',
+                 color: '#07004D',
                  px: isMobile ? 2 : 0,
                  fontSize: isSmallMobile ? '0.9rem' : undefined
                }}
@@ -209,7 +207,7 @@ const AboutPage: React.FC = () => {
              </Typography>
           </Fade>
         </Container>
-      </Box>
+      </GradientBackground>
 
       {/* Mission Section */}
       <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
@@ -222,8 +220,9 @@ const AboutPage: React.FC = () => {
                 sx={{ 
                   mb: isMobile ? 2 : 4, 
                   fontWeight: 600, 
-                  color: 'text.primary',
-                  fontSize: isSmallMobile ? '1.5rem' : undefined
+                  color: '#07004D',
+                  fontSize: isSmallMobile ? '1.5rem' : undefined,
+                  fontFamily: '"BearNose", serif'
                 }}
               >
                 Our Mission
@@ -239,7 +238,7 @@ const AboutPage: React.FC = () => {
                   lineHeight: 1.8 
                 }}
               >
-                At Ariana Daris Studio, I believe that great design has the power to transform 
+                At Gretz Tech, I believe that great design has the power to transform 
                 businesses and inspire people. My mission is to create meaningful, beautiful, 
                 and effective design solutions that help my clients achieve their goals.
               </Typography>
@@ -306,8 +305,9 @@ const AboutPage: React.FC = () => {
               sx={{ 
                 mb: isMobile ? 4 : 8, 
                 fontWeight: 600, 
-                color: 'text.primary',
-                fontSize: isSmallMobile ? '1.5rem' : undefined
+                color: '#07004D',
+                fontSize: isSmallMobile ? '1.5rem' : undefined,
+                fontFamily: '"BearNose", serif'
               }}
             >
               Our Values
@@ -323,19 +323,19 @@ const AboutPage: React.FC = () => {
                       textAlign: 'center',
                       p: 4,
                       transition: 'all 0.3s ease-in-out',
-                      background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,248,248,0.8) 100%)',
+                      background: getGradient('card'),
                       backdropFilter: 'blur(10px)',
                       '&:hover': { 
                         transform: 'translateY(-8px)',
                         boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
-                        background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)'
+                        background: getGradient('cardHover')
                       }
                     }}
                   >
                     <Box sx={{ mb: 3 }}>
                       {value.icon}
                     </Box>
-                    <Typography variant="h5" component="h3" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
+                    <Typography variant="h5" component="h3" sx={{ mb: 2, fontWeight: 600, color: '#07004D' }}>
                       {value.title}
                     </Typography>
                     <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
@@ -370,7 +370,8 @@ const AboutPage: React.FC = () => {
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'cover'
+                      objectFit: 'cover',
+                      transform: 'scale(3.5) translateY(50px) translateX(-2px)'
                     }}
                   />
                 </Avatar>
@@ -380,7 +381,7 @@ const AboutPage: React.FC = () => {
           <Grid item xs={12} md={8}>
             <Fade in={scrollY > 750} timeout={1200}>
               <Box>
-                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
+                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: '#07004D' }}>
                   {personalInfo.name}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
@@ -389,7 +390,7 @@ const AboutPage: React.FC = () => {
                 <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
                   {personalInfo.bio}
                 </Typography>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#07004D', fontFamily: '"Figtree", serif' }}>
                   Specializations
                 </Typography>
                 <Grid container spacing={1} sx={{ mb: 3 }}>
@@ -412,6 +413,72 @@ const AboutPage: React.FC = () => {
           </Grid>
         </Grid>
              </Container>
+
+      {/* Husband Section */}
+      <Container maxWidth="lg" sx={{ py: 12 }}>
+        <Grid container spacing={6} alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Fade in={scrollY > 900} timeout={1400}>
+              <Box>
+                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: '#07004D' }}>
+                  {husbandInfo.name}
+                </Typography>
+                <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
+                  {husbandInfo.role}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
+                  {husbandInfo.bio}
+                </Typography>
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#07004D', fontFamily: '"Figtree", serif' }}>
+                  What He Brings
+                </Typography>
+                <Grid container spacing={1} sx={{ mb: 3 }}>
+                  {husbandInfo.skills.map((skill, skillIndex) => (
+                    <Grid item key={skillIndex}>
+                      <Chip 
+                        label={skill} 
+                        size="medium" 
+                        sx={{ 
+                          bgcolor: `${theme.palette.secondary.main}1A`, 
+                          color: 'secondary.main',
+                          fontWeight: 500,
+                        }} 
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </Fade>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Grow in={scrollY > 950} timeout={1600}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Avatar 
+                  sx={{ 
+                    width: 200, 
+                    height: 200, 
+                    mx: 'auto', 
+                    mb: 3,
+                    bgcolor: 'background.paper',
+                    border: `3px solid ${theme.palette.primary.main}20`
+                  }}
+                >
+                  <img 
+                    src={husbandInfo.avatar} 
+                    alt={husbandInfo.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transform: 'scale(2) translateY(45px)'
+                    }}
+                  />
+                </Avatar>
+              </Box>
+            </Grow>
+          </Grid>
+        </Grid>
+      </Container>
 
        {/* Get in Touch CTA Section */}
        <ContactCTA 

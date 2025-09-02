@@ -157,7 +157,7 @@ class PortfolioService {
   getTagColor(tag: string): string {
     const tags = this.getTagsWithInfo();
     const foundTag = tags.find(t => t.name === tag);
-    return foundTag ? foundTag.color : '#FF6B6B';
+    return foundTag ? foundTag.color : '#4A90E2';
   }
 
   // Get available years

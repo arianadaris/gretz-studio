@@ -25,6 +25,7 @@ import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import ContactCTA from '../components/ContactCTA';
 import { portfolioService, Project } from '../services/portfolioService';
+import GradientBackground, { getGradient } from '../components/GradientBackground';
 
 const PortfolioPage: React.FC = () => {
   const theme = useTheme();
@@ -84,16 +85,12 @@ const PortfolioPage: React.FC = () => {
   return (
     <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
       {/* Hero Section */}
-      <Box 
+      <GradientBackground 
+        type="hero"
         sx={{ 
-          background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)',
           color: '#2D3748',
           py: isMobile ? 6 : 12,
-          position: 'relative',
-          overflow: 'hidden',
-          minHeight: isMobile ? '30vh' : '40vh',
-          display: 'flex',
-          alignItems: 'center'
+          minHeight: isMobile ? '30vh' : '40vh'
         }}
       >
         {/* Cozy Background Pattern */}
@@ -194,20 +191,21 @@ const PortfolioPage: React.FC = () => {
         
         <Container maxWidth="lg">
           <Fade in={isVisible} timeout={1000}>
-            <Typography 
-              variant={isMobile ? "h3" : "h2"}
-              component="h1" 
-              align="center" 
-              sx={{ 
-                mb: isMobile ? 2 : 4,  
-                mt: isMobile ? 4 : 0,
-                fontWeight: 700, 
-                color: '#2D3748',
-                fontSize: isSmallMobile ? '1.8rem' : undefined
-              }}
-            >
-              Our Portfolio
-            </Typography>
+                         <Typography 
+               variant={isMobile ? "h3" : "h2"}
+               component="h1" 
+               align="center" 
+               sx={{ 
+                 mb: isMobile ? 2 : 4,  
+                 mt: isMobile ? 4 : 0,
+                 fontWeight: 700, 
+                 color: '#2D3748',
+                 fontSize: isSmallMobile ? '1.8rem' : undefined,
+                 fontFamily: '"BearNose", serif'
+               }}
+             >
+               Our Portfolio
+             </Typography>
           </Fade>
           <Fade in={isVisible} timeout={1200}>
             <Typography 
@@ -227,7 +225,7 @@ const PortfolioPage: React.FC = () => {
             </Typography>
           </Fade>
         </Container>
-      </Box>
+      </GradientBackground>
 
       {/* Filter Section */}
       <Container maxWidth="lg" sx={{ py: isMobile ? 6 : 12 }}>
@@ -240,7 +238,8 @@ const PortfolioPage: React.FC = () => {
                 mb: isMobile ? 2 : 4, 
                 fontWeight: 600, 
                 color: 'text.primary',
-                fontSize: isSmallMobile ? '1.5rem' : undefined
+                fontSize: isSmallMobile ? '1.5rem' : undefined,
+                fontFamily: '"BearNose", serif'
               }}
             >
               Browse by Category
@@ -290,12 +289,12 @@ const PortfolioPage: React.FC = () => {
                     transition: 'all 0.3s ease-in-out',
                     position: 'relative',
                     overflow: 'hidden',
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,248,248,0.8) 100%)',
+                    background: getGradient('card'),
                     backdropFilter: 'blur(10px)',
                     '&:hover': { 
                       transform: 'translateY(-8px)',
                       boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
-                      background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)',
+                      background: getGradient('cardHover'),
                       ...(project.viewUrl && {
                         '& .project-overlay': {
                           opacity: 1
@@ -389,7 +388,7 @@ const PortfolioPage: React.FC = () => {
                             bgcolor: 'white',
                             color: 'primary.main',
                             fontSize: isMobile ? '0.8rem' : undefined,
-                            '&:hover': { bgcolor: '#f5f5f5' }
+                            '&:hover': { bgcolor: '#E3F2FD' }
                           }}
                         >
                           View

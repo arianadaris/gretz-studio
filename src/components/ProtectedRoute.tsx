@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
+import GradientBackground, { getGradient } from './GradientBackground';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -20,21 +21,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (isAuthenticated === null) {
     // Loading state
     return (
-      <Box
+      <GradientBackground
+        type="hero"
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #FFE5E5 0%, #FFF0F0 25%, #F0F8FF 75%, #E6F3FF 100%)'
+          minHeight: '100vh'
         }}
       >
         <CircularProgress size={60} sx={{ mb: 2 }} />
         <Typography variant="h6" sx={{ color: 'text.secondary' }}>
           Checking authentication...
         </Typography>
-      </Box>
+      </GradientBackground>
     );
   }
 
