@@ -11,6 +11,7 @@ import { useTheme } from '@mui/material/styles';
 import GradientBackground, { getGradient } from '../../components/GradientBackground';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useThemeContext } from '../../contexts/ThemeContext';
 
 const AdminLoginPage: React.FC = () => {
   const [credentials, setCredentials] = useState({
@@ -22,6 +23,7 @@ const AdminLoginPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { user } = useAuth();
+  const { isDarkMode } = useThemeContext();
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
@@ -93,7 +95,8 @@ const AdminLoginPage: React.FC = () => {
                 style={{ 
                   height: '60px', 
                   width: 'auto',
-                  maxWidth: '200px'
+                  maxWidth: '200px',
+                  filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
                 }} 
               />
             </Box>

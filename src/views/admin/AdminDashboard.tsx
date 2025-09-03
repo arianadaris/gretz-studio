@@ -23,6 +23,7 @@ import AdminProjectModal from '../../components/AdminProjectModal';
 import { portfolioService } from '../../services/portfolioService';
 import type { Project } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useThemeContext } from '../../contexts/ThemeContext';
 
 const AdminDashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -33,6 +34,7 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { signOut } = useAuth();
+  const { isDarkMode } = useThemeContext();
 
   useEffect(() => {
     const loadData = async () => {
@@ -138,7 +140,14 @@ const AdminDashboard: React.FC = () => {
   return (
           <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.backgrounds.admin }}>
       {/* Admin App Bar */}
-      <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
+      <AppBar 
+        position="static" 
+        sx={{ 
+          bgcolor: isDarkMode ? theme.palette.gradients.card : 'white', 
+          color: 'text.primary', 
+          boxShadow: 1 
+        }}
+      >
         <Toolbar>
           {/* Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 3, cursor: 'pointer' }} onClick={() => navigate('/')}>
@@ -148,7 +157,8 @@ const AdminDashboard: React.FC = () => {
               style={{ 
                 height: '40px', 
                 width: 'auto',
-                maxWidth: '150px'
+                maxWidth: '150px',
+                filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
               }} 
             />
           </Box>
@@ -180,7 +190,13 @@ const AdminDashboard: React.FC = () => {
         {/* Stats Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
+            <Card sx={{ 
+              bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
+              borderRadius: 2,
+              border: `1px solid ${theme.palette.borders.light}`,
+              background: isDarkMode ? theme.palette.gradients.card : 'white',
+              boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
               <CardContent>
                 <Typography color="admin.main" gutterBottom>
                   Total Projects
@@ -192,7 +208,13 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
+            <Card sx={{ 
+              bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
+              borderRadius: 2,
+              border: `1px solid ${theme.palette.borders.light}`,
+              background: isDarkMode ? theme.palette.gradients.card : 'white',
+              boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
               <CardContent>
                 <Typography color="admin.main" gutterBottom>
                   Featured Projects
@@ -204,7 +226,13 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
+            <Card sx={{ 
+              bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
+              borderRadius: 2,
+              border: `1px solid ${theme.palette.borders.light}`,
+              background: isDarkMode ? theme.palette.gradients.card : 'white',
+              boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
               <CardContent>
                 <Typography color="admin.main" gutterBottom>
                   Categories
@@ -216,13 +244,19 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
+            <Card sx={{ 
+              bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
+              borderRadius: 2,
+              border: `1px solid ${theme.palette.borders.light}`,
+              background: isDarkMode ? theme.palette.gradients.card : 'white',
+              boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
               <CardContent>
                 <Typography color="admin.main" gutterBottom>
                   This Year
                 </Typography>
                 <Typography variant="h4" component="div" sx={{ fontWeight: 600, color: 'admin.main' }}>
-                  {projects.filter(p => p.year === '2024').length}
+                  {projects.filter(p => p.year === '2025').length}
                 </Typography>
               </CardContent>
             </Card>
@@ -230,7 +264,13 @@ const AdminDashboard: React.FC = () => {
         </Grid>
 
         {/* Projects List */}
-        <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
+        <Card sx={{ 
+          bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
+          borderRadius: 2,
+          border: `1px solid ${theme.palette.borders.light}`,
+          background: isDarkMode ? theme.palette.gradients.card : 'white',
+          boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
           <CardContent>
             <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
               Portfolio Projects
@@ -256,8 +296,15 @@ const AdminDashboard: React.FC = () => {
                     <Card 
                       sx={{ 
                         border: `1px solid ${theme.palette.borders.light}`,
-                        '&:hover': { boxShadow: 2 },
-                        cursor: 'pointer'
+                        bgcolor: isDarkMode ? theme.palette.backgrounds.veryLight : 'white',
+                        background: isDarkMode ? theme.palette.gradients.card : 'white',
+                        boxShadow: isDarkMode ? `0 5px 20px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)',
+                        '&:hover': { 
+                          boxShadow: isDarkMode ? `0 8px 25px ${theme.palette.secondary.main}33` : 2,
+                          transform: isDarkMode ? 'translateY(-2px)' : 'none'
+                        },
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease'
                       }}
                       onClick={() => handleEditProject(project)}
                     >

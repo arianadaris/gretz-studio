@@ -36,6 +36,7 @@ import { useTheme } from '@mui/material/styles';
 import { aboutService, PersonalInfo } from '../../services/aboutService';
 import { teamService } from '../../services/teamService';
 import type { TeamMember } from '../../lib/supabase';
+import { useThemeContext } from '../../contexts/ThemeContext';
 
 interface Category {
   id: string;
@@ -95,6 +96,7 @@ const AdminSettings: React.FC = () => {
   
   const navigate = useNavigate();
   const theme = useTheme();
+  const { isDarkMode } = useThemeContext();
 
   // Pre-set tag colors based on theme
   const tagColors = [
@@ -523,7 +525,14 @@ const AdminSettings: React.FC = () => {
   return (
           <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.backgrounds.admin }}>
       {/* Admin App Bar */}
-      <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
+      <AppBar 
+        position="static" 
+        sx={{ 
+          bgcolor: isDarkMode ? theme.palette.backgrounds.admin : 'white', 
+          color: 'text.primary', 
+          boxShadow: 1 
+        }}
+      >
         <Toolbar>
           {/* Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 3, cursor: 'pointer' }} onClick={() => navigate('/')}>
@@ -533,7 +542,8 @@ const AdminSettings: React.FC = () => {
               style={{ 
                 height: '40px', 
                 width: 'auto',
-                maxWidth: '150px'
+                maxWidth: '150px',
+                filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
               }} 
             />
           </Box>
@@ -554,10 +564,12 @@ const AdminSettings: React.FC = () => {
               expanded={arianaExpanded} 
               onChange={handleArianaChange('ariana')}
               sx={{ 
-                bgcolor: 'white', 
+                bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
                 borderRadius: 2,
                 '&:before': { display: 'none' },
-                boxShadow: 1
+                border: `1px solid ${theme.palette.borders.light}`,
+                background: isDarkMode ? theme.palette.gradients.card : 'white',
+                boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
               }}
             >
               <AccordionSummary
@@ -671,10 +683,12 @@ const AdminSettings: React.FC = () => {
               expanded={cooperExpanded} 
               onChange={handleCooperChange('cooper')}
               sx={{ 
-                bgcolor: 'white', 
+                bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
                 borderRadius: 2,
                 '&:before': { display: 'none' },
-                boxShadow: 1
+                border: `1px solid ${theme.palette.borders.light}`,
+                background: isDarkMode ? theme.palette.gradients.card : 'white',
+                boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
               }}
             >
               <AccordionSummary
@@ -790,10 +804,12 @@ const AdminSettings: React.FC = () => {
               expanded={categoriesExpanded} 
               onChange={handleCategoriesChange('categories')}
               sx={{ 
-                bgcolor: 'white', 
+                bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
                 borderRadius: 2,
                 '&:before': { display: 'none' },
-                boxShadow: 1
+                border: `1px solid ${theme.palette.borders.light}`,
+                background: isDarkMode ? theme.palette.gradients.card : 'white',
+                boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
               }}
             >
               <AccordionSummary
@@ -825,7 +841,13 @@ const AdminSettings: React.FC = () => {
               <AccordionDetails>
                 {/* Add/Edit Category Form */}
                 {isAdding && (
-                  <Card sx={{ mb: 3, bgcolor: 'grey.50', border: `1px solid ${theme.palette.borders.light}` }}>
+                  <Card sx={{ 
+                    mb: 3, 
+                    bgcolor: isDarkMode ? theme.palette.backgrounds.veryLight : 'grey.50', 
+                    border: `1px solid ${theme.palette.borders.light}`,
+                    background: isDarkMode ? theme.palette.gradients.card : 'grey.50',
+                    boxShadow: isDarkMode ? `0 5px 20px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
                     <CardContent>
                       <Typography variant="h6" sx={{ mb: 2, color: 'admin.main' }}>
                         {editingCategory ? 'Edit Category' : 'Add New Category'}
@@ -896,7 +918,14 @@ const AdminSettings: React.FC = () => {
                         border: `1px solid ${theme.palette.borders.light}`, 
                         borderRadius: 1, 
                         mb: 1,
-                        bgcolor: 'white'
+                        bgcolor: isDarkMode ? theme.palette.backgrounds.veryLight : 'white',
+                        background: isDarkMode ? theme.palette.gradients.card : 'white',
+                        boxShadow: isDarkMode ? `0 2px 8px ${theme.palette.secondary.main}1A` : 'none',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          boxShadow: isDarkMode ? `0 4px 12px ${theme.palette.secondary.main}26` : 'none',
+                          transform: isDarkMode ? 'translateY(-1px)' : 'none'
+                        }
                       }}
                     >
                       <Box 
@@ -955,10 +984,12 @@ const AdminSettings: React.FC = () => {
               expanded={tagsExpanded} 
               onChange={handleTagsChange('tags')}
               sx={{ 
-                bgcolor: 'white', 
+                bgcolor: isDarkMode ? theme.palette.backgrounds.card : 'white', 
                 borderRadius: 2,
                 '&:before': { display: 'none' },
-                boxShadow: 1
+                border: `1px solid ${theme.palette.borders.light}`,
+                background: isDarkMode ? theme.palette.gradients.card : 'white',
+                boxShadow: isDarkMode ? `0 10px 30px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
               }}
             >
               <AccordionSummary
@@ -990,7 +1021,13 @@ const AdminSettings: React.FC = () => {
               <AccordionDetails>
                 {/* Add/Edit Tag Form */}
                 {isAddingTag && (
-                  <Card sx={{ mb: 3, bgcolor: 'grey.50', border: `1px solid ${theme.palette.borders.light}` }}>
+                  <Card sx={{ 
+                    mb: 3, 
+                    bgcolor: isDarkMode ? theme.palette.backgrounds.veryLight : 'grey.50', 
+                    border: `1px solid ${theme.palette.borders.light}`,
+                    background: isDarkMode ? theme.palette.gradients.card : 'grey.50',
+                    boxShadow: isDarkMode ? `0 5px 20px ${theme.palette.secondary.main}1A` : '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
                     <CardContent>
                       <Typography variant="h6" sx={{ mb: 2, color: 'admin.main' }}>
                         {editingTag ? 'Edit Tag' : 'Add New Tag'}
@@ -1061,7 +1098,14 @@ const AdminSettings: React.FC = () => {
                         border: `1px solid ${theme.palette.borders.light}`, 
                         borderRadius: 1, 
                         mb: 1,
-                        bgcolor: 'white'
+                        bgcolor: isDarkMode ? theme.palette.backgrounds.veryLight : 'white',
+                        background: isDarkMode ? theme.palette.gradients.card : 'white',
+                        boxShadow: isDarkMode ? `0 2px 8px ${theme.palette.secondary.main}1A` : 'none',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          boxShadow: isDarkMode ? `0 4px 12px ${theme.palette.secondary.main}26` : 'none',
+                          transform: isDarkMode ? 'translateY(-1px)' : 'none'
+                        }
                       }}
                     >
                       <Box 
