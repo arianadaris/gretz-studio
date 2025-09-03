@@ -6,7 +6,7 @@ const usePageTitle = () => {
 
   useEffect(() => {
     const getPageTitle = (pathname: string): string => {
-      const baseTitle = 'Gretz Tech';
+      const baseTitle = 'Gretz Studio';
       
       switch (pathname) {
         case '/':

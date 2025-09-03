@@ -153,7 +153,7 @@ const AdminDashboard: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 3, cursor: 'pointer' }} onClick={() => navigate('/')}>
             <img 
               src="/logos/PrimaryLogo.svg" 
-              alt="Gretz Tech" 
+              alt="Gretz Studio" 
               style={{ 
                 height: '40px', 
                 width: 'auto',

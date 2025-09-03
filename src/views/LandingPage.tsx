@@ -214,7 +214,7 @@ const LandingPage: React.FC = () => {
                  <Box sx={{ mb: isMobile ? 2 : 4, display: 'flex', justifyContent: 'center' }}>
                    <img 
                      src="/logos/PrimaryLogo.svg" 
-                     alt="Gretz Tech" 
+                     alt="Gretz Studio" 
                      style={{
                        width: '100%',
                        maxWidth: isMobile ? '300px' : '400px',

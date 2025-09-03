@@ -83,7 +83,7 @@ const Navigation: React.FC = () => {
       }}>
         <img 
           src="/logos/PrimaryLogo.svg" 
-          alt="Gretz Tech" 
+          alt="Gretz Studio" 
           style={{
             width: '100%',
             maxWidth: '200px',
@@ -169,7 +169,7 @@ const Navigation: React.FC = () => {
               >
                 <img 
                   src="/logos/PrimaryLogo.svg" 
-                  alt="Gretz Tech" 
+                  alt="Gretz Studio" 
                   style={{
                     height: '60px',
                     width: 'auto',

@@ -91,7 +91,7 @@ const AdminLoginPage: React.FC = () => {
             <Box sx={{ mb: 3 }}>
               <img 
                 src="/logos/PrimaryLogo.svg" 
-                alt="Gretz Tech" 
+                alt="Gretz Studio" 
                 style={{ 
                   height: '60px', 
                   width: 'auto',

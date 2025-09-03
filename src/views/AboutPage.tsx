@@ -261,7 +261,7 @@ const AboutPage: React.FC = () => {
                   lineHeight: 1.8 
                 }}
               >
-                At Gretz Tech, we believe that great design has the power to transform 
+                At Gretz Studio, we believe that great design has the power to transform 
                 businesses and inspire people. Our mission is to create meaningful, beautiful, 
                 and effective design solutions that help our clients achieve their goals.
               </Typography>
