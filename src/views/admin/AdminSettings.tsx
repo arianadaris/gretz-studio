@@ -34,6 +34,8 @@ import Person from '@mui/icons-material/Person';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { aboutService, PersonalInfo } from '../../services/aboutService';
+import { teamService } from '../../services/teamService';
+import type { TeamMember } from '../../lib/supabase';
 
 interface Category {
   id: string;
@@ -53,8 +55,8 @@ const AdminSettings: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
-      const [newCategory, setNewCategory] = useState({ name: '', label: '', color: '#4A90E2' });
-    const [newTag, setNewTag] = useState({ name: '', color: '#4A90E2' });
+        const [newCategory, setNewCategory] = useState({ name: '', label: '', color: '#4A90E2' });
+  const [newTag, setNewTag] = useState({ name: '', color: '#4A90E2' });
   const [isAdding, setIsAdding] = useState(false);
   const [isAddingTag, setIsAddingTag] = useState(false);
   const [categoriesExpanded, setCategoriesExpanded] = useState(false);
@@ -66,6 +68,17 @@ const AdminSettings: React.FC = () => {
   const [newSkill, setNewSkill] = useState('');
   const [aboutExpanded, setAboutExpanded] = useState(false);
   
+  // Team members state
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [arianaInfo, setArianaInfo] = useState<TeamMember | null>(null);
+  const [cooperInfo, setCooperInfo] = useState<TeamMember | null>(null);
+  const [editingArianaSkill, setEditingArianaSkill] = useState<string | null>(null);
+  const [newArianaSkill, setNewArianaSkill] = useState('');
+  const [editingCooperSkill, setEditingCooperSkill] = useState<string | null>(null);
+  const [newCooperSkill, setNewCooperSkill] = useState('');
+  const [arianaExpanded, setArianaExpanded] = useState(false);
+  const [cooperExpanded, setCooperExpanded] = useState(false);
+  
 
   
   const navigate = useNavigate();
@@ -73,20 +86,31 @@ const AdminSettings: React.FC = () => {
 
   // Pre-set tag colors based on theme
   const tagColors = [
-            { value: '#4A90E2', label: 'Blue', color: '#4A90E2' },
-        { value: '#4CAF50', label: 'Green', color: '#4CAF50' },
-    { value: '#4ECDC4', label: 'Teal', color: '#4ECDC4' },
-    { value: '#45B7D1', label: 'Sky Blue', color: '#45B7D1' },
-    { value: '#C8A2C8', label: 'Lilac', color: '#C8A2C8' }
+    { value: theme.palette.tagColors.blue, label: 'Blue', color: theme.palette.tagColors.blue },
+    { value: theme.palette.tagColors.green, label: 'Green', color: theme.palette.tagColors.green },
+    { value: theme.palette.tagColors.teal, label: 'Teal', color: theme.palette.tagColors.teal },
+    { value: theme.palette.tagColors.skyBlue, label: 'Sky Blue', color: theme.palette.tagColors.skyBlue },
+    { value: theme.palette.tagColors.lilac, label: 'Lilac', color: theme.palette.tagColors.lilac }
   ];
 
   useEffect(() => {
-    // Check authentication
-    const isAuthenticated = localStorage.getItem('adminAuthenticated');
-    if (!isAuthenticated) {
-      navigate('/admin');
-      return;
-    }
+    // Load team members from database
+    const loadTeamMembers = async () => {
+      try {
+        await teamService.initializeDefaultTeamMembers();
+        const members = await teamService.getTeamMembers();
+        setTeamMembers(members);
+        
+        // Set individual member info
+        const ariana = members.find(m => m.id === 'ariana');
+        const cooper = members.find(m => m.id === 'cooper');
+        
+        if (ariana) setArianaInfo(ariana);
+        if (cooper) setCooperInfo(cooper);
+      } catch (error) {
+        console.error('Error loading team members:', error);
+      }
+    };
 
     // Load categories from localStorage if they exist
     const savedCategories = localStorage.getItem('portfolioCategories');
@@ -100,8 +124,8 @@ const AdminSettings: React.FC = () => {
       setTags(JSON.parse(savedTags));
     }
 
-
-  }, [navigate]);
+    loadTeamMembers();
+  }, []);
 
   const saveCategories = (updatedCategories: Category[]) => {
     setCategories(updatedCategories);
@@ -125,7 +149,7 @@ const AdminSettings: React.FC = () => {
       
       const updatedCategories = [...categories, category];
       saveCategories(updatedCategories);
-      setNewCategory({ name: '', label: '', color: '#4A90E2' });
+      setNewCategory({ name: '', label: '', color: theme.palette.tagColors.blue });
       setIsAdding(false);
     }
   };
@@ -155,7 +179,7 @@ const AdminSettings: React.FC = () => {
       );
       saveCategories(updatedCategories);
       setEditingCategory(null);
-      setNewCategory({ name: '', label: '', color: '#4A90E2' });
+      setNewCategory({ name: '', label: '', color: theme.palette.tagColors.blue });
       setIsAdding(false);
     }
   };
@@ -169,7 +193,7 @@ const AdminSettings: React.FC = () => {
 
   const handleCancel = () => {
     setEditingCategory(null);
-    setNewCategory({ name: '', label: '', color: '#4A90E2' });
+    setNewCategory({ name: '', label: '', color: theme.palette.tagColors.blue });
     setIsAdding(false);
   };
 
@@ -184,7 +208,7 @@ const AdminSettings: React.FC = () => {
       
       const updatedTags = [...tags, tag];
       saveTags(updatedTags);
-      setNewTag({ name: '', color: '#4A90E2' });
+      setNewTag({ name: '', color: theme.palette.tagColors.blue });
       setIsAddingTag(false);
     }
   };
@@ -211,7 +235,7 @@ const AdminSettings: React.FC = () => {
       );
       saveTags(updatedTags);
       setEditingTag(null);
-      setNewTag({ name: '', color: '#4A90E2' });
+      setNewTag({ name: '', color: theme.palette.tagColors.blue });
       setIsAddingTag(false);
     }
   };
@@ -315,8 +339,171 @@ const AdminSettings: React.FC = () => {
     setAboutExpanded(isExpanded);
   };
 
+  // Team member information management functions
+  const handleArianaInfoUpdate = async (field: keyof TeamMember, value: string | string[]) => {
+    if (!arianaInfo) return;
+    
+    try {
+      const updatedInfo = { ...arianaInfo, [field]: value };
+      const savedMember = await teamService.updateTeamMember(arianaInfo.id, updatedInfo);
+      setArianaInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
+    } catch (error) {
+      console.error('Error updating Ariana info:', error);
+    }
+  };
+
+  const handleCooperInfoUpdate = async (field: keyof TeamMember, value: string | string[]) => {
+    if (!cooperInfo) return;
+    
+    try {
+      const updatedInfo = { ...cooperInfo, [field]: value };
+      const savedMember = await teamService.updateTeamMember(cooperInfo.id, updatedInfo);
+      setCooperInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
+    } catch (error) {
+      console.error('Error updating Cooper info:', error);
+    }
+  };
+
+  // Ariana skills management
+  const handleAddArianaSkill = async () => {
+    if (!arianaInfo || !newArianaSkill.trim()) return;
+    
+    try {
+      const updatedSkills = [...arianaInfo.skills, newArianaSkill.trim()];
+      const savedMember = await teamService.updateTeamMember(arianaInfo.id, { skills: updatedSkills });
+      setArianaInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
+      setNewArianaSkill('');
+    } catch (error) {
+      console.error('Error adding Ariana skill:', error);
+    }
+  };
+
+  const handleEditArianaSkill = (skill: string) => {
+    setEditingArianaSkill(skill);
+    setNewArianaSkill(skill);
+  };
+
+  const handleUpdateArianaSkill = async () => {
+    if (!arianaInfo || !editingArianaSkill || !newArianaSkill.trim()) return;
+    
+    try {
+      const updatedSkills = arianaInfo.skills.map(s => s === editingArianaSkill ? newArianaSkill.trim() : s);
+      const savedMember = await teamService.updateTeamMember(arianaInfo.id, { skills: updatedSkills });
+      setArianaInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
+      setEditingArianaSkill(null);
+      setNewArianaSkill('');
+    } catch (error) {
+      console.error('Error updating Ariana skill:', error);
+    }
+  };
+
+  const handleDeleteArianaSkill = async (skill: string) => {
+    if (!arianaInfo || !window.confirm('Are you sure you want to delete this skill?')) return;
+    
+    try {
+      const updatedSkills = arianaInfo.skills.filter(s => s !== skill);
+      const savedMember = await teamService.updateTeamMember(arianaInfo.id, { skills: updatedSkills });
+      setArianaInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
+    } catch (error) {
+      console.error('Error deleting Ariana skill:', error);
+    }
+  };
+
+  const handleCancelArianaSkill = () => {
+    setEditingArianaSkill(null);
+    setNewArianaSkill('');
+  };
+
+  const handleArianaSkillKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (editingArianaSkill) {
+        handleUpdateArianaSkill();
+      } else {
+        handleAddArianaSkill();
+      }
+    }
+  };
+
+  // Cooper skills management
+  const handleAddCooperSkill = async () => {
+    if (!cooperInfo || !newCooperSkill.trim()) return;
+    
+    try {
+      const updatedSkills = [...cooperInfo.skills, newCooperSkill.trim()];
+      const savedMember = await teamService.updateTeamMember(cooperInfo.id, { skills: updatedSkills });
+      setCooperInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
+      setNewCooperSkill('');
+    } catch (error) {
+      console.error('Error adding Cooper skill:', error);
+    }
+  };
+
+  const handleEditCooperSkill = (skill: string) => {
+    setEditingCooperSkill(skill);
+    setNewCooperSkill(skill);
+  };
+
+  const handleUpdateCooperSkill = async () => {
+    if (!cooperInfo || !editingCooperSkill || !newCooperSkill.trim()) return;
+    
+    try {
+      const updatedSkills = cooperInfo.skills.map(s => s === editingCooperSkill ? newCooperSkill.trim() : s);
+      const savedMember = await teamService.updateTeamMember(cooperInfo.id, { skills: updatedSkills });
+      setCooperInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
+      setEditingCooperSkill(null);
+      setNewCooperSkill('');
+    } catch (error) {
+      console.error('Error updating Cooper skill:', error);
+    }
+  };
+
+  const handleDeleteCooperSkill = async (skill: string) => {
+    if (!cooperInfo || !window.confirm('Are you sure you want to delete this skill?')) return;
+    
+    try {
+      const updatedSkills = cooperInfo.skills.filter(s => s !== skill);
+      const savedMember = await teamService.updateTeamMember(cooperInfo.id, { skills: updatedSkills });
+      setCooperInfo(savedMember);
+      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
+    } catch (error) {
+      console.error('Error deleting Cooper skill:', error);
+    }
+  };
+
+  const handleCancelCooperSkill = () => {
+    setEditingCooperSkill(null);
+    setNewCooperSkill('');
+  };
+
+  const handleCooperSkillKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (editingCooperSkill) {
+        handleUpdateCooperSkill();
+      } else {
+        handleAddCooperSkill();
+      }
+    }
+  };
+
+  const handleArianaChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setArianaExpanded(isExpanded);
+  };
+
+  const handleCooperChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setCooperExpanded(isExpanded);
+  };
+
   return (
-          <Box sx={{ minHeight: '100vh', bgcolor: '#F0F8FF' }}>
+          <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.backgrounds.admin }}>
       {/* Admin App Bar */}
       <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
         <Toolbar>
@@ -332,7 +519,7 @@ const AdminSettings: React.FC = () => {
               }} 
             />
           </Box>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
             Settings
           </Typography>
           <IconButton onClick={() => navigate('/admin/dashboard')} color="inherit">
@@ -346,8 +533,8 @@ const AdminSettings: React.FC = () => {
           {/* About Page Management */}
           <Grid item xs={12}>
             <Accordion 
-              expanded={aboutExpanded} 
-              onChange={handleAboutChange('about')}
+              expanded={arianaExpanded} 
+              onChange={handleArianaChange('ariana')}
               sx={{ 
                 bgcolor: 'white', 
                 borderRadius: 2,
@@ -366,8 +553,125 @@ const AdminSettings: React.FC = () => {
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Person sx={{ color: 'secondary.main' }} />
-                  <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
-                    About Page Settings
+                  <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
+                    Ariana's Information
+                  </Typography>
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container spacing={3}>
+                                     <Grid item xs={12} md={6}>
+                     <TextField
+                       fullWidth
+                       label="Name"
+                       value={arianaInfo?.name || ''}
+                       onChange={(e) => handleArianaInfoUpdate('name', e.target.value)}
+                       sx={{ mb: 2 }}
+                     />
+                     <TextField
+                       fullWidth
+                       label="Role/Title"
+                       value={arianaInfo?.role || ''}
+                       onChange={(e) => handleArianaInfoUpdate('role', e.target.value)}
+                       sx={{ mb: 2 }}
+                     />
+                     <TextField
+                       fullWidth
+                       label="Avatar Image URL"
+                       value={arianaInfo?.avatar || ''}
+                       onChange={(e) => handleArianaInfoUpdate('avatar', e.target.value)}
+                       placeholder="/photos/Headshot.jpg"
+                       sx={{ mb: 2 }}
+                     />
+                   </Grid>
+                   <Grid item xs={12} md={6}>
+                     <TextField
+                       fullWidth
+                       multiline
+                       rows={4}
+                       label="Bio/Description"
+                       value={arianaInfo?.bio || ''}
+                       onChange={(e) => handleArianaInfoUpdate('bio', e.target.value)}
+                       sx={{ mb: 2 }}
+                     />
+                   </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: 'admin.main' }}>
+                      Specializations/Skills
+                    </Typography>
+                    
+                                         {/* Add new skill */}
+                     <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                       <TextField
+                         fullWidth
+                         label="Add new skill"
+                         value={newArianaSkill}
+                         onChange={(e) => setNewArianaSkill(e.target.value)}
+                         onKeyPress={handleArianaSkillKeyPress}
+                         placeholder="e.g., Brand Strategy"
+                       />
+                       <Button 
+                         variant="contained" 
+                         onClick={editingArianaSkill ? handleUpdateArianaSkill : handleAddArianaSkill}
+                         disabled={!newArianaSkill.trim()}
+                       >
+                         {editingArianaSkill ? 'Update' : 'Add'}
+                       </Button>
+                       {editingArianaSkill && (
+                         <Button variant="outlined" onClick={handleCancelArianaSkill}>
+                           Cancel
+                         </Button>
+                       )}
+                     </Box>
+
+                     {/* Skills list */}
+                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                       {arianaInfo?.skills?.map((skill, index) => (
+                         <Chip
+                           key={index}
+                           label={skill}
+                           onDelete={() => handleDeleteArianaSkill(skill)}
+                           onClick={() => handleEditArianaSkill(skill)}
+                           sx={{ 
+                             bgcolor: `${theme.palette.secondary.main}1A`, 
+                             color: 'secondary.main',
+                             fontWeight: 500,
+                             cursor: 'pointer'
+                           }}
+                         />
+                       )) || []}
+                     </Box>
+                  </Grid>
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+
+          {/* Cooper Information Management */}
+          <Grid item xs={12}>
+            <Accordion 
+              expanded={cooperExpanded} 
+              onChange={handleCooperChange('cooper')}
+              sx={{ 
+                bgcolor: 'white', 
+                borderRadius: 2,
+                '&:before': { display: 'none' },
+                boxShadow: 1
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMore />}
+                sx={{
+                  '& .MuiAccordionSummary-content': {
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Person sx={{ color: 'secondary.main' }} />
+                  <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
+                    Cooper's Information
                   </Typography>
                 </Box>
               </AccordionSummary>
@@ -377,23 +681,23 @@ const AdminSettings: React.FC = () => {
                     <TextField
                       fullWidth
                       label="Name"
-                      value={personalInfo.name}
-                      onChange={(e) => handlePersonalInfoUpdate('name', e.target.value)}
+                      value={cooperInfo?.name || ''}
+                      onChange={(e) => handleCooperInfoUpdate('name', e.target.value)}
                       sx={{ mb: 2 }}
                     />
                     <TextField
                       fullWidth
                       label="Role/Title"
-                      value={personalInfo.role}
-                      onChange={(e) => handlePersonalInfoUpdate('role', e.target.value)}
+                      value={cooperInfo?.role || ''}
+                      onChange={(e) => handleCooperInfoUpdate('role', e.target.value)}
                       sx={{ mb: 2 }}
                     />
                     <TextField
                       fullWidth
                       label="Avatar Image URL"
-                      value={personalInfo.avatar}
-                      onChange={(e) => handlePersonalInfoUpdate('avatar', e.target.value)}
-                      placeholder="/photos/Headshot.jpg"
+                      value={cooperInfo?.avatar || ''}
+                      onChange={(e) => handleCooperInfoUpdate('avatar', e.target.value)}
+                      placeholder="/photos/CooperHeadshot.jpg"
                       sx={{ mb: 2 }}
                     />
                   </Grid>
@@ -403,13 +707,13 @@ const AdminSettings: React.FC = () => {
                       multiline
                       rows={4}
                       label="Bio/Description"
-                      value={personalInfo.bio}
-                      onChange={(e) => handlePersonalInfoUpdate('bio', e.target.value)}
+                      value={cooperInfo?.bio || ''}
+                      onChange={(e) => handleCooperInfoUpdate('bio', e.target.value)}
                       sx={{ mb: 2 }}
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: 'admin.main' }}>
                       Specializations/Skills
                     </Typography>
                     
@@ -418,20 +722,20 @@ const AdminSettings: React.FC = () => {
                       <TextField
                         fullWidth
                         label="Add new skill"
-                        value={newSkill}
-                        onChange={(e) => setNewSkill(e.target.value)}
-                        onKeyPress={handleSkillKeyPress}
-                        placeholder="e.g., Brand Strategy"
+                        value={newCooperSkill}
+                        onChange={(e) => setNewCooperSkill(e.target.value)}
+                        onKeyPress={handleCooperSkillKeyPress}
+                        placeholder="e.g., Creative Direction"
                       />
                       <Button 
                         variant="contained" 
-                        onClick={editingSkill ? handleUpdateSkill : handleAddSkill}
-                        disabled={!newSkill.trim()}
+                        onClick={editingCooperSkill ? handleUpdateCooperSkill : handleAddCooperSkill}
+                        disabled={!newCooperSkill.trim()}
                       >
-                        {editingSkill ? 'Update' : 'Add'}
+                        {editingCooperSkill ? 'Update' : 'Add'}
                       </Button>
-                      {editingSkill && (
-                        <Button variant="outlined" onClick={handleCancelSkill}>
+                      {editingCooperSkill && (
+                        <Button variant="outlined" onClick={handleCancelCooperSkill}>
                           Cancel
                         </Button>
                       )}
@@ -439,20 +743,20 @@ const AdminSettings: React.FC = () => {
 
                     {/* Skills list */}
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {personalInfo.skills.map((skill, index) => (
+                      {cooperInfo?.skills?.map((skill, index) => (
                         <Chip
                           key={index}
                           label={skill}
-                          onDelete={() => handleDeleteSkill(skill)}
-                          onClick={() => handleEditSkill(skill)}
+                          onDelete={() => handleDeleteCooperSkill(skill)}
+                          onClick={() => handleEditCooperSkill(skill)}
                           sx={{ 
-                            bgcolor: `${theme.palette.secondary.main}1A`, 
-                            color: 'secondary.main',
+                            bgcolor: `${theme.palette.primary.main}1A`, 
+                            color: 'primary.main',
                             fontWeight: 500,
                             cursor: 'pointer'
                           }}
                         />
-                      ))}
+                      )) || []}
                     </Box>
                   </Grid>
                 </Grid>
@@ -483,7 +787,7 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               >
-                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
+                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
                   Portfolio Categories
                 </Typography>
                 {!isAdding && (
@@ -503,9 +807,9 @@ const AdminSettings: React.FC = () => {
               <AccordionDetails>
                 {/* Add/Edit Category Form */}
                 {isAdding && (
-                  <Card sx={{ mb: 3, bgcolor: 'grey.50', border: '1px solid #e0e0e0' }}>
+                  <Card sx={{ mb: 3, bgcolor: 'grey.50', border: `1px solid ${theme.palette.borders.light}` }}>
                     <CardContent>
-                      <Typography variant="h6" sx={{ mb: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 2, color: 'admin.main' }}>
                         {editingCategory ? 'Edit Category' : 'Add New Category'}
                       </Typography>
                       <Grid container spacing={2}>
@@ -536,7 +840,7 @@ const AdminSettings: React.FC = () => {
                                         height: 20, 
                                         borderRadius: '50%', 
                                         bgcolor: colorOption.color,
-                                        border: '1px solid #e0e0e0'
+                                        border: `1px solid ${theme.palette.borders.light}`
                                       }} 
                                     />
                                     {colorOption.label}
@@ -571,7 +875,7 @@ const AdminSettings: React.FC = () => {
                     <ListItem 
                       key={category.id}
                       sx={{ 
-                        border: '1px solid #e0e0e0', 
+                        border: `1px solid ${theme.palette.borders.light}`, 
                         borderRadius: 1, 
                         mb: 1,
                         bgcolor: 'white'
@@ -611,7 +915,7 @@ const AdminSettings: React.FC = () => {
 
                 {categories.length === 0 && (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
-                    <Typography variant="h6" sx={{ color: 'text.secondary', mb: 2 }}>
+                    <Typography variant="h6" sx={{ color: 'admin.main', mb: 2 }}>
                       No categories yet
                     </Typography>
                     <Button 
@@ -648,7 +952,7 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               >
-                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
+                <Typography variant="h5" component="h2" sx={{ fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
                   Portfolio Tags
                 </Typography>
                 {!isAddingTag && (
@@ -668,9 +972,9 @@ const AdminSettings: React.FC = () => {
               <AccordionDetails>
                 {/* Add/Edit Tag Form */}
                 {isAddingTag && (
-                  <Card sx={{ mb: 3, bgcolor: 'grey.50', border: '1px solid #e0e0e0' }}>
+                  <Card sx={{ mb: 3, bgcolor: 'grey.50', border: `1px solid ${theme.palette.borders.light}` }}>
                     <CardContent>
-                      <Typography variant="h6" sx={{ mb: 2 }}>
+                      <Typography variant="h6" sx={{ mb: 2, color: 'admin.main' }}>
                         {editingTag ? 'Edit Tag' : 'Add New Tag'}
                       </Typography>
                       <Grid container spacing={2}>
@@ -701,7 +1005,7 @@ const AdminSettings: React.FC = () => {
                                         height: 20, 
                                         borderRadius: '50%', 
                                         bgcolor: colorOption.color,
-                                        border: '1px solid #e0e0e0'
+                                        border: `1px solid ${theme.palette.borders.light}`
                                       }} 
                                     />
                                     {colorOption.label}
@@ -736,7 +1040,7 @@ const AdminSettings: React.FC = () => {
                     <ListItem 
                       key={tag.id}
                       sx={{ 
-                        border: '1px solid #e0e0e0', 
+                        border: `1px solid ${theme.palette.borders.light}`, 
                         borderRadius: 1, 
                         mb: 1,
                         bgcolor: 'white'
@@ -776,7 +1080,7 @@ const AdminSettings: React.FC = () => {
 
                 {tags.length === 0 && (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
-                    <Typography variant="h6" sx={{ color: 'text.secondary', mb: 2 }}>
+                    <Typography variant="h6" sx={{ color: 'admin.main', mb: 2 }}>
                       No tags yet
                     </Typography>
                     <Button 

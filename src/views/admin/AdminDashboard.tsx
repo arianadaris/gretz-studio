@@ -20,31 +20,60 @@ import Launch from '@mui/icons-material/Launch';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import AdminProjectModal from '../../components/AdminProjectModal';
-import { portfolioService, Project } from '../../services/portfolioService';
+import { portfolioService } from '../../services/portfolioService';
+import type { Project } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 const AdminDashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [tagColors, setTagColors] = useState<{ [key: string]: string }>({});
+  const [categoryColors, setCategoryColors] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
   const theme = useTheme();
+  const { signOut } = useAuth();
 
   useEffect(() => {
-    // Check authentication
-    const isAuthenticated = localStorage.getItem('adminAuthenticated');
-    if (!isAuthenticated) {
-      navigate('/admin');
-      return;
-    }
+    const loadData = async () => {
+      try {
+        // Initialize default projects if none exist and load projects
+        await portfolioService.initializeDefaultProjects();
+        const projectsData = await portfolioService.getProjects();
+        setProjects(projectsData);
+        
+        // Load tag colors
+        const tagsData = await portfolioService.getTagsWithInfo();
+        const colorsMap: { [key: string]: string } = {};
+        tagsData.forEach(tag => {
+          colorsMap[tag.name] = tag.color;
+        });
+        setTagColors(colorsMap);
+        
+        // Load category colors
+        const categoriesData = await portfolioService.getCategoriesWithInfo();
+        const categoryColorsMap: { [key: string]: string } = {};
+        categoriesData.forEach(cat => {
+          categoryColorsMap[cat.name] = cat.color;
+        });
+        setCategoryColors(categoryColorsMap);
+      } catch (error) {
+        console.error('Error loading projects:', error);
+      }
+    };
 
-    // Initialize default projects if none exist and load projects
-    portfolioService.initializeDefaultProjects();
-    setProjects(portfolioService.getProjects());
+    loadData();
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminAuthenticated');
-    navigate('/admin');
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/admin');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Still navigate to login even if signout fails
+      navigate('/admin');
+    }
   };
 
   const handleAddProject = () => {
@@ -57,49 +86,62 @@ const AdminDashboard: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteProject = (projectId: number) => {
+  const handleDeleteProject = async (projectId: number) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
-      portfolioService.deleteProject(projectId);
-      setProjects(portfolioService.getProjects());
+      try {
+        await portfolioService.deleteProject(projectId);
+        const projectsData = await portfolioService.getProjects();
+        setProjects(projectsData);
+      } catch (error) {
+        console.error('Error deleting project:', error);
+      }
     }
   };
 
-  const handleSaveProject = (project: Project) => {
-    if (editingProject) {
-      // Update existing project
-      portfolioService.updateProject(project);
-    } else {
-      // Add new project
-      portfolioService.addProject(project);
+  const handleSaveProject = async (project: Project) => {
+    try {
+      if (editingProject) {
+        // Update existing project
+        await portfolioService.updateProject(project);
+      } else {
+        // Add new project
+        await portfolioService.addProject(project);
+      }
+      
+      const projectsData = await portfolioService.getProjects();
+      setProjects(projectsData);
+      setIsModalOpen(false);
+      setEditingProject(null);
+    } catch (error) {
+      console.error('Error saving project:', error);
     }
-    
-    setProjects(portfolioService.getProjects());
-    setIsModalOpen(false);
-    setEditingProject(null);
   };
 
-  const toggleFeatured = (projectId: number) => {
+  const toggleFeatured = async (projectId: number) => {
     const project = projects.find(p => p.id === projectId);
     if (project) {
-      const updatedProject = { ...project, featured: !project.featured };
-      portfolioService.updateProject(updatedProject);
-      setProjects(portfolioService.getProjects());
+      try {
+        const updatedProject = { ...project, featured: !project.featured };
+        await portfolioService.updateProject(updatedProject);
+        const projectsData = await portfolioService.getProjects();
+        setProjects(projectsData);
+      } catch (error) {
+        console.error('Error updating project:', error);
+      }
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    return portfolioService.getCategoryColor(category);
-  };
+
 
   console.log(projects);
 
   return (
-          <Box sx={{ minHeight: '100vh', bgcolor: '#F0F8FF' }}>
+          <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.backgrounds.admin }}>
       {/* Admin App Bar */}
       <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
         <Toolbar>
           {/* Logo */}
-          <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 3, cursor: 'pointer' }} onClick={() => navigate('/')}>
             <img 
               src="/logos/PrimaryLogo.svg" 
               alt="Gretz Tech" 
@@ -110,7 +152,7 @@ const AdminDashboard: React.FC = () => {
               }} 
             />
           </Box>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
             Portfolio CMS
           </Typography>
           <Button 
@@ -140,10 +182,10 @@ const AdminDashboard: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
               <CardContent>
-                <Typography color="textSecondary" gutterBottom>
+                <Typography color="admin.main" gutterBottom>
                   Total Projects
                 </Typography>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 600 }}>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 600, color: 'admin.main' }}>
                   {projects.length}
                 </Typography>
               </CardContent>
@@ -152,10 +194,10 @@ const AdminDashboard: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
               <CardContent>
-                <Typography color="textSecondary" gutterBottom>
+                <Typography color="admin.main" gutterBottom>
                   Featured Projects
                 </Typography>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 600 }}>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 600, color: 'admin.main' }}>
                   {projects.filter(p => p.featured).length}
                 </Typography>
               </CardContent>
@@ -164,10 +206,10 @@ const AdminDashboard: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
               <CardContent>
-                <Typography color="textSecondary" gutterBottom>
+                <Typography color="admin.main" gutterBottom>
                   Categories
                 </Typography>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 600 }}>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 600, color: 'admin.main' }}>
                   {new Set(projects.map(p => p.category)).size}
                 </Typography>
               </CardContent>
@@ -176,10 +218,10 @@ const AdminDashboard: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
               <CardContent>
-                <Typography color="textSecondary" gutterBottom>
+                <Typography color="admin.main" gutterBottom>
                   This Year
                 </Typography>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 600 }}>
+                <Typography variant="h4" component="div" sx={{ fontWeight: 600, color: 'admin.main' }}>
                   {projects.filter(p => p.year === '2024').length}
                 </Typography>
               </CardContent>
@@ -190,13 +232,13 @@ const AdminDashboard: React.FC = () => {
         {/* Projects List */}
         <Card sx={{ bgcolor: 'white', borderRadius: 2 }}>
           <CardContent>
-            <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif' }}>
+            <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
               Portfolio Projects
             </Typography>
             
             {projects.length === 0 ? (
               <Box sx={{ textAlign: 'center', py: 4 }}>
-                <Typography variant="h6" sx={{ color: 'text.secondary', mb: 2 }}>
+                <Typography variant="h6" sx={{ color: 'admin.main', mb: 2 }}>
                   No projects yet
                 </Typography>
                 <Button 
@@ -213,7 +255,7 @@ const AdminDashboard: React.FC = () => {
                   <Grid item xs={12} key={project.id}>
                     <Card 
                       sx={{ 
-                        border: '1px solid #e0e0e0',
+                        border: `1px solid ${theme.palette.borders.light}`,
                         '&:hover': { boxShadow: 2 },
                         cursor: 'pointer'
                       }}
@@ -225,7 +267,7 @@ const AdminDashboard: React.FC = () => {
                             sx={{ 
                               width: 60, 
                               height: 60, 
-                              bgcolor: '#E3F2FD',
+                              bgcolor: theme.palette.backgrounds.card,
                               borderRadius: 1,
                               display: 'flex',
                               alignItems: 'center',
@@ -249,7 +291,7 @@ const AdminDashboard: React.FC = () => {
                                    px: 1, 
                                    py: 0.5, 
                                    borderRadius: 1, 
-                                   bgcolor: getCategoryColor(project.category),
+                                   bgcolor: categoryColors[project.category] || theme.palette.tagColors.default,
                                    color: 'white',
                                    fontSize: '0.75rem',
                                    fontWeight: 600
@@ -278,7 +320,7 @@ const AdminDashboard: React.FC = () => {
                             </Box>
                           </Box>
                           <Box sx={{ display: 'flex', gap: 1 }}>
-                            {project.viewUrl && (
+                            {project.view_url && (
                               <Box 
                                 sx={{ 
                                   px: 1, 
@@ -328,10 +370,10 @@ const AdminDashboard: React.FC = () => {
                         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
                           {project.description}
                         </Typography>
-                        {project.viewUrl && (
+                        {project.view_url && (
                           <Box sx={{ mb: 2 }}>
                             <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary' }}>
-                              View URL: {project.viewUrl}
+                              View URL: {project.view_url}
                             </Typography>
                           </Box>
                         )}
@@ -343,7 +385,7 @@ const AdminDashboard: React.FC = () => {
                                  px: 1, 
                                  py: 0.5, 
                                  borderRadius: 1, 
-                                 bgcolor: portfolioService.getTagColor(tag),
+                                 bgcolor: tagColors[tag] || theme.palette.tagColors.blue,
                                  fontSize: '0.75rem',
                                  color: 'white',
                                  fontWeight: 500

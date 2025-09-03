@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import { Theme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 
 export type GradientType = 
   | 'hero' 
@@ -29,6 +29,35 @@ interface GradientBackgroundProps {
 
 // Utility function to get gradient strings for use in sx props
 export const getGradient = (gradientType: GradientType, theme?: Theme): string => {
+  if (theme) {
+    switch (gradientType) {
+      case 'hero':
+        return theme.palette.gradients.primary;
+      
+      case 'card':
+        return theme.palette.gradients.card;
+      
+      case 'cardHover':
+        return theme.palette.gradients.secondary;
+      
+      case 'section':
+        return theme.palette.gradients.secondary;
+      
+      case 'sectionAlt':
+        return theme.palette.gradients.hero;
+      
+      case 'button':
+        return `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`;
+      
+      case 'custom':
+        return theme.palette.gradients.primary;
+      
+      default:
+        return theme.palette.gradients.primary;
+    }
+  }
+  
+  // Fallback gradients if theme is not available
   switch (gradientType) {
     case 'hero':
       return 'linear-gradient(135deg, #E8F5E8 0%, #E3F2FD 25%, #F0F8FF 75%, #E0F2F1 100%)';
@@ -72,8 +101,10 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
   color,
   ...props
 }) => {
+  const theme = useTheme();
+  
   const defaultStyles = {
-    background: getGradient(type),
+    background: getGradient(type, theme),
     minHeight: minHeight || (type === 'hero' ? '40vh' : 'auto'),
     py: py || (type === 'hero' ? 12 : 0),
     px: px || 0,
@@ -82,7 +113,7 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     justifyContent: justifyContent || 'flex-start',
     position: position || 'relative',
     overflow: overflow || 'hidden',
-    color: color || (type === 'hero' ? '#2D3748' : 'inherit'),
+    color: color || (type === 'hero' ? theme.palette.customText.dark : 'inherit'),
     ...sx
   };
 

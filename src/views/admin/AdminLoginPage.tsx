@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -9,16 +9,26 @@ import Lock from '@mui/icons-material/Lock';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import GradientBackground, { getGradient } from '../../components/GradientBackground';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 const AdminLoginPage: React.FC = () => {
   const [credentials, setCredentials] = useState({
-    username: '',
+    email: '',
     password: ''
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const { user } = useAuth();
+
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (user) {
+      navigate('/admin/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({
@@ -33,18 +43,23 @@ const AdminLoginPage: React.FC = () => {
     setIsLoading(true);
     setError('');
 
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
 
-    // Dummy authentication - in real app, this would be an API call
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
-      localStorage.setItem('adminAuthenticated', 'true');
-      navigate('/admin/dashboard');
-    } else {
-      setError('Invalid username or password');
+      if (error) {
+        setError(error.message);
+      } else if (data.user) {
+        // Successfully authenticated - navigation will happen automatically via AuthContext
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (
@@ -64,9 +79,9 @@ const AdminLoginPage: React.FC = () => {
           sx={{ 
             p: 4,
             borderRadius: 3,
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
+                    background: theme.palette.backgrounds.card,
+        backdropFilter: 'blur(10px)',
+        border: `1px solid ${theme.palette.borders.light}`
           }}
         >
           <Box sx={{ textAlign: 'center', mb: 4 }}>
@@ -97,10 +112,10 @@ const AdminLoginPage: React.FC = () => {
             >
               <Lock sx={{ fontSize: 30, color: 'white' }} />
             </Box>
-            <Typography variant="h4" component="h1" sx={{ fontWeight: 600, mb: 1, fontFamily: 'BearNose, Georgia, serif' }}>
+            <Typography variant="h4" component="h1" sx={{ fontWeight: 600, mb: 1, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
               Admin Access
             </Typography>
-            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body1" sx={{ color: 'admin.main' }}>
               Content Management System
             </Typography>
           </Box>
@@ -110,12 +125,13 @@ const AdminLoginPage: React.FC = () => {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="email"
+              label="Email"
+              name="email"
+              type="email"
+              autoComplete="email"
               autoFocus
-              value={credentials.username}
+              value={credentials.email}
               onChange={handleInputChange}
               sx={{ mb: 2 }}
             />
@@ -165,10 +181,6 @@ const AdminLoginPage: React.FC = () => {
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
-
-            <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
-              Demo credentials: admin / admin123
-            </Typography>
           </Box>
         </Paper>
       </Container>

@@ -15,7 +15,9 @@ import IconButton from '@mui/material/IconButton';
 import Close from '@mui/icons-material/Close';
 import Add from '@mui/icons-material/Add';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { Project, portfolioService } from '../services/portfolioService';
+import { useTheme } from '@mui/material/styles';
+import { portfolioService } from '../services/portfolioService';
+import type { Project } from '../lib/supabase';
 
 interface AdminProjectModalProps {
   open: boolean;
@@ -30,7 +32,8 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
   onClose,
   onSave
 }) => {
-  const [formData, setFormData] = useState<Omit<Project, 'id'>>({
+  const theme = useTheme();
+  const [formData, setFormData] = useState<Omit<Project, 'id' | 'created_at' | 'updated_at'>>({
     title: '',
     category: '',
     description: '',
@@ -38,21 +41,44 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
     tags: [],
     featured: false,
     year: new Date().getFullYear().toString(),
-    viewUrl: ''
+            view_url: ''
   });
   const [customTagInput, setCustomTagInput] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const categories = portfolioService.getCategoriesWithInfo().map(cat => ({
-    value: cat.name,
-    label: cat.label
-  }));
+  const [categories, setCategories] = useState<Array<{ value: string; label: string }>>([]);
+  const [availableTags, setAvailableTags] = useState<Array<{ value: string; label: string; color: string }>>([]);
+  const [tagColors, setTagColors] = useState<{ [key: string]: string }>({});
 
-  const availableTags = portfolioService.getTagsWithInfo().map(tag => ({
-    value: tag.name,
-    label: tag.name,
-    color: tag.color
-  }));
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const categoriesData = await portfolioService.getCategoriesWithInfo();
+        setCategories(categoriesData.map(cat => ({
+          value: cat.name,
+          label: cat.label
+        })));
+
+        const tagsData = await portfolioService.getTagsWithInfo();
+        setAvailableTags(tagsData.map(tag => ({
+          value: tag.name,
+          label: tag.name,
+          color: tag.color
+        })));
+        
+        // Load tag colors for display
+        const colorsMap: { [key: string]: string } = {};
+        tagsData.forEach(tag => {
+          colorsMap[tag.name] = tag.color;
+        });
+        setTagColors(colorsMap);
+      } catch (error) {
+        console.error('Error loading form data:', error);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const years = Array.from({ length: new Date().getFullYear() - 2018 }, (_, i) => (new Date().getFullYear() - i).toString());
 
@@ -66,7 +92,7 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
         tags: [...project.tags],
         featured: project.featured,
         year: project.year,
-        viewUrl: project.viewUrl || ''
+        view_url: project.view_url || ''
       });
     } else {
       setFormData({
@@ -77,7 +103,7 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
         tags: [],
         featured: false,
         year: new Date().getFullYear().toString(),
-        viewUrl: ''
+        view_url: ''
       });
     }
     setErrors({});
@@ -180,7 +206,9 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
     if (validateForm()) {
       const projectData: Project = {
         id: project?.id || Date.now(),
-        ...formData
+        ...formData,
+        created_at: project?.created_at || new Date().toISOString(),
+        updated_at: new Date().toISOString()
       };
       onSave(projectData);
     }
@@ -216,7 +244,7 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
+          <Typography variant="h5" component="h2" sx={{ fontWeight: 600, color: 'admin.main' }}>
             {project ? 'Edit Project' : 'Add New Project'}
           </Typography>
           <IconButton onClick={onClose} size="small">
@@ -302,8 +330,8 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
           <TextField
             fullWidth
             label="View URL (optional)"
-            value={formData.viewUrl}
-            onChange={(e) => handleInputChange('viewUrl', e.target.value)}
+                    value={formData.view_url}
+        onChange={(e) => handleInputChange('view_url', e.target.value)}
             helperText="URL for the 'View' button (e.g., https://example.com)"
             placeholder="https://example.com"
             sx={{ mb: 3 }}
@@ -325,7 +353,7 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
                 onOpen={() => setCustomTagInput('')}
               >
                 {/* Custom Tag Input at the top */}
-                <MenuItem sx={{ p: 0, borderBottom: '1px solid #e0e0e0' }}>
+                <MenuItem sx={{ p: 0, borderBottom: `1px solid ${theme.palette.borders.light}` }}>
                   <TextField
                     fullWidth
                     size="small"
@@ -355,7 +383,7 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
                             height: 16, 
                             borderRadius: '50%', 
                             bgcolor: tag.color,
-                            border: '1px solid #e0e0e0'
+                            border: `1px solid ${theme.palette.borders.light}`
                           }} 
                         />
                         {tag.label}
@@ -378,7 +406,7 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
                       variant="outlined"
                       size="small"
                       sx={{
-                        bgcolor: portfolioService.getTagColor(tag),
+                                                                                                               bgcolor: tagColors[tag] || theme.palette.tagColors.blue,
                         color: 'white',
                         '& .MuiChip-deleteIcon': {
                           color: 'white'

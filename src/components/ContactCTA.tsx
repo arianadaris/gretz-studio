@@ -57,7 +57,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
           sx={{ 
             mb: { xs: 2, sm: 3, md: 4 }, 
             fontWeight: 600, 
-            color: variant === 'card' ? '#2D3748' : 'text.primary',
+            color: variant === 'card' ? theme.palette.customText.dark : 'text.primary',
             fontFamily: variant === 'card' ? '"BearNose", serif' : 'BearNose',
             fontSize: { xs: '1.3rem', sm: '1.8rem', md: '2.5rem', lg: '3rem' },
             lineHeight: { xs: 1.3, sm: 1.4, md: 1.2 }
@@ -76,7 +76,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({
               sm: variant === 'card' ? '1.1rem' : '1rem',
               md: variant === 'card' ? '1.3rem' : '1.1rem' 
             }, 
-            color: variant === 'card' ? '#4A5568' : 'text.secondary',
+            color: variant === 'card' ? theme.palette.customText.medium : 'text.secondary',
             lineHeight: 1.6,
             fontFamily: variant === 'card' ? '"BearNose", serif' : 'inherit',
             px: { xs: 1, sm: 0 }

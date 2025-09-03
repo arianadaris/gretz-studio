@@ -180,7 +180,7 @@ const AboutPage: React.FC = () => {
                  mb: isMobile ? 2 : 4, 
                  mt: isMobile ? 4 : 0,
                  fontWeight: 700, 
-                 color: '#07004D',
+                 color: theme.palette.admin.main,
                  fontSize: isSmallMobile ? '1.8rem' : undefined,
                  fontFamily: '"BearNose", serif'
                }}
@@ -197,7 +197,7 @@ const AboutPage: React.FC = () => {
                  mx: 'auto', 
                  opacity: 0.9,
                  lineHeight: 1.6,
-                 color: '#07004D',
+                 color: theme.palette.admin.main,
                  px: isMobile ? 2 : 0,
                  fontSize: isSmallMobile ? '0.9rem' : undefined
                }}
@@ -220,7 +220,7 @@ const AboutPage: React.FC = () => {
                 sx={{ 
                   mb: isMobile ? 2 : 4, 
                   fontWeight: 600, 
-                  color: '#07004D',
+                  color: theme.palette.admin.main,
                   fontSize: isSmallMobile ? '1.5rem' : undefined,
                   fontFamily: '"BearNose", serif'
                 }}
@@ -305,7 +305,7 @@ const AboutPage: React.FC = () => {
               sx={{ 
                 mb: isMobile ? 4 : 8, 
                 fontWeight: 600, 
-                color: '#07004D',
+                color: theme.palette.admin.main,
                 fontSize: isSmallMobile ? '1.5rem' : undefined,
                 fontFamily: '"BearNose", serif'
               }}
@@ -335,7 +335,7 @@ const AboutPage: React.FC = () => {
                     <Box sx={{ mb: 3 }}>
                       {value.icon}
                     </Box>
-                    <Typography variant="h5" component="h3" sx={{ mb: 2, fontWeight: 600, color: '#07004D' }}>
+                    <Typography variant="h5" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
                       {value.title}
                     </Typography>
                     <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
@@ -381,7 +381,7 @@ const AboutPage: React.FC = () => {
           <Grid item xs={12} md={8}>
             <Fade in={scrollY > 750} timeout={1200}>
               <Box>
-                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: '#07004D' }}>
+                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
                   {personalInfo.name}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
@@ -390,7 +390,7 @@ const AboutPage: React.FC = () => {
                 <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
                   {personalInfo.bio}
                 </Typography>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#07004D', fontFamily: '"Figtree", serif' }}>
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main, fontFamily: '"Figtree", serif' }}>
                   Specializations
                 </Typography>
                 <Grid container spacing={1} sx={{ mb: 3 }}>
@@ -420,7 +420,7 @@ const AboutPage: React.FC = () => {
           <Grid item xs={12} md={8}>
             <Fade in={scrollY > 900} timeout={1400}>
               <Box>
-                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: '#07004D' }}>
+                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
                   {husbandInfo.name}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
@@ -429,7 +429,7 @@ const AboutPage: React.FC = () => {
                 <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
                   {husbandInfo.bio}
                 </Typography>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#07004D', fontFamily: '"Figtree", serif' }}>
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main, fontFamily: '"Figtree", serif' }}>
                   What He Brings
                 </Typography>
                 <Grid container spacing={1} sx={{ mb: 3 }}>

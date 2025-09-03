@@ -135,7 +135,7 @@ const ServicesPage: React.FC = () => {
       <GradientBackground 
         type="hero"
         sx={{ 
-          color: '#2D3748',
+          color: theme.palette.customText.dark,
           py: isMobile ? 3 : 12,
           minHeight: isMobile ? '25vh' : '40vh'
         }}
@@ -246,7 +246,7 @@ const ServicesPage: React.FC = () => {
                 mb: isMobile ? 1 : 4,  
                 mt: isMobile ? 4 : 0,
                 fontWeight: 700, 
-                color: '#2D3748',
+                color: theme.palette.customText.dark,
                 fontSize: isSmallMobile ? '1.5rem' : undefined,
                 fontFamily: '"BearNose", serif'
               }}
@@ -263,7 +263,7 @@ const ServicesPage: React.FC = () => {
                 mx: 'auto', 
                 opacity: 0.9,
                 lineHeight: 1.6,
-                color: '#2D3748',
+                color: theme.palette.customText.dark,
                 px: isMobile ? 2 : 0,
                 fontSize: isSmallMobile ? '0.9rem' : undefined
               }}
@@ -490,7 +490,7 @@ const ServicesPage: React.FC = () => {
           <Grid container spacing={isMobile ? 2 : 4}>
             {processSteps.map((step, index) => (
               <Grid item xs={12} md={6} lg={2.4} key={index}>
-                <Fade in={scrollY > 1200 + (index * 10)} timeout={1000 + (index * 100)}>
+                <Fade in={scrollY > 800 + (index * 75)} timeout={1000 + (index * 100)}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Box 
                       sx={{ 

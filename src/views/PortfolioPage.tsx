@@ -24,7 +24,8 @@ import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import ContactCTA from '../components/ContactCTA';
-import { portfolioService, Project } from '../services/portfolioService';
+import { portfolioService } from '../services/portfolioService';
+import type { Project } from '../lib/supabase';
 import GradientBackground, { getGradient } from '../components/GradientBackground';
 
 const PortfolioPage: React.FC = () => {
@@ -45,22 +46,67 @@ const PortfolioPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const categories = [
-    { value: 'all', label: 'All Projects' },
-    ...portfolioService.getCategoriesWithInfo().map(cat => ({
-      value: cat.name,
-      label: cat.label
-    }))
-  ];
-
+  const [categories, setCategories] = useState([
+    { value: 'all', label: 'All Projects' }
+  ]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [tagColors, setTagColors] = useState<{ [key: string]: string }>({});
+  const [categoryColors, setCategoryColors] = useState<{ [key: string]: string }>({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize default projects if none exist
-    portfolioService.initializeDefaultProjects();
-    // Load projects from service
-    setProjects(portfolioService.getProjects());
-  }, []);
+    const loadData = () => {
+      setIsLoading(true);
+      // Initialize default projects if none exist
+      portfolioService.initializeDefaultProjects()
+        .then(() => portfolioService.getProjects())
+        .then(projectsData => {
+          setProjects(projectsData);
+          
+          // Get categories and filter them based on projects
+          return portfolioService.getCategoriesWithInfo().then(categoriesData => {
+            // Filter out categories that have no projects
+            const categoriesWithProjects = categoriesData.filter(cat => 
+              projectsData.some((project: any) => project.category === cat.name)
+            );
+            
+            setCategories([
+              { value: 'all', label: 'All Projects' },
+              ...categoriesWithProjects.map(cat => ({
+                value: cat.name,
+                label: cat.label
+              }))
+            ]);
+            
+            // Set category colors immediately
+            const categoryColorsMap: { [key: string]: string } = {};
+            categoriesWithProjects.forEach(cat => {
+              categoryColorsMap[cat.name] = cat.color;
+            });
+            setCategoryColors(categoryColorsMap);
+            
+            return categoriesData; // Return for the next .then()
+          });
+        })
+        .then(() => {
+          return portfolioService.getTagsWithInfo();
+        })
+        .then(tagsData => {
+          const colorsMap: { [key: string]: string } = {};
+          tagsData.forEach(tag => {
+            colorsMap[tag.name] = tag.color;
+          });
+          setTagColors(colorsMap);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error('Error loading portfolio data:', error);
+          setIsLoading(false);
+        });
+    };
+    
+    loadData();
+  }, []); // Empty dependency array ensures this runs only once
 
   const filteredProjects = selectedCategory === 'all' 
     ? projects 
@@ -88,7 +134,7 @@ const PortfolioPage: React.FC = () => {
       <GradientBackground 
         type="hero"
         sx={{ 
-          color: '#2D3748',
+          color: theme.palette.customText.dark,
           py: isMobile ? 6 : 12,
           minHeight: isMobile ? '30vh' : '40vh'
         }}
@@ -199,7 +245,7 @@ const PortfolioPage: React.FC = () => {
                  mb: isMobile ? 2 : 4,  
                  mt: isMobile ? 4 : 0,
                  fontWeight: 700, 
-                 color: '#2D3748',
+                 color: theme.palette.customText.dark,
                  fontSize: isSmallMobile ? '1.8rem' : undefined,
                  fontFamily: '"BearNose", serif'
                }}
@@ -216,7 +262,7 @@ const PortfolioPage: React.FC = () => {
                 mx: 'auto', 
                 opacity: 0.9,
                 lineHeight: 1.6,
-                color: '#2D3748',
+                color: theme.palette.customText.dark,
                 px: isMobile ? 2 : 0,
                 fontSize: isSmallMobile ? '0.9rem' : undefined
               }}
@@ -278,8 +324,15 @@ const PortfolioPage: React.FC = () => {
         </Fade>
 
         {/* Projects Grid */}
-        <Grid container spacing={isMobile ? 2 : 4}>
-          {filteredProjects.map((project, index) => (
+        {isLoading ? (
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+              Loading projects...
+            </Typography>
+          </Box>
+        ) : (
+          <Grid container spacing={isMobile ? 2 : 4}>
+            {filteredProjects.map((project, index) => (
             <Grid item xs={12} sm={6} md={4} key={project.id}>
               <Grow in={isVisible} timeout={2000 + (index * 500)}>
                 <Card 
@@ -295,7 +348,7 @@ const PortfolioPage: React.FC = () => {
                       transform: 'translateY(-8px)',
                       boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
                       background: getGradient('cardHover'),
-                      ...(project.viewUrl && {
+                      ...(project.view_url && {
                         '& .project-overlay': {
                           opacity: 1
                         },
@@ -375,20 +428,20 @@ const PortfolioPage: React.FC = () => {
                         color: 'white'
                       }}
                     >
-                      {project.viewUrl && (
+                      {project.view_url && (
                         <Button
                           variant="contained"
                           size={isMobile ? "small" : "medium"}
                           startIcon={<Visibility />}
                           onClick={(e) => {
                             e.stopPropagation();
-                            window.open(project.viewUrl, '_blank');
+                            window.open(project.view_url, '_blank');
                           }}
                           sx={{
                             bgcolor: 'white',
                             color: 'primary.main',
                             fontSize: isMobile ? '0.8rem' : undefined,
-                            '&:hover': { bgcolor: '#E3F2FD' }
+                            '&:hover': { bgcolor: theme.palette.backgrounds.card }
                           }}
                         >
                           View
@@ -425,7 +478,7 @@ const PortfolioPage: React.FC = () => {
                         label={portfolioService.getCategoryLabel(project.category)} 
                         size="small" 
                         sx={{ 
-                          bgcolor: portfolioService.getCategoryColor(project.category), 
+                          bgcolor: categoryColors[project.category] || theme.palette.tagColors.default, 
                           color: 'white',
                           fontWeight: 500,
                           fontSize: isMobile ? '0.65rem' : '0.7rem'
@@ -435,20 +488,11 @@ const PortfolioPage: React.FC = () => {
                     <Box sx={{ mb: isMobile ? 1.5 : 2 }}>
                       <Typography 
                         variant="body2" 
-                        onClick={(e) => {
-                          if (project.description.length > 120) {
-                            e.stopPropagation();
-                            handleDescriptionToggle(project.id);
-                          }
-                        }}
                         sx={{ 
                           color: 'text.secondary', 
                           lineHeight: 1.5,
                           fontSize: isMobile ? '0.8rem' : undefined,
-                          cursor: project.description.length > 120 ? 'pointer' : 'default',
-                          '&:hover': project.description.length > 120 ? {
-                            textDecoration: 'underline'
-                          } : {}
+                          mb: project.description.length > 120 ? 1 : 0
                         }}
                       >
                         {expandedDescriptions[project.id.toString()]
@@ -456,6 +500,28 @@ const PortfolioPage: React.FC = () => {
                           : truncateDescription(project.description)
                         }
                       </Typography>
+                      {project.description.length > 120 && (
+                        <Button
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDescriptionToggle(project.id);
+                          }}
+                          sx={{
+                            textTransform: 'none',
+                            color: 'secondary.main',
+                            fontSize: isMobile ? '0.75rem' : '0.8rem',
+                            p: 0,
+                            minWidth: 'auto',
+                            '&:hover': {
+                              backgroundColor: 'transparent',
+                              textDecoration: 'underline'
+                            }
+                          }}
+                        >
+                          {expandedDescriptions[project.id.toString()] ? 'Show Less' : 'Read More'}
+                        </Button>
+                      )}
                     </Box>
                     <Grid container spacing={1} sx={{ mb: 2 }}>
                       {project.tags.map((tag: string, tagIndex: number) => (
@@ -464,7 +530,7 @@ const PortfolioPage: React.FC = () => {
                             label={tag} 
                             size="small" 
                             sx={{ 
-                              bgcolor: portfolioService.getTagColor(tag), 
+                                                             bgcolor: tagColors[tag] || theme.palette.tagColors.blue, 
                               color: 'white',
                               fontSize: '0.75rem',
                               fontWeight: 500
@@ -479,8 +545,9 @@ const PortfolioPage: React.FC = () => {
             </Grid>
           ))}
         </Grid>
+        )}
 
-        {filteredProjects.length === 0 && (
+        {!isLoading && filteredProjects.length === 0 && (
           <Fade in={true} timeout={1000}>
             <Box sx={{ textAlign: 'center', py: 8 }}>
               <Typography variant="h5" sx={{ color: 'text.secondary', mb: 2 }}>

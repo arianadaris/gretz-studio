@@ -69,7 +69,7 @@ const Navigation: React.FC = () => {
 
   const drawer = (
     <Box sx={{ width: 250 }} role="presentation" onClick={handleDrawerToggle}>
-      <Box sx={{ p: 3, borderBottom: '1px solid #E2E8F0' }}>
+                  <Box sx={{ p: 3, borderBottom: `1px solid ${theme.palette.borders.medium}` }}>
         <img 
           src="/logos/PrimaryLogo.svg" 
           alt="Gretz Tech" 
@@ -97,7 +97,7 @@ const Navigation: React.FC = () => {
               primary={item.label} 
               sx={{
                 '& .MuiTypography-root': {
-                  color: isActive(item.path) ? theme.palette.secondary.main : '#323C55',
+                  color: isActive(item.path) ? theme.palette.secondary.main : theme.palette.primary.main,
                   fontWeight: isActive(item.path) ? 600 : 400
                 }
               }}
@@ -159,8 +159,8 @@ const Navigation: React.FC = () => {
                 onClick={handleDrawerToggle}
                 sx={{ 
                   color: isOnLandingPage 
-                    ? (scrolled ? '#323C55' : '#323C5590')
-                    : '#323C55',
+                                    ? (scrolled ? theme.palette.primary.main : `${theme.palette.primary.main}90`)
+                : theme.palette.primary.main,
                   '&:hover': {
                     backgroundColor: isOnLandingPage 
                       ? 'rgba(255, 255, 255, 0.1)'
@@ -178,8 +178,8 @@ const Navigation: React.FC = () => {
                     onClick={() => handleNavigation(item.path)}
                     sx={{
                       color: isOnLandingPage 
-                        ? (scrolled ? '#323C55' : '#777')
-                        : '#323C55',
+                                        ? (scrolled ? theme.palette.primary.main : theme.palette.customText.light)
+                : theme.palette.primary.main,
                       fontWeight: isActive(item.path) ? 600 : 400,
                       textTransform: 'none',
                       fontSize: '1rem',

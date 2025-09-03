@@ -130,7 +130,7 @@ const ContactPage: React.FC = () => {
       <GradientBackground 
         type="hero"
         sx={{ 
-          color: '#2D3748',
+          color: theme.palette.customText.dark,
           py: isMobile ? 6 : 12,
           minHeight: isMobile ? '15vh' : '20vh'
         }}
@@ -241,7 +241,7 @@ const ContactPage: React.FC = () => {
                  mb: isMobile ? 2 : 4,  
                  mt: isMobile ? 4 : 0,
                  fontWeight: 700, 
-                 color: '#2D3748',
+                 color: theme.palette.customText.dark,
                  fontSize: isSmallMobile ? '1.8rem' : undefined,
                  fontFamily: '"BearNose", serif'
                }}
@@ -258,7 +258,7 @@ const ContactPage: React.FC = () => {
                 mx: 'auto', 
                 opacity: 0.9,
                 lineHeight: 1.6,
-                color: '#2D3748',
+                color: theme.palette.customText.dark,
                 px: isMobile ? 2 : 0,
                 fontSize: isSmallMobile ? '0.9rem' : undefined
               }}
@@ -293,7 +293,7 @@ const ContactPage: React.FC = () => {
                   sx={{ 
                     mb: isMobile ? 2 : 4, 
                     fontWeight: 600, 
-                    color: '#323C55',
+                    color: theme.palette.primary.main,
                     fontSize: isSmallMobile ? '1.3rem' : undefined,
                     fontFamily: '"BearNose", serif'
                   }}
@@ -312,7 +312,7 @@ const ContactPage: React.FC = () => {
                         variant="outlined"
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            '& fieldset': { borderColor: '#E2E8F0' },
+                            '& fieldset': { borderColor: theme.palette.borders.medium },
                             '&:hover fieldset': { borderColor: theme.palette.secondary.main },
                             '&.Mui-focused fieldset': { borderColor: theme.palette.secondary.main }
                           }
@@ -330,7 +330,7 @@ const ContactPage: React.FC = () => {
                         variant="outlined"
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            '& fieldset': { borderColor: '#E2E8F0' },
+                            '& fieldset': { borderColor: theme.palette.borders.medium },
                             '&:hover fieldset': { borderColor: theme.palette.secondary.main },
                             '&.Mui-focused fieldset': { borderColor: theme.palette.secondary.main }
                           }
@@ -346,7 +346,7 @@ const ContactPage: React.FC = () => {
                         variant="outlined"
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            '& fieldset': { borderColor: '#E2E8F0' },
+                            '& fieldset': { borderColor: theme.palette.borders.medium },
                             '&:hover fieldset': { borderColor: theme.palette.secondary.main },
                             '&.Mui-focused fieldset': { borderColor: theme.palette.secondary.main }
                           }
@@ -362,7 +362,7 @@ const ContactPage: React.FC = () => {
                         variant="outlined"
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            '& fieldset': { borderColor: '#E2E8F0' },
+                            '& fieldset': { borderColor: theme.palette.borders.medium },
                             '&:hover fieldset': { borderColor: theme.palette.secondary.main },
                             '&.Mui-focused fieldset': { borderColor: theme.palette.secondary.main }
                           }
@@ -382,7 +382,7 @@ const ContactPage: React.FC = () => {
                         }}
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            '& fieldset': { borderColor: '#E2E8F0' },
+                            '& fieldset': { borderColor: theme.palette.borders.medium },
                             '&:hover fieldset': { borderColor: theme.palette.secondary.main },
                             '&.Mui-focused fieldset': { borderColor: theme.palette.secondary.main }
                           }
@@ -409,7 +409,7 @@ const ContactPage: React.FC = () => {
                         placeholder="Tell us about your project, goals, timeline, and any specific requirements..."
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            '& fieldset': { borderColor: '#E2E8F0' },
+                            '& fieldset': { borderColor: theme.palette.borders.medium },
                             '&:hover fieldset': { borderColor: theme.palette.secondary.main },
                             '&.Mui-focused fieldset': { borderColor: theme.palette.secondary.main }
                           }
@@ -452,7 +452,7 @@ const ContactPage: React.FC = () => {
                 <Typography 
                   variant="h4" 
                   component="h2" 
-                  sx={{ mb: 4, fontWeight: 600, color: '#323C55', fontFamily: '"BearNose", serif' }}
+                  sx={{ mb: 4, fontWeight: 600, color: theme.palette.primary.main, fontFamily: '"BearNose", serif' }}
                 >
                   Contact Information
                 </Typography>
@@ -475,13 +475,13 @@ const ContactPage: React.FC = () => {
                             {info.icon}
                           </Box>
                           <Box>
-                            <Typography variant="h6" sx={{ fontWeight: 600, color: '#323C55', mb: 1 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.primary.main, mb: 1 }}>
                               {info.title}
                             </Typography>
-                            <Typography variant="body1" sx={{ color: '#545454', mb: 0.5 }}>
+                            <Typography variant="body1" sx={{ color: theme.palette.customText.medium, mb: 0.5 }}>
                               {info.details}
                             </Typography>
-                            <Typography variant="body2" sx={{ color: '#7A7A7A' }}>
+                            <Typography variant="body2" sx={{ color: theme.palette.customText.light }}>
                               {info.description}
                             </Typography>
                           </Box>

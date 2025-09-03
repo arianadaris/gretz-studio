@@ -99,12 +99,12 @@ const LandingPage: React.FC = () => {
 
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#F8FBFF' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.backgrounds.light }}>
       {/* Hero Section */}
       <GradientBackground 
         type="hero"
         sx={{ 
-          color: '#2D3748',
+          color: theme.palette.customText.dark,
           py: isMobile ? 6 : 12,
           minHeight: isMobile ? '80vh' : '100vh'
         }}
@@ -232,7 +232,7 @@ const LandingPage: React.FC = () => {
                      fontSize: isMobile ? '1rem' : '1.3rem',
                      opacity: 0.85,
                      maxWidth: 500,
-                     color: '#4A5568',
+                     color: theme.palette.customText.medium,
                      lineHeight: 1.6,
                      fontFamily: '"Figtree", serif',
                      textAlign: 'center',
@@ -329,12 +329,12 @@ const LandingPage: React.FC = () => {
 
 
       {/* Services Section */}
-      <Box sx={{ py: isMobile ? 6 : 14, bgcolor: '#F8FBFF' }}>
+      <Box sx={{ py: isMobile ? 6 : 14, bgcolor: theme.palette.backgrounds.light }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', mb: isMobile ? 4 : 10 }}>
             <Typography variant={isMobile ? "h3" : "h2"} sx={{ 
               fontWeight: 600, 
-              color: '#2D3748', 
+              color: theme.palette.customText.dark, 
               mb: isMobile ? 2 : 3,
               fontFamily: '"BearNose", serif',
               fontSize: isSmallMobile ? '1.8rem' : undefined
@@ -343,7 +343,7 @@ const LandingPage: React.FC = () => {
             </Typography>
             <Typography variant={isMobile ? "body2" : "body1"} sx={{ 
               fontSize: isMobile ? '1rem' : '1.3rem', 
-              color: '#4A5568', 
+              color: theme.palette.customText.medium, 
               maxWidth: 600, 
               mx: 'auto',
               lineHeight: 1.6,
@@ -362,15 +362,15 @@ const LandingPage: React.FC = () => {
                       height: '100%',
                       p: isMobile ? 3 : 5,
                       textAlign: 'center',
-                      border: '2px solid #E3F2FD',
+                      border: `2px solid ${theme.palette.backgrounds.card}`,
                       borderRadius: '20px',
-                      background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%)',
+                      background: theme.palette.gradients.card,
                       boxShadow: `0 10px 30px ${theme.palette.secondary.main}1A`,
                       '&:hover': {
                         transform: isMobile ? 'none' : 'translateY(-10px)',
                         boxShadow: `0 25px 50px ${theme.palette.secondary.main}33`,
                         borderColor: theme.palette.secondary.main,
-                        background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%)',
+                        background: theme.palette.gradients.card,
                       },
                       transition: 'all 0.4s ease'
                     }}
@@ -388,7 +388,7 @@ const LandingPage: React.FC = () => {
                     </Box>
                     <Typography variant={isMobile ? "h6" : "h5"} sx={{ 
                       fontWeight: 600, 
-                      color: '#2D3748', 
+                      color: theme.palette.customText.dark, 
                       mb: isMobile ? 2 : 3,
                       fontFamily: '"BearNose", serif',
                       fontSize: isSmallMobile ? '1.1rem' : undefined
@@ -396,7 +396,7 @@ const LandingPage: React.FC = () => {
                       {service.title}
                     </Typography>
                     <Typography variant={isMobile ? "body2" : "body1"} sx={{ 
-                      color: '#4A5568',
+                      color: theme.palette.customText.medium,
                       lineHeight: 1.6,
                       fontFamily: '"Figtree", serif',
                       fontSize: isSmallMobile ? '0.85rem' : undefined
@@ -414,7 +414,7 @@ const LandingPage: React.FC = () => {
       {/* Process Section */}
       <Box sx={{ 
         py: isMobile ? 6 : 14, 
-        background: 'linear-gradient(135deg, #F0F8FF 0%, #E6F3FF 20%)',
+        background: theme.palette.gradients.overlay,
         position: 'relative'
       }}>
         {/* Decorative pattern */}
@@ -436,7 +436,7 @@ const LandingPage: React.FC = () => {
           <Box sx={{ textAlign: 'center', mb: isMobile ? 4 : 10 }}>
             <Typography variant={isMobile ? "h3" : "h2"} sx={{ 
               fontWeight: 600, 
-              color: '#2D3748', 
+              color: theme.palette.customText.dark, 
               mb: isMobile ? 2 : 3,
               fontFamily: '"BearNose", serif',
               fontSize: isSmallMobile ? '1.8rem' : undefined
@@ -445,7 +445,7 @@ const LandingPage: React.FC = () => {
             </Typography>
             <Typography variant={isMobile ? "body2" : "body1"} sx={{ 
               fontSize: isMobile ? '1rem' : '1.3rem', 
-              color: '#4A5568', 
+              color: theme.palette.customText.medium, 
               maxWidth: 600, 
               mx: 'auto',
               lineHeight: 1.6,
@@ -465,7 +465,7 @@ const LandingPage: React.FC = () => {
                         width: isMobile ? 70 : 90, 
                         height: isMobile ? 70 : 90, 
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%)',
+                        background: theme.palette.gradients.card,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -484,7 +484,7 @@ const LandingPage: React.FC = () => {
                     </Box>
                     <Typography variant={isMobile ? "body1" : "h6"} sx={{ 
                       fontWeight: 600, 
-                      color: '#2D3748', 
+                      color: theme.palette.customText.dark, 
                       mb: isMobile ? 2 : 3,
                       fontFamily: '"BearNose", serif',
                       fontSize: isSmallMobile ? '1rem' : undefined
@@ -492,7 +492,7 @@ const LandingPage: React.FC = () => {
                       {step.title}
                     </Typography>
                     <Typography variant="body2" sx={{ 
-                      color: '#4A5568',
+                      color: theme.palette.customText.medium,
                       lineHeight: 1.6,
                       fontFamily: '"Figtree", serif',
                       fontSize: isSmallMobile ? '0.8rem' : undefined

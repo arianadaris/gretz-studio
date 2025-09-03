@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import GradientBackground, { getGradient } from './GradientBackground';
+import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const { user, loading } = useAuth();
 
-  useEffect(() => {
-    // Check authentication status
-    const authStatus = localStorage.getItem('adminAuthenticated');
-    setIsAuthenticated(authStatus === 'true');
-  }, []);
-
-  if (isAuthenticated === null) {
+  if (loading) {
     // Loading state
     return (
       <GradientBackground
@@ -39,7 +34,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     // Redirect to login if not authenticated
     return <Navigate to="/admin" replace />;
   }
