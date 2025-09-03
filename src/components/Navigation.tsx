@@ -71,15 +71,24 @@ const Navigation: React.FC = () => {
   const isOnLandingPage = location.pathname === '/';
 
   const drawer = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={handleDrawerToggle}>
-      <Box sx={{ p: 3, borderBottom: `1px solid ${theme.palette.borders.medium}` }}>
+    <Box sx={{ 
+      width: 250,
+      backgroundColor: 'transparent',
+      color: isDarkMode ? theme.palette.text.primary : theme.palette.text.primary
+    }} role="presentation" onClick={handleDrawerToggle}>
+      <Box sx={{ 
+        p: 3, 
+        borderBottom: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : theme.palette.borders.medium}`,
+        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)'
+      }}>
         <img 
           src="/logos/PrimaryLogo.svg" 
           alt="Gretz Tech" 
           style={{
             width: '100%',
             maxWidth: '200px',
-            height: 'auto'
+            height: 'auto',
+            filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
           }}
         />
       </Box>
@@ -90,9 +99,13 @@ const Navigation: React.FC = () => {
             button 
             onClick={() => handleNavigation(item.path)}
             sx={{
-              backgroundColor: isActive(item.path) ? 'rgba(74, 144, 226, 0.1)' : 'transparent',
+              backgroundColor: isActive(item.path) 
+                ? (isDarkMode ? 'rgba(96, 165, 250, 0.15)' : 'rgba(74, 144, 226, 0.1)')
+                : 'transparent',
               '&:hover': {
-                backgroundColor: 'rgba(74, 144, 226, 0.05)'
+                backgroundColor: isDarkMode 
+                  ? 'rgba(96, 165, 250, 0.1)' 
+                  : 'rgba(74, 144, 226, 0.05)'
               }
             }}
           >
@@ -100,7 +113,9 @@ const Navigation: React.FC = () => {
               primary={item.label} 
               sx={{
                 '& .MuiTypography-root': {
-                  color: isActive(item.path) ? theme.palette.secondary.main : theme.palette.primary.main,
+                  color: isActive(item.path) 
+                    ? theme.palette.secondary.main 
+                    : (isDarkMode ? theme.palette.text.primary : theme.palette.primary.main),
                   fontWeight: isActive(item.path) ? 600 : 400
                 }
               }}
@@ -112,7 +127,7 @@ const Navigation: React.FC = () => {
             primary={isDarkMode ? 'Light Mode' : 'Dark Mode'} 
             sx={{
               '& .MuiTypography-root': {
-                color: theme.palette.primary.main,
+                color: isDarkMode ? theme.palette.secondary.main : theme.palette.primary.main,
                 fontWeight: 400
               }
             }}
@@ -175,9 +190,11 @@ const Navigation: React.FC = () => {
                   edge="start"
                   onClick={handleDrawerToggle}
                   sx={{ 
-                    color: isOnLandingPage 
-                      ? (scrolled ? theme.palette.primary.main : `${theme.palette.primary.main}90`)
-                    : theme.palette.primary.main,
+                    color: isDarkMode
+                      ? theme.palette.secondary.main
+                      : (isOnLandingPage 
+                          ? (scrolled ? theme.palette.primary.main : `${theme.palette.primary.main}90`)
+                          : theme.palette.primary.main),
                     '&:hover': {
                       backgroundColor: isOnLandingPage 
                         ? 'rgba(255, 255, 255, 0.1)'
@@ -270,7 +287,8 @@ const Navigation: React.FC = () => {
           '& .MuiDrawer-paper': { 
             boxSizing: 'border-box', 
             width: 250,
-            backgroundColor: theme.palette.background.default
+            backgroundColor: isDarkMode ? 'rgba(15, 23, 42)' : theme.palette.background.paper,
+            borderLeft: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)'
           }
         }}
       >

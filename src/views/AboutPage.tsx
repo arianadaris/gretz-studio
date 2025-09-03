@@ -461,7 +461,37 @@ const AboutPage: React.FC = () => {
       {/* Husband Section */}
       <Container maxWidth="lg" sx={{ py: 12 }}>
         <Grid container spacing={6} alignItems="center">
-          <Grid item xs={12} md={8}>
+          {/* Photo - Show first on mobile, second on desktop */}
+          <Grid item xs={12} md={4} sx={{ order: { xs: 1, md: 2 } }}>
+            <Grow in={scrollY > 950} timeout={1600}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Avatar 
+                  sx={{ 
+                    width: 200, 
+                    height: 200, 
+                    mx: 'auto', 
+                    mb: 3,
+                    bgcolor: 'background.paper',
+                    border: `3px solid ${theme.palette.primary.main}20`
+                  }}
+                >
+                  <img 
+                    src={displayHusbandInfo.avatar} 
+                    alt={displayHusbandInfo.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transform: 'scale(2) translateY(45px)'
+                    }}
+                  />
+                </Avatar>
+              </Box>
+            </Grow>
+          </Grid>
+          
+          {/* Content - Show second on mobile, first on desktop */}
+          <Grid item xs={12} md={8} sx={{ order: { xs: 2, md: 1 } }}>
             <Fade in={scrollY > 900} timeout={1400}>
               <Box>
                 <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
@@ -493,33 +523,6 @@ const AboutPage: React.FC = () => {
                 </Grid>
               </Box>
             </Fade>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Grow in={scrollY > 950} timeout={1600}>
-              <Box sx={{ textAlign: 'center' }}>
-                <Avatar 
-                  sx={{ 
-                    width: 200, 
-                    height: 200, 
-                    mx: 'auto', 
-                    mb: 3,
-                    bgcolor: 'background.paper',
-                    border: `3px solid ${theme.palette.primary.main}20`
-                  }}
-                >
-                  <img 
-                    src={displayHusbandInfo.avatar} 
-                    alt={displayHusbandInfo.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transform: 'scale(2) translateY(45px)'
-                    }}
-                  />
-                </Avatar>
-              </Box>
-            </Grow>
           </Grid>
         </Grid>
       </Container>
