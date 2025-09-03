@@ -98,20 +98,20 @@ const ContactPage: React.FC = () => {
     {
       icon: <Email sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Email',
-      details: 'hello@arianadarisstudio.com',
+      details: 'thegretzemas@gmail.com',
       description: 'Send us an email anytime'
     },
     {
       icon: <Phone sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Phone',
-      details: '+1 (555) 123-4567',
-      description: 'Mon-Fri from 9am to 6pm'
+      details: '+1 (480) 708-0928',
+      description: 'Mon-Fri from 2pm to 8pm'
     },
     {
       icon: <Schedule sx={{ fontSize: isMobile ? 24 : 30, color: theme.palette.secondary.main }} />,
       title: 'Business Hours',
       details: 'Monday - Friday',
-      description: '9:00 AM - 6:00 PM EST'
+      description: '2:00 PM - 8:00 PM MST'
     }
   ];
 
