@@ -63,7 +63,19 @@ const AdminSettings: React.FC = () => {
   const [tagsExpanded, setTagsExpanded] = useState(false);
   
   // About Page state
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(aboutService.getPersonalInfo());
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(() => {
+    const savedInfo = aboutService.getPersonalInfo();
+    if (savedInfo) return savedInfo;
+    
+    // Return default data if none is saved
+    return {
+      name: 'Ariana Gretzema',
+      role: 'Creative Director & Founder',
+      bio: 'I am passionate about creating meaningful brand experiences that connect with audiences and drive results. With a fresh perspective and dedication to excellence, I bring creativity and vision to every project.',
+      avatar: '/photos/AriHeadshot.jpg',
+      skills: ['Brand Strategy', 'Creative Direction', 'Visual Design', 'Brand Identity', 'Digital Design', 'Creative Strategy']
+    };
+  });
   const [editingSkill, setEditingSkill] = useState<string | null>(null);
   const [newSkill, setNewSkill] = useState('');
   const [aboutExpanded, setAboutExpanded] = useState(false);
@@ -293,8 +305,10 @@ const AdminSettings: React.FC = () => {
   const handleAddSkill = () => {
     if (newSkill.trim()) {
       const updatedInfo = aboutService.addSkill(newSkill.trim());
-      setPersonalInfo(updatedInfo);
-      setNewSkill('');
+      if (updatedInfo) {
+        setPersonalInfo(updatedInfo);
+        setNewSkill('');
+      }
     }
   };
 
@@ -306,16 +320,20 @@ const AdminSettings: React.FC = () => {
   const handleUpdateSkill = () => {
     if (editingSkill && newSkill.trim()) {
       const updatedInfo = aboutService.updateSkill(editingSkill, newSkill.trim());
-      setPersonalInfo(updatedInfo);
-      setEditingSkill(null);
-      setNewSkill('');
+      if (updatedInfo) {
+        setPersonalInfo(updatedInfo);
+        setEditingSkill(null);
+        setNewSkill('');
+      }
     }
   };
 
   const handleDeleteSkill = (skill: string) => {
     if (window.confirm('Are you sure you want to delete this skill?')) {
       const updatedInfo = aboutService.removeSkill(skill);
-      setPersonalInfo(updatedInfo);
+      if (updatedInfo) {
+        setPersonalInfo(updatedInfo);
+      }
     }
   };
 
@@ -508,7 +526,7 @@ const AdminSettings: React.FC = () => {
       <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
         <Toolbar>
           {/* Logo */}
-          <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 3, cursor: 'pointer' }} onClick={() => navigate('/')}>
             <img 
               src="/logos/PrimaryLogo.svg" 
               alt="Gretz Tech" 

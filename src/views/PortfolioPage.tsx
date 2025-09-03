@@ -342,12 +342,12 @@ const PortfolioPage: React.FC = () => {
                     transition: 'all 0.3s ease-in-out',
                     position: 'relative',
                     overflow: 'hidden',
-                    background: getGradient('card'),
+                    background: theme.palette.gradients.card,
                     backdropFilter: 'blur(10px)',
                     '&:hover': { 
                       transform: 'translateY(-8px)',
                       boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
-                      background: getGradient('cardHover'),
+                      background: theme.palette.gradients.card,
                       ...(project.view_url && {
                         '& .project-overlay': {
                           opacity: 1
@@ -359,7 +359,7 @@ const PortfolioPage: React.FC = () => {
                     }
                   }}
                 >
-                  <Box sx={{ position: 'relative', height: 250 }}>
+                  <Box sx={{ position: 'relative', height: 250, pt: 2 }}>
                     <Box 
                       className="project-image"
                       sx={{
@@ -377,8 +377,8 @@ const PortfolioPage: React.FC = () => {
                         sx={{
                           position: 'absolute',
                           top: '2.25%',
-                          left: '13%',
-                          width: '74%',
+                          left: '16%',
+                          width: '68%',
                           height: '60%',
                           overflow: 'hidden',
                           borderRadius: '2px'

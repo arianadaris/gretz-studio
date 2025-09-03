@@ -22,9 +22,11 @@ import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
 import GradientBackground, { getGradient } from '../components/GradientBackground';
 import { aboutService } from '../services/aboutService';
+import { useDarkMode } from '../hooks';
 const AboutPage: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { isDarkMode, toggleTheme } = useDarkMode();
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -47,6 +49,27 @@ const AboutPage: React.FC = () => {
     setHusbandInfo(aboutService.getHusbandInfo());
   }, []);
 
+  // Default data to use when no saved data exists
+  const defaultPersonalInfo = {
+    name: 'Ariana Gretzema',
+    role: 'Creative Director & Founder',
+    bio: 'I am passionate about creating meaningful brand experiences that connect with audiences and drive results. With a fresh perspective and dedication to excellence, I bring creativity and vision to every project.',
+    avatar: '/photos/AriHeadshot.jpg',
+    skills: ['Brand Strategy', 'Creative Direction', 'Visual Design', 'Brand Identity', 'Digital Design', 'Creative Strategy']
+  };
+
+  const defaultHusbandInfo = {
+    name: 'Cooper Gretzema',
+    role: 'Backend Developer & Tech Enthusiast',
+    bio: 'My husband has been an incredible support throughout my creative journey. His background in technology and passion for innovation has been instrumental in helping me stay current with the latest trends and tools in the industry. Together, we form a dynamic duo where creativity meets technical expertise.',
+    avatar: '/photos/CooperHeadshot.jpg',
+    skills: ['Technical Support', 'Creative Feedback', 'Business Strategy', 'Innovation Insights']
+  };
+
+  // Use default data if no saved data exists
+  const displayPersonalInfo = personalInfo || defaultPersonalInfo;
+  const displayHusbandInfo = husbandInfo || defaultHusbandInfo;
+
   const values = [
     {
       icon: <LightbulbIcon sx={{ fontSize: isMobile ? 32 : 40, color: theme.palette.secondary.main }} />,
@@ -65,9 +88,9 @@ const AboutPage: React.FC = () => {
     }
   ];
 
-  return (
+    return (
     <Box sx={{ minHeight: '40vh', bgcolor: 'background.default', pt: isMobile ? 2 : 8 }}>
-                    {/* Hero Section */}
+      {/* Hero Section */}
        <GradientBackground 
          type="hero"
          sx={{ 
@@ -269,11 +292,11 @@ const AboutPage: React.FC = () => {
                     '@keyframes logoPulse': {
                       '0%, 100%': { 
                         transform: 'scale(1)',
-                        filter: `drop-shadow(0 10px 20px ${theme.palette.primary.main}20)`
+                        filter: `drop-shadow(0 10px 20px ${theme.palette.primary.main}20) ${isDarkMode ? 'brightness(0) invert(1)' : 'none'}`
                       },
                       '50%': { 
                         transform: 'scale(1.05)',
-                        filter: `drop-shadow(0 15px 30px ${theme.palette.primary.main}30)`
+                        filter: `drop-shadow(0 15px 30px ${theme.palette.primary.main}30) ${isDarkMode ? 'brightness(0) invert(1)' : 'none'}`
                       }
                     }
                   }}
@@ -285,7 +308,8 @@ const AboutPage: React.FC = () => {
                       width: '100%',
                       maxWidth: isMobile ? '300px' : '400px',
                       height: 'auto',
-                      animation: 'logoPulse 4s ease-in-out infinite'
+                      animation: 'logoPulse 4s ease-in-out infinite',
+                      filter: isDarkMode ? 'brightness(0) invert(1)' : 'none'
                     }}
                  />
                </Box>
@@ -322,23 +346,43 @@ const AboutPage: React.FC = () => {
                       height: '100%',
                       textAlign: 'center',
                       p: 4,
-                      transition: 'all 0.3s ease-in-out',
-                      background: getGradient('card'),
-                      backdropFilter: 'blur(10px)',
-                      '&:hover': { 
-                        transform: 'translateY(-8px)',
-                        boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
-                        background: getGradient('cardHover')
-                      }
+                      border: `2px solid ${theme.palette.backgrounds.card}`,
+                      borderRadius: '20px',
+                      background: theme.palette.gradients.card,
+                      boxShadow: `0 10px 30px ${theme.palette.secondary.main}1A`,
+                      '&:hover': {
+                        transform: 'translateY(-10px)',
+                        boxShadow: `0 25px 50px ${theme.palette.secondary.main}33`,
+                        borderColor: theme.palette.secondary.main,
+                        background: theme.palette.gradients.card,
+                      },
+                      transition: 'all 0.4s ease'
                     }}
                   >
-                    <Box sx={{ mb: 3 }}>
+                    <Box sx={{ 
+                      mb: 3,
+                      p: 3,
+                      borderRadius: '50%',
+                      background: `${theme.palette.secondary.main}1A`,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
                       {value.icon}
                     </Box>
-                    <Typography variant="h5" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
+                    <Typography variant="h5" component="h3" sx={{ 
+                      mb: 2, 
+                      fontWeight: 600, 
+                      color: theme.palette.customText.dark,
+                      fontFamily: '"BearNose", serif'
+                    }}>
                       {value.title}
                     </Typography>
-                    <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+                    <Typography variant="body1" sx={{ 
+                      color: theme.palette.customText.medium, 
+                      lineHeight: 1.6,
+                      fontFamily: '"Figtree", serif'
+                    }}>
                       {value.description}
                     </Typography>
                   </Card>
@@ -365,8 +409,8 @@ const AboutPage: React.FC = () => {
                   }}
                 >
                   <img 
-                    src={personalInfo.avatar} 
-                    alt={personalInfo.name}
+                    src={displayPersonalInfo.avatar} 
+                    alt={displayPersonalInfo.name}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -382,19 +426,19 @@ const AboutPage: React.FC = () => {
             <Fade in={scrollY > 750} timeout={1200}>
               <Box>
                 <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
-                  {personalInfo.name}
+                  {displayPersonalInfo.name}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
-                  {personalInfo.role}
+                  {displayPersonalInfo.role}
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
-                  {personalInfo.bio}
+                  {displayPersonalInfo.bio}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main, fontFamily: '"Figtree", serif' }}>
                   Specializations
                 </Typography>
                 <Grid container spacing={1} sx={{ mb: 3 }}>
-                  {personalInfo.skills.map((skill, skillIndex) => (
+                  {displayPersonalInfo.skills.map((skill, skillIndex) => (
                     <Grid item key={skillIndex}>
                       <Chip 
                         label={skill} 
@@ -421,19 +465,19 @@ const AboutPage: React.FC = () => {
             <Fade in={scrollY > 900} timeout={1400}>
               <Box>
                 <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
-                  {husbandInfo.name}
+                  {displayHusbandInfo.name}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
-                  {husbandInfo.role}
+                  {displayHusbandInfo.role}
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
-                  {husbandInfo.bio}
+                  {displayHusbandInfo.bio}
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main, fontFamily: '"Figtree", serif' }}>
-                  What He Brings
+                  What I Bring
                 </Typography>
                 <Grid container spacing={1} sx={{ mb: 3 }}>
-                  {husbandInfo.skills.map((skill, skillIndex) => (
+                  {displayHusbandInfo.skills.map((skill, skillIndex) => (
                     <Grid item key={skillIndex}>
                       <Chip 
                         label={skill} 
@@ -464,8 +508,8 @@ const AboutPage: React.FC = () => {
                   }}
                 >
                   <img 
-                    src={husbandInfo.avatar} 
-                    alt={husbandInfo.name}
+                    src={displayHusbandInfo.avatar} 
+                    alt={displayHusbandInfo.name}
                     style={{
                       width: '100%',
                       height: '100%',

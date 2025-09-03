@@ -304,12 +304,12 @@ const ServicesPage: React.FC = () => {
                     transition: 'all 0.3s ease-in-out',
                     position: 'relative',
                     overflow: 'hidden',
-                    background: getGradient('card'),
+                    background: theme.palette.gradients.card,
                     backdropFilter: 'blur(10px)',
                     '&:hover': { 
                       transform: isMobile ? 'none' : 'translateY(-8px)',
                       boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
-                      background: getGradient('cardHover')
+                      background: theme.palette.gradients.card
                     }
                   }}
                 >

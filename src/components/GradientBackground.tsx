@@ -57,31 +57,31 @@ export const getGradient = (gradientType: GradientType, theme?: Theme): string =
     }
   }
   
-  // Fallback gradients if theme is not available
+  // Fallback gradients if theme is not available - using CSS custom properties for theme awareness
   switch (gradientType) {
     case 'hero':
-      return 'linear-gradient(135deg, #E8F5E8 0%, #E3F2FD 25%, #F0F8FF 75%, #E0F2F1 100%)';
+      return 'linear-gradient(135deg, var(--soft-green, #E8F5E8) 0%, var(--soft-blue, #E3F2FD) 25%, var(--very-light-bg, #F0F8FF) 75%, var(--soft-teal, #E0F2F1) 100%)';
     
     case 'card':
-      return 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,248,248,0.8) 100%)';
+      return 'linear-gradient(135deg, var(--white, rgba(255,255,255,0.9)) 0%, var(--very-light-bg, rgba(255,248,248,0.8)) 100%)';
     
     case 'cardHover':
-      return 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)';
+      return 'linear-gradient(135deg, var(--white, rgba(255,255,255,0.95)) 0%, var(--very-light-bg, rgba(248,250,252,0.9)) 100%)';
     
     case 'section':
-      return 'linear-gradient(135deg, #FFFFFF 0%, #F0F8FF 100%)';
+      return 'linear-gradient(135deg, var(--white, #FFFFFF) 0%, var(--very-light-bg, #F0F8FF) 100%)';
     
     case 'sectionAlt':
-      return 'linear-gradient(135deg, #F0F8FF 0%, #E8F5E8 100%)';
+      return 'linear-gradient(135deg, var(--very-light-bg, #F0F8FF) 0%, var(--soft-green, #E8F5E8) 100%)';
     
     case 'button':
-      return 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)';
+      return 'linear-gradient(90deg, var(--primary-blue, #1976d2) 0%, var(--secondary-blue, #42a5f5) 100%)';
     
     case 'custom':
-      return 'linear-gradient(135deg, #E8F5E8 0%, #E3F2FD 25%, #F0F8FF 75%, #E0F2F1 100%)';
+      return 'linear-gradient(135deg, var(--soft-green, #E8F5E8) 0%, var(--soft-blue, #E3F2FD) 25%, var(--very-light-bg, #F0F8FF) 75%, var(--soft-teal, #E0F2F1) 100%)';
     
     default:
-      return 'linear-gradient(135deg, #E8F5E8 0%, #E3F2FD 25%, #F0F8FF 75%, #E0F2F1 100%)';
+      return 'linear-gradient(135deg, var(--soft-green, #E8F5E8) 0%, var(--soft-blue, #E3F2FD) 25%, var(--very-light-bg, #F0F8FF) 75%, var(--soft-teal, #E0F2F1) 100%)';
   }
 };
 

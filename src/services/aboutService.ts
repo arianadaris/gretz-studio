@@ -19,29 +19,16 @@ class AboutService {
   private readonly HUSBAND_STORAGE_KEY = 'husbandInfo';
 
   // Get personal info
-  getPersonalInfo(): PersonalInfo {
+  getPersonalInfo(): PersonalInfo | null {
     try {
       const savedInfo = localStorage.getItem(this.STORAGE_KEY);
       if (savedInfo) {
         return JSON.parse(savedInfo);
       }
-      // Return default info if none is saved
-      return {
-        name: 'Ariana Gretzema',
-        role: 'Creative Director & Founder',
-        bio: 'I am passionate about creating meaningful brand experiences that connect with audiences and drive results. With a fresh perspective and dedication to excellence, I bring creativity and vision to every project.',
-        avatar: '/photos/AriHeadshot.jpg',
-        skills: ['Brand Strategy', 'Creative Direction', 'Visual Design', 'Brand Identity', 'Digital Design', 'Creative Strategy']
-      };
+      return null;
     } catch (error) {
       console.error('Error loading personal info:', error);
-      return {
-        name: 'Ariana Gretzema',
-        role: 'Creative Director & Founder',
-        bio: 'I am passionate about creating meaningful brand experiences that connect with audiences and drive results. With a fresh perspective and dedication to excellence, I bring creativity and vision to every project.',
-        avatar: '/photos/AriHeadshot.jpg',
-        skills: ['Brand Strategy', 'Creative Direction', 'Visual Design', 'Brand Identity', 'Digital Design', 'Creative Strategy']
-      };
+      return null;
     }
   }
 
@@ -55,16 +42,20 @@ class AboutService {
   }
 
   // Update personal info
-  updatePersonalInfo(updates: Partial<PersonalInfo>): PersonalInfo {
+  updatePersonalInfo(updates: Partial<PersonalInfo>): PersonalInfo | null {
     const currentInfo = this.getPersonalInfo();
+    if (!currentInfo) return null;
+    
     const updatedInfo = { ...currentInfo, ...updates };
     this.savePersonalInfo(updatedInfo);
     return updatedInfo;
   }
 
   // Add a skill
-  addSkill(skill: string): PersonalInfo {
+  addSkill(skill: string): PersonalInfo | null {
     const currentInfo = this.getPersonalInfo();
+    if (!currentInfo) return null;
+    
     if (!currentInfo.skills.includes(skill)) {
       const updatedInfo = {
         ...currentInfo,
@@ -77,8 +68,10 @@ class AboutService {
   }
 
   // Remove a skill
-  removeSkill(skill: string): PersonalInfo {
+  removeSkill(skill: string): PersonalInfo | null {
     const currentInfo = this.getPersonalInfo();
+    if (!currentInfo) return null;
+    
     const updatedInfo = {
       ...currentInfo,
       skills: currentInfo.skills.filter(s => s !== skill)
@@ -88,8 +81,10 @@ class AboutService {
   }
 
   // Update a skill
-  updateSkill(oldSkill: string, newSkill: string): PersonalInfo {
+  updateSkill(oldSkill: string, newSkill: string): PersonalInfo | null {
     const currentInfo = this.getPersonalInfo();
+    if (!currentInfo) return null;
+    
     const skillIndex = currentInfo.skills.indexOf(oldSkill);
     if (skillIndex !== -1) {
       const updatedSkills = [...currentInfo.skills];
@@ -116,29 +111,16 @@ class AboutService {
   }
 
   // Get husband info
-  getHusbandInfo(): HusbandInfo {
+  getHusbandInfo(): HusbandInfo | null {
     try {
       const savedInfo = localStorage.getItem(this.HUSBAND_STORAGE_KEY);
       if (savedInfo) {
         return JSON.parse(savedInfo);
       }
-      // Return default husband info if none is saved
-      return {
-        name: 'Cooper Gretzema',
-        role: 'Backend Developer & Tech Enthusiast',
-        bio: 'My husband has been an incredible support throughout my creative journey. His background in technology and passion for innovation has been instrumental in helping me stay current with the latest trends and tools in the industry. Together, we form a dynamic duo where creativity meets technical expertise.',
-        avatar: '/photos/CooperHeadshot.jpg',
-        skills: ['Technical Support', 'Creative Feedback', 'Business Strategy', 'Innovation Insights']
-      };
+      return null;
     } catch (error) {
       console.error('Error loading husband info:', error);
-      return {
-        name: 'Cooper Gretzema',
-        role: 'Backend Developer & Tech Enthusiast',
-        bio: 'My husband has been an incredible support throughout my creative journey. His background in technology and passion for innovation has been instrumental in helping me stay current with the latest trends and tools in the industry. Together, we form a dynamic duo where creativity meets technical expertise.',
-        avatar: '/photos/Headshot.jpg',
-        skills: ['Technical Support', 'Creative Feedback', 'Business Strategy', 'Innovation Insights']
-      };
+      return null;
     }
   }
 
@@ -152,16 +134,20 @@ class AboutService {
   }
 
   // Update husband info
-  updateHusbandInfo(updates: Partial<HusbandInfo>): HusbandInfo {
+  updateHusbandInfo(updates: Partial<HusbandInfo>): HusbandInfo | null {
     const currentInfo = this.getHusbandInfo();
+    if (!currentInfo) return null;
+    
     const updatedInfo = { ...currentInfo, ...updates };
     this.saveHusbandInfo(updatedInfo);
     return updatedInfo;
   }
 
   // Add a husband skill
-  addHusbandSkill(skill: string): HusbandInfo {
+  addHusbandSkill(skill: string): HusbandInfo | null {
     const currentInfo = this.getHusbandInfo();
+    if (!currentInfo) return null;
+    
     if (!currentInfo.skills.includes(skill)) {
       const updatedInfo = {
         ...currentInfo,
@@ -174,8 +160,10 @@ class AboutService {
   }
 
   // Remove a husband skill
-  removeHusbandSkill(skill: string): HusbandInfo {
+  removeHusbandSkill(skill: string): HusbandInfo | null {
     const currentInfo = this.getHusbandInfo();
+    if (!currentInfo) return null;
+    
     const updatedInfo = {
       ...currentInfo,
       skills: currentInfo.skills.filter(s => s !== skill)
@@ -185,8 +173,10 @@ class AboutService {
   }
 
   // Update a husband skill
-  updateHusbandSkill(oldSkill: string, newSkill: string): HusbandInfo {
+  updateHusbandSkill(oldSkill: string, newSkill: string): HusbandInfo | null {
     const currentInfo = this.getHusbandInfo();
+    if (!currentInfo) return null;
+    
     const skillIndex = currentInfo.skills.indexOf(oldSkill);
     if (skillIndex !== -1) {
       const updatedSkills = [...currentInfo.skills];

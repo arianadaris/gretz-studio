@@ -279,12 +279,12 @@ const ContactPage: React.FC = () => {
               <Card sx={{ 
                 p: isMobile ? 2.5 : 4, 
                 height: 'fit-content',
-                background: getGradient('card'),
+                background: theme.palette.gradients.card,
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': { 
                   boxShadow: `0 20px 40px ${theme.palette.primary.main}26`,
-                  background: getGradient('cardHover')
+                  background: theme.palette.gradients.card
                 }
               }}>
                 <Typography 
@@ -293,7 +293,7 @@ const ContactPage: React.FC = () => {
                   sx={{ 
                     mb: isMobile ? 2 : 4, 
                     fontWeight: 600, 
-                    color: theme.palette.primary.main,
+                    color: theme.palette.customText.dark,
                     fontSize: isSmallMobile ? '1.3rem' : undefined,
                     fontFamily: '"BearNose", serif'
                   }}
@@ -452,7 +452,7 @@ const ContactPage: React.FC = () => {
                 <Typography 
                   variant="h4" 
                   component="h2" 
-                  sx={{ mb: 4, fontWeight: 600, color: theme.palette.primary.main, fontFamily: '"BearNose", serif' }}
+                  sx={{ mb: 4, fontWeight: 600, color: theme.palette.customText.dark, fontFamily: '"BearNose", serif' }}
                 >
                   Contact Information
                 </Typography>
@@ -461,13 +461,13 @@ const ContactPage: React.FC = () => {
                     <Grow in={isVisible} timeout={1200 + (index * 100)} key={index}>
                       <Card sx={{ 
                         p: 3,
-                        background: getGradient('card'),
+                        background: theme.palette.gradients.card,
                         backdropFilter: 'blur(10px)',
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': { 
                           transform: 'translateY(-4px)',
                           boxShadow: `0 12px 24px ${theme.palette.primary.main}26`,
-                          background: getGradient('cardHover')
+                          background: theme.palette.gradients.card
                         }
                       }}>
                         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
@@ -475,7 +475,7 @@ const ContactPage: React.FC = () => {
                             {info.icon}
                           </Box>
                           <Box>
-                            <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.primary.main, mb: 1 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.customText.dark, mb: 1 }}>
                               {info.title}
                             </Typography>
                             <Typography variant="body1" sx={{ color: theme.palette.customText.medium, mb: 0.5 }}>

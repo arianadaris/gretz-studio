@@ -29,12 +29,14 @@ import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
 import GradientBackground from '../components/GradientBackground';
 import { aboutService } from '../services/aboutService';
+import { useDarkMode } from '../hooks';
 
 const LandingPage: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const { isDarkMode } = useDarkMode();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [personalInfo, setPersonalInfo] = useState(aboutService.getPersonalInfo());
@@ -217,7 +219,7 @@ const LandingPage: React.FC = () => {
                        width: '100%',
                        maxWidth: isMobile ? '300px' : '400px',
                        height: 'auto',
-                       filter: 'brightness(0) saturate(100%) invert(18%) sepia(8%) saturate(1234%) hue-rotate(202deg) brightness(95%) contrast(86%)',
+                       filter: isDarkMode ? 'brightness(0) invert(1)' : 'brightness(0) saturate(100%) invert(18%) sepia(8%) saturate(1234%) hue-rotate(202deg) brightness(95%) contrast(86%)',
                        transform: `translateY(${scrollY * 0.1}px)`,
                        transition: 'transform 0.1s ease-out'
                      }}
@@ -414,7 +416,7 @@ const LandingPage: React.FC = () => {
       {/* Process Section */}
       <Box sx={{ 
         py: isMobile ? 6 : 14, 
-        background: theme.palette.gradients.overlay,
+        background: isDarkMode ? theme.palette.gradients.card : theme.palette.gradients.overlay,
         position: 'relative'
       }}>
         {/* Decorative pattern */}
