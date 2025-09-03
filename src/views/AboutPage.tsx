@@ -61,7 +61,7 @@ const AboutPage: React.FC = () => {
   const defaultHusbandInfo = {
     name: 'Cooper Gretzema',
     role: 'Backend Developer & Tech Enthusiast',
-    bio: 'My husband has been an incredible support throughout my creative journey. His background in technology and passion for innovation has been instrumental in helping me stay current with the latest trends and tools in the industry. Together, we form a dynamic duo where creativity meets technical expertise.',
+    bio: 'Cooper has been an incredible support throughout our creative journey. His background in technology and passion for innovation has been instrumental in helping us stay current with the latest trends and tools in the industry. Together, we form a dynamic duo where creativity meets technical expertise.',
     avatar: '/photos/CooperHeadshot.jpg',
     skills: ['Technical Support', 'Creative Feedback', 'Business Strategy', 'Innovation Insights']
   };
@@ -225,7 +225,7 @@ const AboutPage: React.FC = () => {
                  fontSize: isSmallMobile ? '0.9rem' : undefined
                }}
              >
-               I am a passionate creative professional dedicated to transforming ideas into 
+               We are passionate creative professionals dedicated to transforming ideas into 
                compelling visual experiences that inspire and connect.
              </Typography>
           </Fade>
@@ -261,9 +261,9 @@ const AboutPage: React.FC = () => {
                   lineHeight: 1.8 
                 }}
               >
-                At Gretz Tech, I believe that great design has the power to transform 
-                businesses and inspire people. My mission is to create meaningful, beautiful, 
-                and effective design solutions that help my clients achieve their goals.
+                At Gretz Tech, we believe that great design has the power to transform 
+                businesses and inspire people. Our mission is to create meaningful, beautiful, 
+                and effective design solutions that help our clients achieve their goals.
               </Typography>
             </Fade>
             <Fade in={isVisible} timeout={3500}>
@@ -275,7 +275,7 @@ const AboutPage: React.FC = () => {
                   lineHeight: 1.8 
                 }}
               >
-                I combine strategic thinking with creative excellence to deliver designs that 
+                We combine strategic thinking with creative excellence to deliver designs that 
                 not only look stunning but also drive results. Every project is an opportunity 
                 to tell a story, solve a problem, and create something extraordinary.
               </Typography>
@@ -527,7 +527,7 @@ const AboutPage: React.FC = () => {
        {/* Get in Touch CTA Section */}
        <ContactCTA 
          title="Ready to Start Your Project?"
-         description="Let's collaborate to bring your creative vision to life. I'm excited to hear about your project and discuss how we can work together."
+         description="Let's collaborate to bring your creative vision to life. We're excited to hear about your project and discuss how we can work together."
          primaryButtonText="Get in Touch"
          secondaryButtonText="View Portfolio"
          scrollY={scrollY}
