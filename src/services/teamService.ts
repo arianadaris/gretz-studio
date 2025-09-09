@@ -13,7 +13,6 @@ export const teamService = {
       console.error('Error fetching team members:', error);
       throw error;
     }
-
     return data || [];
   },
 

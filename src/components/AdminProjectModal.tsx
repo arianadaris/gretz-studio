@@ -14,7 +14,15 @@ import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Close from '@mui/icons-material/Close';
 import Add from '@mui/icons-material/Add';
+import CloudUpload from '@mui/icons-material/CloudUpload';
+import Delete from '@mui/icons-material/Delete';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { portfolioService } from '../services/portfolioService';
 import type { Project } from '../lib/supabase';
@@ -25,6 +33,18 @@ interface AdminProjectModalProps {
   onClose: () => void;
   onSave: (project: Project) => void;
 }
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
   open,
@@ -45,6 +65,10 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
   });
   const [customTagInput, setCustomTagInput] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string>('');
 
   const [categories, setCategories] = useState<Array<{ value: string; label: string }>>([]);
   const [availableTags, setAvailableTags] = useState<Array<{ value: string; label: string; color: string }>>([]);
@@ -94,6 +118,7 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
         year: project.year,
         view_url: project.view_url || ''
       });
+      setImagePreview(project.image);
     } else {
       setFormData({
         title: '',
@@ -105,9 +130,13 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
         year: new Date().getFullYear().toString(),
         view_url: ''
       });
+      setImagePreview('');
     }
     setErrors({});
     setCustomTagInput('');
+    setSelectedFile(null);
+    setUploadError('');
+    setIsUploading(false);
   }, [project, open]);
 
   const validateForm = () => {
@@ -122,8 +151,8 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
-    if (!formData.image.trim()) {
-      newErrors.image = 'Image URL is required';
+    if (!formData.image.trim() && !selectedFile) {
+      newErrors.image = 'Project image is required';
     }
     if (!formData.year) {
       newErrors.year = 'Year is required';
@@ -200,17 +229,89 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file
+      const validation = portfolioService.validateImageFile(file);
+      if (!validation.valid) {
+        setUploadError(validation.error || 'Invalid file');
+        return;
+      }
+
+      setSelectedFile(file);
+      setUploadError('');
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+      
+      // Clear any existing image URL error
+      if (errors.image) {
+        setErrors(prev => ({
+          ...prev,
+          image: ''
+        }));
+      }
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    setImagePreview('');
+    setUploadError('');
+    setFormData(prev => ({
+      ...prev,
+      image: ''
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateForm()) {
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadError('');
+
+    try {
+      let imageUrl = formData.image;
+
+      // Handle image upload if a new file is selected
+      if (selectedFile) {
+        const uploadedUrl = await portfolioService.uploadImage(selectedFile);
+        if (!uploadedUrl) {
+          setUploadError('Failed to upload image. Please try again.');
+          setIsUploading(false);
+          return;
+        }
+        imageUrl = uploadedUrl;
+
+        // If updating an existing project with a different image, delete the old one
+        if (project && project.image && project.image !== uploadedUrl && project.image.includes('supabase')) {
+          await portfolioService.deleteImage(project.image);
+        }
+      }
+
       const projectData: Project = {
         id: project?.id || Date.now(),
         ...formData,
+        image: imageUrl,
         created_at: project?.created_at || new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
+      
       onSave(projectData);
+    } catch (error) {
+      console.error('Error saving project:', error);
+      setUploadError('Failed to save project. Please try again.');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -317,15 +418,77 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
             sx={{ mb: 3 }}
           />
 
-          <TextField
-            fullWidth
-            label="Image URL"
-            value={formData.image}
-            onChange={(e) => handleInputChange('image', e.target.value)}
-            error={!!errors.image}
-            helperText={errors.image || 'Enter the path to the project image (e.g., /logos/PrimaryLogo.svg)'}
-            sx={{ mb: 3 }}
-          />
+          {/* Image Upload Section */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+              Project Image
+            </Typography>
+            
+            {uploadError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {uploadError}
+              </Alert>
+            )}
+
+            {/* Image Preview */}
+            {imagePreview && (
+              <Card sx={{ mb: 2, maxWidth: 300 }}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={imagePreview}
+                  alt="Project preview"
+                  sx={{ objectFit: 'contain' }}
+                />
+                <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>
+                  <IconButton 
+                    onClick={handleRemoveImage}
+                    color="error"
+                    size="small"
+                  >
+                    <Delete />
+                  </IconButton>
+                </Box>
+              </Card>
+            )}
+
+            {/* Upload Button */}
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <Button
+                component="label"
+                variant={imagePreview ? "outlined" : "contained"}
+                startIcon={<CloudUpload />}
+                disabled={isUploading}
+              >
+                {imagePreview ? 'Change Image' : 'Upload Image'}
+                <VisuallyHiddenInput
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                />
+              </Button>
+              
+              {isUploading && (
+                <Box sx={{ width: 200 }}>
+                  <LinearProgress />
+                </Box>
+              )}
+            </Box>
+
+            {/* Alternative URL Input */}
+            <Typography variant="caption" sx={{ display: 'block', mt: 2, mb: 1, color: 'text.secondary' }}>
+              Or enter an image URL:
+            </Typography>
+            <TextField
+              fullWidth
+              label="Image URL (optional)"
+              value={formData.image}
+              onChange={(e) => handleInputChange('image', e.target.value)}
+              error={!!errors.image}
+              helperText={errors.image || 'Enter the path to the project image (e.g., /logos/PrimaryLogo.svg)'}
+              size="small"
+            />
+          </Box>
 
           <TextField
             fullWidth
@@ -431,11 +594,16 @@ const AdminProjectModal: React.FC<AdminProjectModalProps> = ({
           />
 
           <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-            <Button variant="outlined" onClick={onClose}>
+            <Button variant="outlined" onClick={onClose} disabled={isUploading}>
               Cancel
             </Button>
-            <Button variant="contained" type="submit">
-              {project ? 'Update Project' : 'Add Project'}
+            <Button 
+              variant="contained" 
+              type="submit" 
+              disabled={isUploading}
+              startIcon={isUploading ? <CircularProgress size={20} color="inherit" /> : undefined}
+            >
+              {isUploading ? 'Saving...' : (project ? 'Update Project' : 'Add Project')}
             </Button>
           </Box>
         </Box>

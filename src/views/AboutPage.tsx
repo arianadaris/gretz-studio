@@ -21,7 +21,8 @@ import { useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ContactCTA from '../components/ContactCTA';
 import GradientBackground, { getGradient } from '../components/GradientBackground';
-import { aboutService } from '../services/aboutService';
+import { teamService } from '../services/teamService';
+import type { TeamMember } from '../lib/supabase';
 import { useDarkMode } from '../hooks';
 const AboutPage: React.FC = () => {
   const theme = useTheme();
@@ -41,34 +42,29 @@ const AboutPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const [personalInfo, setPersonalInfo] = useState(aboutService.getPersonalInfo());
-  const [husbandInfo, setHusbandInfo] = useState(aboutService.getHusbandInfo());
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setPersonalInfo(aboutService.getPersonalInfo());
-    setHusbandInfo(aboutService.getHusbandInfo());
+    const fetchTeamMembers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        // Initialize default team members if none exist
+        await teamService.initializeDefaultTeamMembers();
+        const members = await teamService.getTeamMembers();
+        setTeamMembers(members);
+      } catch (err) {
+        console.error('Error fetching team members:', err);
+        setError('Failed to load team members');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTeamMembers();
   }, []);
-
-  // Default data to use when no saved data exists
-  const defaultPersonalInfo = {
-    name: 'Ariana Gretzema',
-    role: 'Creative Director & Founder',
-    bio: 'I am passionate about creating meaningful brand experiences that connect with audiences and drive results. With a fresh perspective and dedication to excellence, I bring creativity and vision to every project.',
-    avatar: '/photos/AriHeadshot.jpg',
-    skills: ['Brand Strategy', 'Creative Direction', 'Visual Design', 'Brand Identity', 'Digital Design', 'Creative Strategy']
-  };
-
-  const defaultHusbandInfo = {
-    name: 'Cooper Gretzema',
-    role: 'Backend Developer & Tech Enthusiast',
-    bio: 'Cooper has been an incredible support throughout our creative journey. His background in technology and passion for innovation has been instrumental in helping us stay current with the latest trends and tools in the industry. Together, we form a dynamic duo where creativity meets technical expertise.',
-    avatar: '/photos/CooperHeadshot.jpg',
-    skills: ['Technical Support', 'Creative Feedback', 'Business Strategy', 'Innovation Insights']
-  };
-
-  // Use default data if no saved data exists
-  const displayPersonalInfo = personalInfo || defaultPersonalInfo;
-  const displayHusbandInfo = husbandInfo || defaultHusbandInfo;
 
   const values = [
     {
@@ -393,139 +389,97 @@ const AboutPage: React.FC = () => {
         </Container>
       </Box>
 
-      {/* Personal Section */}
-      <Container maxWidth="lg" sx={{ py: 12 }}>
-        <Grid container spacing={6} alignItems="center">
-          <Grid item xs={12} md={4}>
-            <Grow in={scrollY > 700} timeout={1000}>
-              <Box sx={{ textAlign: 'center' }}>
-                <Avatar 
-                  sx={{ 
-                    width: 200, 
-                    height: 200, 
-                    mx: 'auto', 
-                    mb: 3,
-                    bgcolor: 'background.paper'
-                  }}
-                >
-                  <img 
-                    src={displayPersonalInfo.avatar} 
-                    alt={displayPersonalInfo.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transform: 'scale(3.5) translateY(50px) translateX(-2px)'
-                    }}
-                  />
-                </Avatar>
-              </Box>
-            </Grow>
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <Fade in={scrollY > 750} timeout={1200}>
-              <Box>
-                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
-                  {displayPersonalInfo.name}
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
-                  {displayPersonalInfo.role}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
-                  {displayPersonalInfo.bio}
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main, fontFamily: '"Figtree", serif' }}>
-                  Specializations
-                </Typography>
-                <Grid container spacing={1} sx={{ mb: 3 }}>
-                  {displayPersonalInfo.skills.map((skill, skillIndex) => (
-                    <Grid item key={skillIndex}>
-                      <Chip 
-                        label={skill} 
-                        size="medium" 
-                        sx={{ 
-                          bgcolor: `${theme.palette.secondary.main}1A`, 
-                          color: 'secondary.main',
-                          fontWeight: 500,
-                        }} 
+      {/* Team Section */}
+      {loading ? (
+        <Container maxWidth="lg" sx={{ py: 12, textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+            Loading team members...
+          </Typography>
+        </Container>
+      ) : error ? (
+        <Container maxWidth="lg" sx={{ py: 12, textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ color: 'error.main' }}>
+            {error}
+          </Typography>
+        </Container>
+      ) : teamMembers.length > 0 ? (
+        teamMembers
+          .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically by name
+          .map((member, index) => (
+          <Container key={member.id} maxWidth="lg" sx={{ py: 12 }}>
+            <Grid container spacing={6} alignItems="center">
+              {/* Photo - Alternate sides for visual interest */}
+              <Grid item xs={12} md={4} sx={{ order: { xs: 1, md: index % 2 === 0 ? 1 : 2 } }}>
+                <Grow in={scrollY > 700 + (index * 200)} timeout={1000 + (index * 200)}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Avatar 
+                      sx={{ 
+                        width: 200, 
+                        height: 200, 
+                        mx: 'auto', 
+                        mb: 3,
+                        bgcolor: 'background.paper',
+                        border: index === 0 ? 'none' : `3px solid ${theme.palette.primary.main}20`
+                      }}
+                    >
+                      <img 
+                        src={member.avatar} 
+                        alt={member.name}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          // Different transforms for different members
+                          transform: member.id === 'ariana' 
+                            ? 'scale(3.5) translateY(50px) translateX(-2px)'
+                            : member.id === 'cooper'
+                            ? 'scale(2) translateY(45px)'
+                            : 'scale(1)'
+                        }}
                       />
+                    </Avatar>
+                  </Box>
+                </Grow>
+              </Grid>
+              
+              {/* Content */}
+              <Grid item xs={12} md={8} sx={{ order: { xs: 2, md: index % 2 === 0 ? 2 : 1 } }}>
+                <Fade in={scrollY > 750 + (index * 200)} timeout={1200 + (index * 200)}>
+                  <Box>
+                    <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
+                      {member.name}
+                    </Typography>
+                    <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
+                      {member.role}
+                    </Typography>
+                    <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
+                      {member.bio}
+                    </Typography>
+                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main, fontFamily: '"Figtree", serif' }}>
+                      Specializations
+                    </Typography>
+                    <Grid container spacing={1} sx={{ mb: 3 }}>
+                      {member.skills.map((skill, skillIndex) => (
+                        <Grid item key={skillIndex}>
+                          <Chip 
+                            label={skill} 
+                            size="medium" 
+                            sx={{ 
+                              bgcolor: `${theme.palette.secondary.main}1A`, 
+                              color: 'secondary.main',
+                              fontWeight: 500,
+                            }} 
+                          />
+                        </Grid>
+                      ))}
                     </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            </Fade>
-          </Grid>
-        </Grid>
-             </Container>
-
-      {/* Husband Section */}
-      <Container maxWidth="lg" sx={{ py: 12 }}>
-        <Grid container spacing={6} alignItems="center">
-          {/* Photo - Show first on mobile, second on desktop */}
-          <Grid item xs={12} md={4} sx={{ order: { xs: 1, md: 2 } }}>
-            <Grow in={scrollY > 950} timeout={1600}>
-              <Box sx={{ textAlign: 'center' }}>
-                <Avatar 
-                  sx={{ 
-                    width: 200, 
-                    height: 200, 
-                    mx: 'auto', 
-                    mb: 3,
-                    bgcolor: 'background.paper',
-                    border: `3px solid ${theme.palette.primary.main}20`
-                  }}
-                >
-                  <img 
-                    src={displayHusbandInfo.avatar} 
-                    alt={displayHusbandInfo.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transform: 'scale(2) translateY(45px)'
-                    }}
-                  />
-                </Avatar>
-              </Box>
-            </Grow>
-          </Grid>
-          
-          {/* Content - Show second on mobile, first on desktop */}
-          <Grid item xs={12} md={8} sx={{ order: { xs: 2, md: 1 } }}>
-            <Fade in={scrollY > 900} timeout={1400}>
-              <Box>
-                <Typography variant="h4" component="h3" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main }}>
-                  {displayHusbandInfo.name}
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 3, color: 'secondary.main', fontWeight: 500 }}>
-                  {displayHusbandInfo.role}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem' }}>
-                  {displayHusbandInfo.bio}
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.admin.main, fontFamily: '"Figtree", serif' }}>
-                  What I Bring
-                </Typography>
-                <Grid container spacing={1} sx={{ mb: 3 }}>
-                  {displayHusbandInfo.skills.map((skill, skillIndex) => (
-                    <Grid item key={skillIndex}>
-                      <Chip 
-                        label={skill} 
-                        size="medium" 
-                        sx={{ 
-                          bgcolor: `${theme.palette.secondary.main}1A`, 
-                          color: 'secondary.main',
-                          fontWeight: 500,
-                        }} 
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            </Fade>
-          </Grid>
-        </Grid>
-      </Container>
+                  </Box>
+                </Fade>
+              </Grid>
+            </Grid>
+          </Container>
+        ))
+      ) : null}
 
        {/* Get in Touch CTA Section */}
        <ContactCTA 

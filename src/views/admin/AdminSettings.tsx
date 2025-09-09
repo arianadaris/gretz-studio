@@ -24,6 +24,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Chip from '@mui/material/Chip';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import CircularProgress from '@mui/material/CircularProgress';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import Add from '@mui/icons-material/Add';
@@ -31,9 +34,10 @@ import Settings from '@mui/icons-material/Settings';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Person from '@mui/icons-material/Person';
+import Save from '@mui/icons-material/Save';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import { aboutService, PersonalInfo } from '../../services/aboutService';
+import { aboutService, PersonalInfo, TeamInfo, TeamMember as AboutTeamMember } from '../../services/aboutService';
 import { teamService } from '../../services/teamService';
 import type { TeamMember } from '../../lib/supabase';
 import { useThemeContext } from '../../contexts/ThemeContext';
@@ -92,6 +96,16 @@ const AdminSettings: React.FC = () => {
   const [arianaExpanded, setArianaExpanded] = useState(false);
   const [cooperExpanded, setCooperExpanded] = useState(false);
   
+  // Save state management
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  
+  // Track original data for comparison
+  const [originalArianaInfo, setOriginalArianaInfo] = useState<TeamMember | null>(null);
+  const [originalCooperInfo, setOriginalCooperInfo] = useState<TeamMember | null>(null);
+  const [originalPersonalInfo, setOriginalPersonalInfo] = useState<PersonalInfo | null>(null);
 
   
   const navigate = useNavigate();
@@ -119,8 +133,14 @@ const AdminSettings: React.FC = () => {
         const ariana = members.find(m => m.id === 'ariana');
         const cooper = members.find(m => m.id === 'cooper');
         
-        if (ariana) setArianaInfo(ariana);
-        if (cooper) setCooperInfo(cooper);
+        if (ariana) {
+          setArianaInfo(ariana);
+          setOriginalArianaInfo(JSON.parse(JSON.stringify(ariana))); // Deep copy
+        }
+        if (cooper) {
+          setCooperInfo(cooper);
+          setOriginalCooperInfo(JSON.parse(JSON.stringify(cooper))); // Deep copy
+        }
       } catch (error) {
         console.error('Error loading team members:', error);
       }
@@ -139,6 +159,9 @@ const AdminSettings: React.FC = () => {
     }
 
     loadTeamMembers();
+    
+    // Set original personal info
+    setOriginalPersonalInfo(JSON.parse(JSON.stringify(personalInfo)));
   }, []);
 
   const saveCategories = (updatedCategories: Category[]) => {
@@ -149,6 +172,93 @@ const AdminSettings: React.FC = () => {
   const saveTags = (updatedTags: Tag[]) => {
     setTags(updatedTags);
     localStorage.setItem('portfolioTags', JSON.stringify(updatedTags));
+  };
+
+  // Check if there are unsaved changes
+  const checkForUnsavedChanges = () => {
+    const arianaChanged = originalArianaInfo && arianaInfo && 
+      JSON.stringify(originalArianaInfo) !== JSON.stringify(arianaInfo);
+    const cooperChanged = originalCooperInfo && cooperInfo && 
+      JSON.stringify(originalCooperInfo) !== JSON.stringify(cooperInfo);
+    const personalChanged = originalPersonalInfo && 
+      JSON.stringify(originalPersonalInfo) !== JSON.stringify(personalInfo);
+    
+    const hasChanges = Boolean(arianaChanged || cooperChanged || personalChanged);
+    setHasUnsavedChanges(hasChanges);
+    return hasChanges;
+  };
+
+  // Effect to check for changes whenever relevant state updates
+  useEffect(() => {
+    checkForUnsavedChanges();
+  }, [arianaInfo, cooperInfo, personalInfo, originalArianaInfo, originalCooperInfo, originalPersonalInfo]);
+
+  // Add beforeunload event listener to warn about unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  // Batch save all changes
+  const handleSaveAllChanges = async () => {
+    setIsSaving(true);
+    setSaveError(null);
+    
+    try {
+      const promises = [];
+      
+      // Save Ariana's info if changed
+      if (originalArianaInfo && arianaInfo && 
+          JSON.stringify(originalArianaInfo) !== JSON.stringify(arianaInfo)) {
+        promises.push(teamService.updateTeamMember(arianaInfo.id, arianaInfo));
+      }
+      
+      // Save Cooper's info if changed
+      if (originalCooperInfo && cooperInfo && 
+          JSON.stringify(originalCooperInfo) !== JSON.stringify(cooperInfo)) {
+        promises.push(teamService.updateTeamMember(cooperInfo.id, cooperInfo));
+      }
+      
+      // Save personal info if changed (localStorage - synchronous)
+      if (originalPersonalInfo && 
+          JSON.stringify(originalPersonalInfo) !== JSON.stringify(personalInfo)) {
+        aboutService.savePersonalInfo(personalInfo);
+      }
+      
+      // Wait for all database operations to complete
+      if (promises.length > 0) {
+        await Promise.all(promises);
+      }
+      
+      // Update original data to match current data
+      if (arianaInfo) setOriginalArianaInfo(JSON.parse(JSON.stringify(arianaInfo)));
+      if (cooperInfo) setOriginalCooperInfo(JSON.parse(JSON.stringify(cooperInfo)));
+      setOriginalPersonalInfo(JSON.parse(JSON.stringify(personalInfo)));
+      
+      // Update team members state
+      setTeamMembers(prev => prev.map(m => {
+        if (m.id === 'ariana' && arianaInfo) return arianaInfo;
+        if (m.id === 'cooper' && cooperInfo) return cooperInfo;
+        return m;
+      }));
+      
+      setHasUnsavedChanges(false);
+      setSaveSuccess(true);
+      
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      setSaveError('Failed to save changes. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleAddCategory = () => {
@@ -301,16 +411,13 @@ const AdminSettings: React.FC = () => {
   const handlePersonalInfoUpdate = (field: keyof PersonalInfo, value: string | string[]) => {
     const updatedInfo = { ...personalInfo, [field]: value };
     setPersonalInfo(updatedInfo);
-    aboutService.savePersonalInfo(updatedInfo);
   };
 
   const handleAddSkill = () => {
     if (newSkill.trim()) {
-      const updatedInfo = aboutService.addSkill(newSkill.trim());
-      if (updatedInfo) {
-        setPersonalInfo(updatedInfo);
-        setNewSkill('');
-      }
+      const updatedSkills = [...personalInfo.skills, newSkill.trim()];
+      setPersonalInfo({ ...personalInfo, skills: updatedSkills });
+      setNewSkill('');
     }
   };
 
@@ -321,21 +428,17 @@ const AdminSettings: React.FC = () => {
 
   const handleUpdateSkill = () => {
     if (editingSkill && newSkill.trim()) {
-      const updatedInfo = aboutService.updateSkill(editingSkill, newSkill.trim());
-      if (updatedInfo) {
-        setPersonalInfo(updatedInfo);
-        setEditingSkill(null);
-        setNewSkill('');
-      }
+      const updatedSkills = personalInfo.skills.map(s => s === editingSkill ? newSkill.trim() : s);
+      setPersonalInfo({ ...personalInfo, skills: updatedSkills });
+      setEditingSkill(null);
+      setNewSkill('');
     }
   };
 
   const handleDeleteSkill = (skill: string) => {
     if (window.confirm('Are you sure you want to delete this skill?')) {
-      const updatedInfo = aboutService.removeSkill(skill);
-      if (updatedInfo) {
-        setPersonalInfo(updatedInfo);
-      }
+      const updatedSkills = personalInfo.skills.filter(s => s !== skill);
+      setPersonalInfo({ ...personalInfo, skills: updatedSkills });
     }
   };
 
@@ -360,45 +463,27 @@ const AdminSettings: React.FC = () => {
   };
 
   // Team member information management functions
-  const handleArianaInfoUpdate = async (field: keyof TeamMember, value: string | string[]) => {
+  const handleArianaInfoUpdate = (field: keyof TeamMember, value: string | string[]) => {
     if (!arianaInfo) return;
     
-    try {
-      const updatedInfo = { ...arianaInfo, [field]: value };
-      const savedMember = await teamService.updateTeamMember(arianaInfo.id, updatedInfo);
-      setArianaInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
-    } catch (error) {
-      console.error('Error updating Ariana info:', error);
-    }
+    const updatedInfo = { ...arianaInfo, [field]: value };
+    setArianaInfo(updatedInfo);
   };
 
-  const handleCooperInfoUpdate = async (field: keyof TeamMember, value: string | string[]) => {
+  const handleCooperInfoUpdate = (field: keyof TeamMember, value: string | string[]) => {
     if (!cooperInfo) return;
     
-    try {
-      const updatedInfo = { ...cooperInfo, [field]: value };
-      const savedMember = await teamService.updateTeamMember(cooperInfo.id, updatedInfo);
-      setCooperInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
-    } catch (error) {
-      console.error('Error updating Cooper info:', error);
-    }
+    const updatedInfo = { ...cooperInfo, [field]: value };
+    setCooperInfo(updatedInfo);
   };
 
   // Ariana skills management
-  const handleAddArianaSkill = async () => {
+  const handleAddArianaSkill = () => {
     if (!arianaInfo || !newArianaSkill.trim()) return;
     
-    try {
-      const updatedSkills = [...arianaInfo.skills, newArianaSkill.trim()];
-      const savedMember = await teamService.updateTeamMember(arianaInfo.id, { skills: updatedSkills });
-      setArianaInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
-      setNewArianaSkill('');
-    } catch (error) {
-      console.error('Error adding Ariana skill:', error);
-    }
+    const updatedSkills = [...arianaInfo.skills, newArianaSkill.trim()];
+    setArianaInfo({ ...arianaInfo, skills: updatedSkills });
+    setNewArianaSkill('');
   };
 
   const handleEditArianaSkill = (skill: string) => {
@@ -406,32 +491,20 @@ const AdminSettings: React.FC = () => {
     setNewArianaSkill(skill);
   };
 
-  const handleUpdateArianaSkill = async () => {
+  const handleUpdateArianaSkill = () => {
     if (!arianaInfo || !editingArianaSkill || !newArianaSkill.trim()) return;
     
-    try {
-      const updatedSkills = arianaInfo.skills.map(s => s === editingArianaSkill ? newArianaSkill.trim() : s);
-      const savedMember = await teamService.updateTeamMember(arianaInfo.id, { skills: updatedSkills });
-      setArianaInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
-      setEditingArianaSkill(null);
-      setNewArianaSkill('');
-    } catch (error) {
-      console.error('Error updating Ariana skill:', error);
-    }
+    const updatedSkills = arianaInfo.skills.map(s => s === editingArianaSkill ? newArianaSkill.trim() : s);
+    setArianaInfo({ ...arianaInfo, skills: updatedSkills });
+    setEditingArianaSkill(null);
+    setNewArianaSkill('');
   };
 
-  const handleDeleteArianaSkill = async (skill: string) => {
+  const handleDeleteArianaSkill = (skill: string) => {
     if (!arianaInfo || !window.confirm('Are you sure you want to delete this skill?')) return;
     
-    try {
-      const updatedSkills = arianaInfo.skills.filter(s => s !== skill);
-      const savedMember = await teamService.updateTeamMember(arianaInfo.id, { skills: updatedSkills });
-      setArianaInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'ariana' ? savedMember : m));
-    } catch (error) {
-      console.error('Error deleting Ariana skill:', error);
-    }
+    const updatedSkills = arianaInfo.skills.filter(s => s !== skill);
+    setArianaInfo({ ...arianaInfo, skills: updatedSkills });
   };
 
   const handleCancelArianaSkill = () => {
@@ -451,18 +524,12 @@ const AdminSettings: React.FC = () => {
   };
 
   // Cooper skills management
-  const handleAddCooperSkill = async () => {
+  const handleAddCooperSkill = () => {
     if (!cooperInfo || !newCooperSkill.trim()) return;
     
-    try {
-      const updatedSkills = [...cooperInfo.skills, newCooperSkill.trim()];
-      const savedMember = await teamService.updateTeamMember(cooperInfo.id, { skills: updatedSkills });
-      setCooperInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
-      setNewCooperSkill('');
-    } catch (error) {
-      console.error('Error adding Cooper skill:', error);
-    }
+    const updatedSkills = [...cooperInfo.skills, newCooperSkill.trim()];
+    setCooperInfo({ ...cooperInfo, skills: updatedSkills });
+    setNewCooperSkill('');
   };
 
   const handleEditCooperSkill = (skill: string) => {
@@ -470,32 +537,20 @@ const AdminSettings: React.FC = () => {
     setNewCooperSkill(skill);
   };
 
-  const handleUpdateCooperSkill = async () => {
+  const handleUpdateCooperSkill = () => {
     if (!cooperInfo || !editingCooperSkill || !newCooperSkill.trim()) return;
     
-    try {
-      const updatedSkills = cooperInfo.skills.map(s => s === editingCooperSkill ? newCooperSkill.trim() : s);
-      const savedMember = await teamService.updateTeamMember(cooperInfo.id, { skills: updatedSkills });
-      setCooperInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
-      setEditingCooperSkill(null);
-      setNewCooperSkill('');
-    } catch (error) {
-      console.error('Error updating Cooper skill:', error);
-    }
+    const updatedSkills = cooperInfo.skills.map(s => s === editingCooperSkill ? newCooperSkill.trim() : s);
+    setCooperInfo({ ...cooperInfo, skills: updatedSkills });
+    setEditingCooperSkill(null);
+    setNewCooperSkill('');
   };
 
-  const handleDeleteCooperSkill = async (skill: string) => {
+  const handleDeleteCooperSkill = (skill: string) => {
     if (!cooperInfo || !window.confirm('Are you sure you want to delete this skill?')) return;
     
-    try {
-      const updatedSkills = cooperInfo.skills.filter(s => s !== skill);
-      const savedMember = await teamService.updateTeamMember(cooperInfo.id, { skills: updatedSkills });
-      setCooperInfo(savedMember);
-      setTeamMembers(prev => prev.map(m => m.id === 'cooper' ? savedMember : m));
-    } catch (error) {
-      console.error('Error deleting Cooper skill:', error);
-    }
+    const updatedSkills = cooperInfo.skills.filter(s => s !== skill);
+    setCooperInfo({ ...cooperInfo, skills: updatedSkills });
   };
 
   const handleCancelCooperSkill = () => {
@@ -549,7 +604,33 @@ const AdminSettings: React.FC = () => {
           </Box>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600, fontFamily: 'BearNose, Georgia, serif', color: 'admin.main' }}>
             Settings
+            {hasUnsavedChanges && (
+              <Chip 
+                label="Unsaved Changes" 
+                size="small" 
+                color="warning" 
+                sx={{ ml: 2, fontSize: '0.75rem' }}
+              />
+            )}
           </Typography>
+          
+          {/* Save Changes Button */}
+          <Button
+            variant="contained"
+            startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : <Save />}
+            onClick={handleSaveAllChanges}
+            disabled={!hasUnsavedChanges || isSaving}
+            sx={{ 
+              mr: 2,
+              bgcolor: hasUnsavedChanges ? 'primary.main' : 'grey.400',
+              '&:hover': {
+                bgcolor: hasUnsavedChanges ? 'primary.dark' : 'grey.500'
+              }
+            }}
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </Button>
+          
           <IconButton onClick={() => navigate('/admin/dashboard')} color="inherit">
             <ArrowBack />
           </IconButton>
@@ -1159,6 +1240,29 @@ const AdminSettings: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
+
+      {/* Success/Error Notifications */}
+      <Snackbar 
+        open={saveSuccess} 
+        autoHideDuration={4000} 
+        onClose={() => setSaveSuccess(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSaveSuccess(false)} severity="success" sx={{ width: '100%' }}>
+          Changes saved successfully!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar 
+        open={!!saveError} 
+        autoHideDuration={6000} 
+        onClose={() => setSaveError(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSaveError(null)} severity="error" sx={{ width: '100%' }}>
+          {saveError}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

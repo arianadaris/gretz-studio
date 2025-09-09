@@ -393,6 +393,11 @@ const PortfolioPage: React.FC = () => {
                             objectFit: 'cover',
                             filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3))'
                           }}
+                          onError={(e) => {
+                            // Fallback to a default image if the image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/logos/PrimaryLogo.svg';
+                          }}
                         />
                       </Box>
                     </Box>

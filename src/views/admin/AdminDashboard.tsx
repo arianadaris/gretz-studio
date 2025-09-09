@@ -326,6 +326,11 @@ const AdminDashboard: React.FC = () => {
                               src={project.image} 
                               alt={project.title}
                               style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+                              onError={(e) => {
+                                // Fallback to a default image if the image fails to load
+                                const target = e.target as HTMLImageElement;
+                                target.src = '/logos/PrimaryLogo.svg';
+                              }}
                             />
                           </Box>
                           <Box sx={{ flexGrow: 1 }}>

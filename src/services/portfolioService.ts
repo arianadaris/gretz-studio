@@ -380,6 +380,107 @@ class PortfolioService {
     }
   }
 
+  // Upload image to Supabase storage
+  async uploadImage(file: File, fileName?: string): Promise<string | null> {
+    try {
+      // Generate a unique filename if not provided
+      const fileExtension = file.name.split('.').pop();
+      const uniqueFileName = fileName || `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
+      const filePath = `projects/${uniqueFileName}`;
+
+      // Upload file to Supabase storage
+      const { data, error } = await supabase.storage
+        .from('project-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error);
+        return null;
+      }
+
+      // Get public URL for the uploaded image
+      const { data: publicUrlData } = supabase.storage
+        .from('project-images')
+        .getPublicUrl(filePath);
+
+      return publicUrlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  }
+
+  // Delete image from Supabase storage
+  async deleteImage(imageUrl: string): Promise<boolean> {
+    try {
+      // Extract file path from URL
+      const url = new URL(imageUrl);
+      const pathParts = url.pathname.split('/');
+      const filePath = pathParts.slice(-2).join('/'); // Get 'projects/filename'
+
+      const { error } = await supabase.storage
+        .from('project-images')
+        .remove([filePath]);
+
+      if (error) {
+        console.error('Error deleting image:', error);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      return false;
+    }
+  }
+
+  // Update image in Supabase storage (delete old, upload new)
+  async updateImage(oldImageUrl: string, newFile: File, fileName?: string): Promise<string | null> {
+    try {
+      // Upload new image first
+      const newImageUrl = await this.uploadImage(newFile, fileName);
+      
+      if (newImageUrl) {
+        // Delete old image only if new upload was successful
+        await this.deleteImage(oldImageUrl);
+        return newImageUrl;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error updating image:', error);
+      return null;
+    }
+  }
+
+  // Get image URL from Supabase storage
+  getImageUrl(filePath: string): string {
+    const { data } = supabase.storage
+      .from('project-images')
+      .getPublicUrl(filePath);
+    
+    return data.publicUrl;
+  }
+
+  // Validate image file
+  validateImageFile(file: File): { valid: boolean; error?: string } {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml', 'image/gif'];
+
+    if (!allowedTypes.includes(file.type)) {
+      return { valid: false, error: 'Invalid file type. Please upload JPEG, PNG, WebP, SVG, or GIF images.' };
+    }
+
+    if (file.size > maxSize) {
+      return { valid: false, error: 'File size too large. Please upload images smaller than 10MB.' };
+    }
+
+    return { valid: true };
+  }
+
   // Migration helper: Import from localStorage
   async migrateFromLocalStorage(): Promise<void> {
     try {
